@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Redirect, RouteProps } from 'react-router-dom';
 import { connect, ConnectedProps } from 'react-redux';
-import { RootState } from '../store/rootReducer';
+import { RootState } from '../../store/rootReducer';
 
 const mapStateToProps = ({ profile }: RootState) => ({ profile });
 

@@ -1,5 +1,7 @@
 const theme = {
-  fonts: {},
+  fonts: {
+    gilroy: 'Gilroy',
+  },
   variables: {},
   breakpoints: {
     sm: '576px',
@@ -13,9 +15,13 @@ const theme = {
     white: '#FFFFFF',
     black: '#000000',
 
+    gray10: '#F5F5F5',
+
     blue10: '#E8F6FE',
+    blue30: '#D2EAF7',
   },
+  typography: {},
 };
 
-export const { fonts, variables, breakpoints, colors } = theme;
+export const { fonts, variables, breakpoints, colors, typography } = theme;
 export default theme;

@@ -1,11 +1,11 @@
 import React from 'react';
-import Layout from '../components/Layout';
-import WashList from '../components/WashList';
-import { Button } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
+import Layout from '../components/Layout/Layout';
+import WashList from '../components/WashList/WashList';
 
 const Dashboard = () => {
   return (
-    <Layout title={'Объекты'} action={<Button borderRadius={'50%'} ml={'auto'}>+</Button>}>
+    <Layout title={'Объекты'} action={<Link to={'/create-wash'}>+</Link>}>
       <WashList />
     </Layout>
   );

@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
-import { Box } from '@chakra-ui/react';
-import WashCard from './WashCard';
-import WashCardSkeleton from './WashCardSkeleton';
-import { RootState } from '../store/rootReducer';
 import { connect, ConnectedProps } from 'react-redux';
-import { getWashesRequest } from '../store/washes/actions';
+
+import { RootState } from '../../store/rootReducer';
+import { getWashesRequest } from '../../store/washes/actions';
+
+import { Container } from './WashList.styled';
+import WashCard from '../WashCard/WashCard';
+import WashCardSkeleton from '../WashCardSkeleton/WashCardSkeleton';
 
 const mapStateToProps = ({ washes }: RootState) => ({ washes });
 
@@ -21,29 +23,24 @@ const WashList: React.FC<PropsFromRedux> = ({ washes, getWashesRequest }) => {
     getWashesRequest();
   }, []);
 
-  if (washes.status === 'failed') return <Box>Ошибка загрузки данных.</Box>;
+  if (washes.status === 'failed')
+    return <Container>Ошибка загрузки данных.</Container>;
 
   if (washes.status === 'loading')
     return (
-      <Box d={'flex'} flexDir={'column'}>
-        <Box mb={10}>
-          <WashCardSkeleton />
-        </Box>
-        <Box mb={10}>
-          <WashCardSkeleton />
-        </Box>
-        <Box mb={10}>
-          <WashCardSkeleton />
-        </Box>
-      </Box>
+      <Container>
+        <WashCardSkeleton />
+        <WashCardSkeleton />
+        <WashCardSkeleton />
+      </Container>
     );
 
   return (
-    <Box d={'flex'} flexDir={'column'}>
+    <Container>
       {washes.washes.map((wash, index) => (
         <WashCard key={index} {...wash} />
       ))}
-    </Box>
+    </Container>
   );
 };
 
