@@ -5,10 +5,10 @@ import { Container } from './WashCardSkeleton.styled';
 const WashCardSkeleton: React.FC = () => {
   return (
     <Container>
-      <Skeleton flex={1} h={'20px'} mr={20} borderRadius={'20px'} />
-      <Skeleton flex={1} h={'20px'} mr={20} borderRadius={'20px'} />
-      <Skeleton flex={1} h={'20px'} mr={20} borderRadius={'20px'} />
-      <Skeleton flex={1} h={'20px'} borderRadius={'20px'} />
+      <Skeleton flex={1} h={'14px'} mr={20} borderRadius={'6px'} />
+      <Skeleton flex={1} h={'14px'} mr={20} borderRadius={'6px'} />
+      <Skeleton flex={1} h={'14px'} mr={20} borderRadius={'6px'} />
+      <Skeleton flex={1} h={'14px'} borderRadius={'6px'} />
     </Container>
   );
 };

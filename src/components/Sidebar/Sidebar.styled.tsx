@@ -21,3 +21,10 @@ export const ContainerLogo = styled.div`
   justify-content: center;
   padding: 52px 0;
 `;
+
+export const Logout = styled.div`
+  font-size: 20px;
+  font-weight: 700;
+  margin: auto auto 60px;
+  cursor: pointer;
+`;

@@ -9,7 +9,7 @@ export type StatusState = {
 
 export type Response<T = {}> = {
   status: boolean;
-  data: T;
+  data: { session?: boolean } & T;
   message?: string;
 };
 
@@ -17,7 +17,7 @@ export type Auth = {
   id: string;
   hash: string;
   hash2: string;
-}
+};
 
 export type User = {
   id: string | null;

@@ -23,7 +23,7 @@ const App: React.FC = () => {
               <Route path={'/login'}>
                 <Login />
               </Route>
-              <PrivateRoute path={'/create-wash'}>
+              <PrivateRoute path={'/wash/create'}>
                 <CreateWash />
               </PrivateRoute>
               <PrivateRoute path={'/'}>

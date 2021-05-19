@@ -4,7 +4,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../../store/rootReducer';
 import { getWashesRequest } from '../../store/washes/actions';
 
-import { Container } from './WashList.styled';
+import { Container, Titles } from './WashList.styled';
 import WashCard from '../WashCard/WashCard';
 import WashCardSkeleton from '../WashCardSkeleton/WashCardSkeleton';
 
@@ -29,6 +29,12 @@ const WashList: React.FC<PropsFromRedux> = ({ washes, getWashesRequest }) => {
   if (washes.status === 'loading')
     return (
       <Container>
+        <Titles>
+          <div>Название</div>
+          <div>Город</div>
+          <div>Заявки за неделю</div>
+          <div>Статус</div>
+        </Titles>
         <WashCardSkeleton />
         <WashCardSkeleton />
         <WashCardSkeleton />
@@ -37,6 +43,12 @@ const WashList: React.FC<PropsFromRedux> = ({ washes, getWashesRequest }) => {
 
   return (
     <Container>
+      <Titles>
+        <div>Название</div>
+        <div>Город</div>
+        <div>Заявки за неделю</div>
+        <div>Статус</div>
+      </Titles>
       {washes.washes.map((wash, index) => (
         <WashCard key={index} {...wash} />
       ))}
