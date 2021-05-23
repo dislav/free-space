@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { connect, ConnectedProps } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { useTheme } from 'styled-components';
 import cookie from 'cookie';
-import { Container, Form, Input, Button, TextError, Link } from './SignIn.styled';
-import { FormControl, FormErrorMessage } from '@chakra-ui/react';
+
+import { Container, Form, TextError, Link } from './SignIn.styled';
+import { FormControl, FormErrorMessage, Input, Button } from '@chakra-ui/react';
 import { auth } from '../../lib/api';
 import { setLoggedIn } from '../../store/profile/actions';
 
@@ -24,6 +26,8 @@ interface Inputs {
 const SignIn: React.FC<PropsFromRedux> = ({ setLoggedIn }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const { colors } = useTheme();
 
   const history = useHistory();
 
@@ -64,6 +68,11 @@ const SignIn: React.FC<PropsFromRedux> = ({ setLoggedIn }) => {
         <p>Для входа введите свои данные</p>
         <FormControl isInvalid={!!errors.login} mb={8}>
           <Input
+            textAlign={'center'}
+            fontSize={'lg'}
+            minH={'74px'}
+            bg={colors.white}
+            borderRadius={'18px'}
             placeholder={'Логин'}
             {...register('login', {
               required: 'Обязательное поле',
@@ -73,6 +82,11 @@ const SignIn: React.FC<PropsFromRedux> = ({ setLoggedIn }) => {
         </FormControl>
         <FormControl isInvalid={!!errors.pass} mb={8}>
           <Input
+            textAlign={'center'}
+            fontSize={'lg'}
+            minH={'74px'}
+            bg={colors.white}
+            borderRadius={'18px'}
             type={'password'}
             placeholder={'Пароль'}
             {...register('pass', {
@@ -81,7 +95,19 @@ const SignIn: React.FC<PropsFromRedux> = ({ setLoggedIn }) => {
           />
           <FormErrorMessage>{errors.pass?.message}</FormErrorMessage>
         </FormControl>
-        <Button isLoading={isLoading} type={'submit'}>
+        <Button
+          w={'100%'}
+          minH={'60px'}
+          bg={'linear-gradient(to right, #9FD4D8, #B1E0F9)'}
+          borderRadius={'18px'}
+          _hover={{
+            bg: 'linear-gradient(to right, #9FD4D8, #B1E0F9)',
+            opacity: 0.8,
+          }}
+          mb={'26px'}
+          isLoading={isLoading}
+          type={'submit'}
+        >
           Войти
         </Button>
         {error.length > 0 && <TextError>{error}</TextError>}

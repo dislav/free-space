@@ -1,13 +1,16 @@
 export type PromiseStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
 
-export type Error = string | null | undefined;
-
-export type StatusState = {
-  status: PromiseStatus;
-  error: Error;
+export type ActionSaga<T extends {} = any> = {
+  payload: T;
+  type: string;
 };
 
-export type Response<T = {}> = {
+export type ReduxStatus = {
+  status: PromiseStatus;
+  error?: string | null;
+}
+
+export type Response<T extends {} = any> = {
   status: boolean;
   data: { session?: boolean } & T;
   message?: string;

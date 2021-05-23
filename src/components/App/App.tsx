@@ -7,11 +7,13 @@ import { GlobalStyle } from '../../styles/globalStyle';
 import store from '../../store/store';
 import theme from '../../styles/theme';
 import '../../styles/fonts.css';
+import 'leaflet/dist/leaflet.css';
 
 import PrivateRoute from '../PrivateRoute/PrivateRoute';
 import Dashboard from '../../pages/Dashboard';
 import Login from '../../pages/Login';
 import CreateWash from '../../pages/CreateWash';
+import Promotions from '../../pages/Promotions';
 
 const App: React.FC = () => {
   return (
@@ -23,6 +25,9 @@ const App: React.FC = () => {
               <Route path={'/login'}>
                 <Login />
               </Route>
+              <PrivateRoute path={'/promotions'}>
+                <Promotions />
+              </PrivateRoute>
               <PrivateRoute path={'/wash/create'}>
                 <CreateWash />
               </PrivateRoute>

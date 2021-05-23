@@ -1,13 +1,32 @@
 import React, { useState } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 import { useTheme } from 'styled-components';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { FormControl, FormErrorMessage, Button, Input, Select } from '@chakra-ui/react';
+import {
+  FormControl,
+  FormErrorMessage,
+  Button,
+  Input,
+  Select,
+} from '@chakra-ui/react';
+import { TileLayer, Marker, Popup, useMapEvent } from 'react-leaflet';
+import { DivIcon, LatLng } from 'leaflet';
 
-import { useHistory } from 'react-router-dom';
-import cookie from 'cookie';
+import { Container, Form, FormTime, Map } from './CreateWash.styled';
+import { RootState } from '../../store/rootReducer';
+import { createWashRequest } from '../../store/washes/actions';
 
-import { Container, Form, FormTime } from './CreateWash.styled';
-import { createWash } from '../../lib/api';
+const mapStateToProps = ({ washes }: RootState) => ({
+  washesStatus: washes.washesStatus.status,
+});
+
+const mapDispatchToProps = {
+  createWashRequest,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface Inputs {
   name: string;
@@ -18,41 +37,53 @@ interface Inputs {
   endTime: string;
 }
 
-const CreateWash: React.FC = () => {
+const MarkerIcon = new DivIcon({
+  iconSize: [30, 40],
+  html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+    <path
+        fill="red"
+        d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0zM192 272c44.183 0 80-35.817 80-80s-35.817-80-80-80-80 35.817-80 80 35.817 80 80 80z"
+    />
+  </svg>`,
+});
+
+const MapComponent: React.FC<{ setMarketCoord: (latlng: LatLng) => void }> = ({
+  setMarketCoord,
+}) => {
+  useMapEvent('click', ({ latlng }) => setMarketCoord(latlng));
+  return null;
+};
+
+const CreateWash: React.FC<PropsFromRedux> = ({
+  washesStatus,
+  createWashRequest,
+}) => {
   const {
     handleSubmit,
     register,
     formState: { errors },
+    watch,
   } = useForm<Inputs>();
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [markerCoord, setMarketCoord] = useState<LatLng>();
 
   const { colors } = useTheme();
-  const history = useHistory();
+  const fields = watch();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    setIsLoading(true);
+    const formData = new FormData();
 
-    try {
-      const formData = new FormData();
-      Object.entries(data).forEach(([key, value]) => {
-        formData.append(key, value);
-      });
+    const { phone, startTime, endTime, ...props } = data;
+    const newData = {
+      ...props,
+      geoid: `${markerCoord?.lat}:${markerCoord?.lng}`,
+    };
 
-      const response = await createWash(formData);
-      if (!response.data.data.session) {
-        document.cookie = cookie.serialize('ukey28', '');
-        document.cookie = cookie.serialize('sesid28', '');
-        history.push('/login');
-      }
-      if (!response.data.status) throw new Error(response.data.message);
+    Object.entries(newData).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
 
-      console.log(response.data);
-    } catch (e) {
-      console.log(e.message);
-    }
-
-    setIsLoading(false);
+    createWashRequest(formData);
   };
 
   return (
@@ -60,6 +91,8 @@ const CreateWash: React.FC = () => {
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormControl isInvalid={!!errors.name} mb={'20px'}>
           <Input
+            minH={'44px'}
+            borderRadius={'18px'}
             placeholder={'Название объекта'}
             bg={colors.white}
             {...register('name', {
@@ -70,6 +103,8 @@ const CreateWash: React.FC = () => {
         </FormControl>
         <FormControl isInvalid={!!errors.city} mb={'20px'}>
           <Select
+            minH={'44px'}
+            borderRadius={'18px'}
             placeholder={'Выберите город'}
             bg={'white'}
             {...register('city', {
@@ -83,6 +118,8 @@ const CreateWash: React.FC = () => {
         </FormControl>
         <FormControl isInvalid={!!errors.street} mb={'20px'}>
           <Input
+            minH={'44px'}
+            borderRadius={'18px'}
             placeholder={'Адрес'}
             bg={colors.white}
             {...register('street', {
@@ -93,6 +130,8 @@ const CreateWash: React.FC = () => {
         </FormControl>
         <FormControl isInvalid={!!errors.phone} mb={'30px'}>
           <Input
+            minH={'44px'}
+            borderRadius={'18px'}
             placeholder={'Телефон'}
             bg={'white'}
             {...register('phone', {
@@ -105,6 +144,8 @@ const CreateWash: React.FC = () => {
           <p>Режим работы (начало - окончание рабочего дня)</p>
           <FormControl isInvalid={!!errors.startTime} w={'30%'}>
             <Select
+              minH={'44px'}
+              borderRadius={'18px'}
               defaultValue={'01'}
               bg={'white'}
               {...register('startTime', {
@@ -116,8 +157,11 @@ const CreateWash: React.FC = () => {
             </Select>
             <FormErrorMessage>{errors.startTime?.message}</FormErrorMessage>
           </FormControl>
-          <FormControl isInvalid={!!errors.endTime} w={'30%'} ml={'20px'}>
+          <span>—</span>
+          <FormControl isInvalid={!!errors.endTime} w={'30%'}>
             <Select
+              minH={'44px'}
+              borderRadius={'18px'}
               defaultValue={'01'}
               bg={'white'}
               {...register('endTime', {
@@ -139,13 +183,37 @@ const CreateWash: React.FC = () => {
             bg: 'linear-gradient(to right, #9FD4D8, #B1E0F9)',
             opacity: 0.8,
           }}
-          isLoading={isLoading}
+          isLoading={washesStatus === 'loading'}
         >
           Добавить
         </Button>
       </Form>
+      <Map center={[53.79462178802441, 87.15498449999993]} zoom={13}>
+        <TileLayer
+          attribution={
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          }
+          url={'https://tile.openstreetmap.org/{z}/{x}/{y}.png'}
+        />
+        {markerCoord && (
+          <Marker position={markerCoord} icon={MarkerIcon}>
+            <Popup>
+              Название: {fields?.name || '—'}
+              <br />
+              Город: {fields?.city || '—'}
+              <br />
+              Улица: {fields?.street || '—'}
+              <br />
+              Телефон: {fields?.phone || '—'}
+              <br />
+              Режим работы: {fields.startTime}:00 - {fields.endTime}:00
+            </Popup>
+          </Marker>
+        )}
+        <MapComponent setMarketCoord={setMarketCoord} />
+      </Map>
     </Container>
   );
 };
 
-export default CreateWash;
+export default connector(CreateWash);

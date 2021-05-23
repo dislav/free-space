@@ -4,7 +4,8 @@ import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../../store/rootReducer';
 import { getWashesRequest } from '../../store/washes/actions';
 
-import { Container, Titles } from './WashList.styled';
+import { Container } from './WashList.styled';
+import ListHeader from '../ListHeader/ListHeader';
 import WashCard from '../WashCard/WashCard';
 import WashCardSkeleton from '../WashCardSkeleton/WashCardSkeleton';
 
@@ -23,18 +24,15 @@ const WashList: React.FC<PropsFromRedux> = ({ washes, getWashesRequest }) => {
     getWashesRequest();
   }, []);
 
-  if (washes.status === 'failed')
+  if (washes.washesStatus.status === 'failed')
     return <Container>Ошибка загрузки данных.</Container>;
 
-  if (washes.status === 'loading')
+  if (washes.washesStatus.status === 'loading')
     return (
       <Container>
-        <Titles>
-          <div>Название</div>
-          <div>Город</div>
-          <div>Заявки за неделю</div>
-          <div>Статус</div>
-        </Titles>
+        <ListHeader
+          titles={['Название', 'Город', 'Заявки за неделю', 'Статус']}
+        />
         <WashCardSkeleton />
         <WashCardSkeleton />
         <WashCardSkeleton />
@@ -43,12 +41,9 @@ const WashList: React.FC<PropsFromRedux> = ({ washes, getWashesRequest }) => {
 
   return (
     <Container>
-      <Titles>
-        <div>Название</div>
-        <div>Город</div>
-        <div>Заявки за неделю</div>
-        <div>Статус</div>
-      </Titles>
+      <ListHeader
+        titles={['Название', 'Город', 'Заявки за неделю', 'Статус']}
+      />
       {washes.washes.map((wash, index) => (
         <WashCard key={index} {...wash} />
       ))}
