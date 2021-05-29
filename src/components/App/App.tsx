@@ -14,6 +14,7 @@ import Dashboard from '../../pages/Dashboard';
 import Login from '../../pages/Login';
 import CreateWash from '../../pages/CreateWash';
 import Promotions from '../../pages/Promotions';
+import Profile from '../../pages/Profile';
 
 const App: React.FC = () => {
   return (
@@ -25,6 +26,9 @@ const App: React.FC = () => {
               <Route path={'/login'}>
                 <Login />
               </Route>
+              <PrivateRoute path={'/profile'}>
+                <Profile />
+              </PrivateRoute>
               <PrivateRoute path={'/promotions'}>
                 <Promotions />
               </PrivateRoute>

@@ -1,8 +1,9 @@
 import React from 'react';
-import { Button, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 
 import { Container, Column } from './WashCard.styled';
 import { Wash } from '../../interfaces/types';
+import DropdownMenu from '../DropdownMenu/DropdownMenu';
+import DropdownMenuLink from '../DropdownMenuLink/DropdownMenuLink';
 
 const WashCard: React.FC<Wash> = ({ name }) => {
   return (
@@ -10,16 +11,13 @@ const WashCard: React.FC<Wash> = ({ name }) => {
       <Column>{name}</Column>
       <Column>16.05.2021</Column>
       <Column>17</Column>
-      <Column>
-        <Menu>
-          <MenuButton as={Button}>Меню</MenuButton>
-          <MenuList>
-            <MenuItem>Статистика</MenuItem>
-            <MenuItem>Редактировать</MenuItem>
-            <MenuItem>Архивировать</MenuItem>
-          </MenuList>
-        </Menu>
-      </Column>
+      <Column>Активна</Column>
+      <DropdownMenu>
+        <DropdownMenuLink>Статистика</DropdownMenuLink>
+        <DropdownMenuLink>Редактировать</DropdownMenuLink>
+        <hr />
+        <DropdownMenuLink>Архивировать</DropdownMenuLink>
+      </DropdownMenu>
     </Container>
   );
 };

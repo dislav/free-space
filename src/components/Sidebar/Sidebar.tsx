@@ -23,7 +23,7 @@ const Sidebar: React.FC = () => {
       <SidebarLink to={'/'}>Объекты</SidebarLink>
       <SidebarLink to={'/promotions'}>Акции</SidebarLink>
       <SidebarLink to={'/statistics'}>Статистика</SidebarLink>
-      <SidebarLink to={'/settings'}>Настройки</SidebarLink>
+      <SidebarLink to={'/profile'}>Настройки</SidebarLink>
       <Logout onClick={logout}>Выйти</Logout>
     </Container>
   );

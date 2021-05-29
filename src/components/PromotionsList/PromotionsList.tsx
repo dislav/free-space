@@ -13,6 +13,8 @@ const PromotionsList: React.FC = () => {
       <PromotionCardSkeleton />
       <PromotionCardSkeleton />
       <PromotionCard />
+      <PromotionCard />
+      <PromotionCard />
     </Container>
   );
 };

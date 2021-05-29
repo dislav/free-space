@@ -2,7 +2,9 @@ const theme = {
   fonts: {
     gilroy: 'Gilroy',
   },
-  variables: {},
+  variables: {
+    borderRadius: '1.125rem',
+  },
   breakpoints: {
     sm: '576px',
     md: '768px',
@@ -21,6 +23,9 @@ const theme = {
 
     blue10: '#E8F6FE',
     blue30: '#D2EAF7',
+
+    green20: '#A2D6DA',
+    green30: '#64B2B8',
   },
   typography: {},
 };
