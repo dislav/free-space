@@ -1,10 +1,10 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import cookie from 'cookie';
 
 import { Container, ContainerLogo, Logout } from './Sidebar.styled';
 import SidebarLink from '../SidebarLink/SidebarLink';
-import { ReactComponent as Logo } from '../../icons/logo.svg';
+import { Logo } from '../../icons/icons';
 
 const Sidebar: React.FC = () => {
   const history = useHistory();
@@ -18,11 +18,15 @@ const Sidebar: React.FC = () => {
   return (
     <Container>
       <ContainerLogo>
-        <Logo />
+        <Link to={'/'}>
+          <Logo />
+        </Link>
       </ContainerLogo>
       <SidebarLink to={'/'}>Объекты</SidebarLink>
       <SidebarLink to={'/promotions'}>Акции</SidebarLink>
       <SidebarLink to={'/statistics'}>Статистика</SidebarLink>
+      <SidebarLink to={'/services'}>Услуги</SidebarLink>
+      <SidebarLink to={'/orders'}>Заказы</SidebarLink>
       <SidebarLink to={'/profile'}>Настройки</SidebarLink>
       <Logout onClick={logout}>Выйти</Logout>
     </Container>

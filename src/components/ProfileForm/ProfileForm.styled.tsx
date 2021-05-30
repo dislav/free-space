@@ -20,6 +20,12 @@ export const Column = styled.div`
     margin-bottom: 30px;
   }
   
+  p {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 40px;
+  }
+  
   ${ProfileAvatar} {
     margin-bottom: 46px;
   }

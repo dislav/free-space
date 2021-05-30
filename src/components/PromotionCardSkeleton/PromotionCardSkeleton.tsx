@@ -1,7 +1,7 @@
 import React from 'react';
+import { Skeleton } from '@chakra-ui/react';
 
 import { Container } from './PromotionCardSkeleton.styled';
-import { Skeleton } from '@chakra-ui/react';
 
 const PromotionCardSkeleton: React.FC = () => {
   return (

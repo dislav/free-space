@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '@chakra-ui/react';
 import SignIn from '../components/SignIn/SignIn';
-import { ReactComponent as Logo } from '../icons/logo.svg';
+import { Logo } from '../icons/icons';
 
 const Login = () => {
   return (

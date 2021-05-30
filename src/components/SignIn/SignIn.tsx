@@ -27,7 +27,7 @@ const SignIn: React.FC<PropsFromRedux> = ({ setLoggedIn }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const { colors } = useTheme();
+  const { colors, variables } = useTheme();
 
   const history = useHistory();
 
@@ -72,7 +72,7 @@ const SignIn: React.FC<PropsFromRedux> = ({ setLoggedIn }) => {
             fontSize={'lg'}
             minH={'74px'}
             bg={colors.white}
-            borderRadius={'18px'}
+            borderRadius={variables.borderRadius}
             placeholder={'Логин'}
             {...register('login', {
               required: 'Обязательное поле',
@@ -86,7 +86,7 @@ const SignIn: React.FC<PropsFromRedux> = ({ setLoggedIn }) => {
             fontSize={'lg'}
             minH={'74px'}
             bg={colors.white}
-            borderRadius={'18px'}
+            borderRadius={variables.borderRadius}
             type={'password'}
             placeholder={'Пароль'}
             {...register('pass', {
@@ -98,10 +98,10 @@ const SignIn: React.FC<PropsFromRedux> = ({ setLoggedIn }) => {
         <Button
           w={'100%'}
           minH={'60px'}
-          bg={'linear-gradient(to right, #9FD4D8, #B1E0F9)'}
-          borderRadius={'18px'}
+          bg={variables.blueGradient}
+          borderRadius={variables.borderRadius}
           _hover={{
-            bg: 'linear-gradient(to right, #9FD4D8, #B1E0F9)',
+            bg: variables.blueGradient,
             opacity: 0.8,
           }}
           mb={'26px'}

@@ -56,7 +56,12 @@ const ProfileForm: React.FC = () => {
         </FormControl>
         <Button
           h={'60px'}
+          bg={variables.blueGradient}
           borderRadius={variables.borderRadius}
+          _hover={{
+            bg: variables.blueGradient,
+            opacity: 0.8,
+          }}
           type={'submit'}
         >
           Сохранить
@@ -64,6 +69,7 @@ const ProfileForm: React.FC = () => {
       </Column>
       <Column>
         <h2>Безопасность</h2>
+        <p>Вы можете сменить пароль. Введите старый пароль и задайте новый.</p>
         <Input
           h={'58px'}
           bg={colors.white}
