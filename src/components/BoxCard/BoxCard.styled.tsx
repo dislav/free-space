@@ -1,14 +1,14 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
+  position: relative;
   display: flex;
-  align-content: center;
-  max-height: 94px;
   background: ${({ theme }) => theme.variables.greenGradient};
-  border-radius: 18px;
+  border-radius: ${({ theme }) => theme.variables.borderRadius};
   padding: 38px 80px;
 `;
 
 export const Column = styled.div`
-  flex: 1;
+  flex: 1 1 100%;
+  padding-right: 40px;
 `;

@@ -1,12 +1,9 @@
-import React, { useState, useCallback } from 'react';
-import { Button } from '@chakra-ui/react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from 'styled-components';
+import { useFormContext } from 'react-hook-form';
+import { Button } from '@chakra-ui/react';
 
 import { Container, Image } from './ProfileAvatar.styled';
-
-interface IProfileAvatar {
-  image?: string;
-}
 
 const CameraIcon = () => {
   return (
@@ -32,28 +29,37 @@ const CameraIcon = () => {
   );
 };
 
-const ProfileAvatar: React.FC<IProfileAvatar> = ({ image }) => {
+const ProfileAvatar: React.FC = () => {
   const [url, setUrl] = useState('');
 
   const { colors, variables } = useTheme();
+  const { register, watch, setValue } = useFormContext();
 
-  const onChangeImage = (files: FileList | null) => {
-    if (!files || !Object.keys(files).length) return;
-    setUrl(URL.createObjectURL(files[0]));
+  const image = watch('image', '');
+
+  useEffect(() => {
+    if (image) setUrl(URL.createObjectURL(image[0]));
+
+    return () => {
+      setUrl('');
+    };
+  }, [image]);
+
+  const clearImage = () => {
+    setValue('image', '');
   };
-
-  const clearImage = useCallback(() => setUrl(''), []);
 
   return (
     <Container>
       <Image>
-        {url || image ? <img src={url || image} alt="" /> : <CameraIcon />}
+        {url ? <img src={url} alt="" /> : <CameraIcon />}
         <input
-          type="file"
-          onChange={({ target }) => onChangeImage(target.files)}
+          type={'file'}
+          accept={'image/jpg,image/png,image/jpeg'}
+          {...register('image')}
         />
       </Image>
-      {(url || image) && (
+      {image && (
         <Button
           border={`2px solid ${colors.blue30}`}
           borderRadius={variables.borderRadius}

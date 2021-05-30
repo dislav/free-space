@@ -24,7 +24,7 @@ const Sidebar: React.FC = () => {
       </ContainerLogo>
       <SidebarLink to={'/'}>Объекты</SidebarLink>
       <SidebarLink to={'/promotions'}>Акции</SidebarLink>
-      <SidebarLink to={'/statistics'}>Статистика</SidebarLink>
+      <SidebarLink to={'/boxes'}>Боксы</SidebarLink>
       <SidebarLink to={'/services'}>Услуги</SidebarLink>
       <SidebarLink to={'/orders'}>Заказы</SidebarLink>
       <SidebarLink to={'/profile'}>Настройки</SidebarLink>

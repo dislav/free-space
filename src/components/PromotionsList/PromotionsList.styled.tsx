@@ -1,7 +1,7 @@
 import styled from 'styled-components';
+
 import { Container as ListHeader, Column as ListHeaderColumn } from '../ListHeader/ListHeader.styled';
 import { Container as PromotionCard } from '../PromotionCard/PromotionCard.styled';
-import { Container as PromotionCardSkeleton } from '../PromotionCardSkeleton/PromotionCardSkeleton.styled';
 
 export const Container = styled.div`
   display: flex;
@@ -21,7 +21,7 @@ export const Container = styled.div`
     }
   }
   
-  ${PromotionCard}, ${PromotionCardSkeleton} {
+  ${PromotionCard} {
     margin-bottom: 20px;
 
     &:last-child {

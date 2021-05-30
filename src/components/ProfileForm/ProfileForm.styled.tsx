@@ -20,7 +20,7 @@ export const Column = styled.div`
     margin-bottom: 30px;
   }
   
-  p {
+  > p {
     font-size: 20px;
     font-weight: 500;
     margin-bottom: 40px;
@@ -28,5 +28,21 @@ export const Column = styled.div`
   
   ${ProfileAvatar} {
     margin-bottom: 46px;
+  }
+`;
+
+export const Time = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
+
+  p {
+    margin-bottom: 16px;
+  }
+
+  span {
+    color: #9CCDD0;
+    margin: 0 10px;
   }
 `;

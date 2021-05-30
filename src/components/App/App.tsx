@@ -18,6 +18,7 @@ import Profile from '../../pages/Profile';
 import Orders from '../../pages/Orders';
 import Services from '../../pages/Services';
 import CreateService from '../../pages/CreateService';
+import Boxes from '../../pages/Boxes';
 
 const App: React.FC = () => {
   return (
@@ -34,6 +35,9 @@ const App: React.FC = () => {
               </PrivateRoute>
               <PrivateRoute path={'/promotions'}>
                 <Promotions />
+              </PrivateRoute>
+              <PrivateRoute path={'/boxes'}>
+                <Boxes />
               </PrivateRoute>
               <PrivateRoute path={'/services'}>
                 <Services />

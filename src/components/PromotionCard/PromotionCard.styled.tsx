@@ -9,8 +9,8 @@ export const Column = styled.div`
 export const Container = styled.div`
   position: relative;
   display: flex;
-  background-color: ${({ theme }) => theme.colors.blue10};
-  border-radius: 18px;
+  background: ${({ theme }) => theme.variables.greenGradient};
+  border-radius: ${({ theme }) => theme.variables.borderRadius};
   padding: 38px 80px;
 
   ${Column}:first-child {

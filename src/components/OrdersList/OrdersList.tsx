@@ -3,7 +3,6 @@ import React from 'react';
 import { Container } from './OrdersList.styled';
 import ListHeader from '../ListHeader/ListHeader';
 import OrderCard from '../OrderCard/OrderCard';
-import OrderCardSkeleton from '../OrderCardSkeleton/OrderCardSkeleton';
 
 const OrdersList: React.FC = () => {
   return (
@@ -18,9 +17,6 @@ const OrdersList: React.FC = () => {
           'Цена',
         ]}
       />
-      <OrderCardSkeleton />
-      <OrderCardSkeleton />
-      <OrderCardSkeleton />
       <OrderCard />
       <OrderCard />
       <OrderCard />

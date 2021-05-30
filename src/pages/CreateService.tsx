@@ -5,7 +5,7 @@ import ServiceForm from '../components/ServiceForm/ServiceForm';
 
 const CreateService = () => {
   return (
-    <Layout>
+    <Layout title={'Услуги - Добавление'}>
       <ServiceForm />
     </Layout>
   );

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const Container = styled.form`
   position: relative;
   display: flex;
+  align-items: flex-start;
   justify-content: space-between;
   background-color: ${({ theme }) => theme.colors.blue10};
   border-radius: ${({ theme }) => theme.variables.borderRadius};
@@ -16,5 +17,8 @@ export const Column = styled.div`
 
   &:last-child {
     width: 60%;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
   }
 `;
