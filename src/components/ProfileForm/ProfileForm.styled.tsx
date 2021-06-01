@@ -19,13 +19,13 @@ export const Column = styled.div`
     font-weight: 700;
     margin-bottom: 30px;
   }
-  
+
   > p {
     font-size: 20px;
     font-weight: 500;
     margin-bottom: 40px;
   }
-  
+
   ${ProfileAvatar} {
     margin-bottom: 46px;
   }
@@ -42,7 +42,7 @@ export const Time = styled.div`
   }
 
   span {
-    color: #9CCDD0;
+    color: #9ccdd0;
     margin: 0 10px;
   }
 `;

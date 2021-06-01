@@ -11,7 +11,7 @@ export const CREATE_WASH_FAILURE = 'washes/createWashFailure';
 export type WashesState = {
   washesStatus: ReduxStatus;
   washes: Wash[];
-}
+};
 
 // Fetch washes
 interface GetWashesRequestAction {

@@ -8,7 +8,7 @@ export const Container = styled.div`
   //background-color: ${({ theme }) => theme.colors.blue10};
   border-radius: 18px;
   padding: 38px 80px;
-  
+
   ${DropdownMenu} {
     position: absolute;
     top: 50%;

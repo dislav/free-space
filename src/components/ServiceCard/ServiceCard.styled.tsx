@@ -7,7 +7,7 @@ export const Container = styled.div`
   background: ${({ theme }) => theme.variables.greenGradient};
   border-radius: 18px;
   padding: 38px 80px;
-  
+
   ${DropdownMenu} {
     position: absolute;
     top: 50%;
@@ -18,11 +18,11 @@ export const Container = styled.div`
 
 export const Column = styled.div`
   padding-right: 40px;
-  
+
   &:nth-child(1) {
     flex: 1 1 25%;
   }
-  
+
   &:nth-child(2) {
     flex: 1 1 15%;
   }
@@ -30,7 +30,7 @@ export const Column = styled.div`
   &:nth-child(3) {
     flex: 1 1 50%;
   }
-  
+
   &:nth-child(4) {
     flex: 1 1 10%;
   }

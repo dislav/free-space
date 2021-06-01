@@ -1,42 +1,32 @@
 import styled from 'styled-components';
 import { up } from 'styled-breakpoints';
+import { font } from '../../styles/utils';
 
 export const Container = styled.div`
-  background-color: ${({ theme }) => theme.colors.blue10};
-
-  ${up('xl')} {
-    width: 520px;
-    max-width: 520px;
-    border-radius: 18px;
-    padding: 3.75rem 5.625rem;
-  }
-`;
-
-export const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: calc(100% - 32px);
+  background-color: ${({ theme }) => theme.colors.blue10};
+  border-radius: ${({ theme }) => theme.variables.borderRadius};
+  padding: 40px 14px;
+
+  ${up('md')} {
+    width: 520px;
+    max-width: 520px;
+    padding: 3.75rem 5.625rem;
+  }
 
   h1 {
+    ${font('2xl')}
+    font-weight: bold;
+    margin-bottom: 16px;
+
     ${up('xl')} {
-      font-size: 2.25rem;
-      font-weight: bold;
+      ${font('3xl')}
       margin-bottom: 46px;
     }
   }
-
-  p {
-    ${up('xl')} {
-      font-size: 1.25rem;
-      margin-bottom: 40px;
-    }
-  }
-`;
-
-export const TextError = styled.p`
-  color: red;
-  font-size: 20px;
-  font-weight: bold;
 `;
 
 export const Link = styled.div`

@@ -21,4 +21,4 @@ export const createWash = (
     group: boolean;
     link_wash: boolean;
   }>
-> => axios.post(`${apiUrl}/wash/create`, data)
+> => axios.post(`${apiUrl}/wash/create`, data);

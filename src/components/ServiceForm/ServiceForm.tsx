@@ -119,15 +119,15 @@ const ServiceForm = () => {
         <FormControl isInvalid={!!errors.stationWagon} w={'45%'}>
           <FormLabel>Цена для грузовика, ₽</FormLabel>
           <Input
-              bg={colors.white}
-              h={'60px'}
-              borderRadius={variables.borderRadius}
-              {...register('stationWagon', {
-                pattern: {
-                  value: /^\d+$/,
-                  message: 'Значение должно быть число',
-                },
-              })}
+            bg={colors.white}
+            h={'60px'}
+            borderRadius={variables.borderRadius}
+            {...register('stationWagon', {
+              pattern: {
+                value: /^\d+$/,
+                message: 'Значение должно быть число',
+              },
+            })}
           />
           <FormErrorMessage>{errors.stationWagon?.message}</FormErrorMessage>
         </FormControl>

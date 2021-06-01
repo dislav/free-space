@@ -5,10 +5,7 @@ const DropdownMenu: React.FC = ({ children }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  const openMenu = useCallback(
-      () => setIsOpen(true),
-      [],
-  );
+  const openMenu = useCallback(() => setIsOpen(true), []);
 
   return (
     <Container ref={containerRef}>

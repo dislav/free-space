@@ -16,7 +16,7 @@ export const Container = styled.div`
   ${Column}:first-child {
     flex: 1 1 60%;
   }
-  
+
   ${Column}:nth-child(2) {
     flex: 1 1 40%;
   }
@@ -24,7 +24,7 @@ export const Container = styled.div`
   ${Column}:nth-child(3) {
     flex: 1 1 140%;
   }
-  
+
   ${DropdownMenu} {
     position: absolute;
     top: 50%;

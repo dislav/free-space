@@ -8,7 +8,7 @@ export type ActionSaga<T extends {} = any> = {
 export type ReduxStatus = {
   status: PromiseStatus;
   error?: string | null;
-}
+};
 
 export type Response<T extends {} = any> = {
   status: boolean;

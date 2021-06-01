@@ -16,13 +16,13 @@ export const Image = styled.label`
   margin-right: 38px;
   overflow: hidden;
   cursor: pointer;
-  
+
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-  
+
   input {
     display: none;
     pointer-events: none;

@@ -33,15 +33,15 @@ export const Menu = styled.div`
   padding: 14px 16px;
   transform: translate(-50%, 10px);
   z-index: 10;
-  
+
   ${DropdownMenuLink} {
     margin-bottom: 10px;
-    
+
     &:last-child {
       margin-bottom: 0;
     }
   }
-  
+
   hr {
     width: 100%;
     height: 1px;

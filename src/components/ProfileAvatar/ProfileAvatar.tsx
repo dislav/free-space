@@ -35,18 +35,15 @@ const ProfileAvatar: React.FC = () => {
   const { colors, variables } = useTheme();
   const { register, watch, setValue } = useFormContext();
 
-  const image = watch('image', '');
+  const image = watch('image', null);
 
   useEffect(() => {
-    if (image) setUrl(URL.createObjectURL(image[0]));
-
-    return () => {
-      setUrl('');
-    };
+    if (image?.length) setUrl(URL.createObjectURL(image[0]));
   }, [image]);
 
   const clearImage = () => {
     setValue('image', '');
+    setUrl('');
   };
 
   return (
@@ -59,7 +56,7 @@ const ProfileAvatar: React.FC = () => {
           {...register('image')}
         />
       </Image>
-      {image && (
+      {url && (
         <Button
           border={`2px solid ${colors.blue30}`}
           borderRadius={variables.borderRadius}

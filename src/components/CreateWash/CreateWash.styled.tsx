@@ -25,16 +25,16 @@ export const FormTime = styled.div`
   p {
     margin-bottom: 16px;
   }
-  
+
   span {
-    color: #9CCDD0;
+    color: #9ccdd0;
     margin: 0 10px;
   }
 `;
 
 export const Map = styled(MapContainer)`
   overflow: hidden;
-  
+
   ${up('xl')} {
     width: 65%;
     max-height: 500px;

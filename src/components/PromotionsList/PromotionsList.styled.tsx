@@ -1,12 +1,15 @@
 import styled from 'styled-components';
 
-import { Container as ListHeader, Column as ListHeaderColumn } from '../ListHeader/ListHeader.styled';
+import {
+  Container as ListHeader,
+  Column as ListHeaderColumn,
+} from '../ListHeader/ListHeader.styled';
 import { Container as PromotionCard } from '../PromotionCard/PromotionCard.styled';
 
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  
+
   ${ListHeader} {
     ${ListHeaderColumn}:first-child {
       flex: 1 1 60%;
@@ -20,7 +23,7 @@ export const Container = styled.div`
       flex: 1 1 140%;
     }
   }
-  
+
   ${PromotionCard} {
     margin-bottom: 20px;
 
