@@ -9,6 +9,7 @@ import {
   Textarea,
   Button,
 } from '@chakra-ui/react';
+import MediaQuery from 'react-responsive';
 
 import { Container, Column } from './ServiceForm.styled';
 
@@ -28,7 +29,7 @@ const ServiceForm = () => {
     formState: { errors },
   } = useForm<Inputs>();
 
-  const { colors, variables } = useTheme();
+  const { colors, variables, breakpoints } = useTheme();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     console.log(data);
@@ -56,22 +57,28 @@ const ServiceForm = () => {
           placeholder={'Описание услуги'}
           {...register('description')}
         />
-        <Button
-          w={'100%'}
-          h={'60px'}
-          bg={variables.blueGradient}
-          borderRadius={variables.borderRadius}
-          _hover={{
-            bg: variables.blueGradient,
-            opacity: 0.8,
-          }}
-          type={'submit'}
-        >
-          Добавить
-        </Button>
+        <MediaQuery minWidth={breakpoints.xl}>
+          <Button
+            w={'100%'}
+            h={'60px'}
+            bg={variables.blueGradient}
+            borderRadius={variables.borderRadius}
+            _hover={{
+              bg: variables.blueGradient,
+              opacity: 0.8,
+            }}
+            type={'submit'}
+          >
+            Добавить
+          </Button>
+        </MediaQuery>
       </Column>
       <Column>
-        <FormControl isInvalid={!!errors.hatchback} w={'45%'} mb={'16px'}>
+        <FormControl
+          isInvalid={!!errors.hatchback}
+          w={['100%', '100%', '45%']}
+          mb={'16px'}
+        >
           <FormLabel>Цена для хэтчбека, ₽</FormLabel>
           <Input
             bg={colors.white}
@@ -86,7 +93,11 @@ const ServiceForm = () => {
           />
           <FormErrorMessage>{errors.hatchback?.message}</FormErrorMessage>
         </FormControl>
-        <FormControl isInvalid={!!errors.sedan} w={'45%'} mb={'16px'}>
+        <FormControl
+          isInvalid={!!errors.sedan}
+          w={['100%', '100%', '45%']}
+          mb={'16px'}
+        >
           <FormLabel>Цена для седана, ₽</FormLabel>
           <Input
             bg={colors.white}
@@ -101,7 +112,7 @@ const ServiceForm = () => {
           />
           <FormErrorMessage>{errors.sedan?.message}</FormErrorMessage>
         </FormControl>
-        <FormControl isInvalid={!!errors.truck} w={'45%'}>
+        <FormControl isInvalid={!!errors.truck} w={['100%', '100%', '45%']}>
           <FormLabel>Цена для грузовика, ₽</FormLabel>
           <Input
             bg={colors.white}
@@ -116,7 +127,10 @@ const ServiceForm = () => {
           />
           <FormErrorMessage>{errors.truck?.message}</FormErrorMessage>
         </FormControl>
-        <FormControl isInvalid={!!errors.stationWagon} w={'45%'}>
+        <FormControl
+          isInvalid={!!errors.stationWagon}
+          w={['100%', '100%', '45%']}
+        >
           <FormLabel>Цена для грузовика, ₽</FormLabel>
           <Input
             bg={colors.white}
@@ -131,6 +145,21 @@ const ServiceForm = () => {
           />
           <FormErrorMessage>{errors.stationWagon?.message}</FormErrorMessage>
         </FormControl>
+        <MediaQuery maxWidth={breakpoints.xl}>
+          <Button
+            w={'100%'}
+            h={'60px'}
+            bg={variables.blueGradient}
+            borderRadius={variables.borderRadius}
+            _hover={{
+              bg: variables.blueGradient,
+              opacity: 0.8,
+            }}
+            type={'submit'}
+          >
+            Добавить
+          </Button>
+        </MediaQuery>
       </Column>
     </Container>
   );

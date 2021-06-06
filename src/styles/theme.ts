@@ -25,11 +25,13 @@ const theme = {
 
     blue10: '#E8F6FE',
     blue30: '#D2EAF7',
+    blue40: '#ADDEF1',
 
     green20: '#A2D6DA',
     green30: '#64B2B8',
   },
   fontSize: {
+    xs: [10, 12],
     sm: [14, 20],
     base: [16, 24],
     lg: [20, 28],

@@ -1,28 +1,22 @@
 import React, { useEffect } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
 
-import { RootState } from '../../store/rootReducer';
 import { getWashesRequest } from '../../store/washes/actions';
+import { getWashesState } from '../../store/washes/selectors';
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 
 import { Container } from './WashList.styled';
 import ListHeader from '../ListHeader/ListHeader';
 import WashCard from '../WashCard/WashCard';
 import WashCardSkeleton from '../WashCardSkeleton/WashCardSkeleton';
+import SearchForm from '../SearchForm/SearchForm';
 
-const mapStateToProps = ({ washes }: RootState) => ({ washes });
+const WashList: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const washes = useAppSelector(getWashesState);
 
-const mapDispatchToProps = {
-  getWashesRequest,
-};
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-const WashList: React.FC<PropsFromRedux> = ({ washes, getWashesRequest }) => {
   useEffect(() => {
-    getWashesRequest();
-  }, []);
+    dispatch(getWashesRequest());
+  }, [dispatch]);
 
   if (washes.washesStatus.status === 'failed')
     return <Container>Ошибка загрузки данных.</Container>;
@@ -41,6 +35,7 @@ const WashList: React.FC<PropsFromRedux> = ({ washes, getWashesRequest }) => {
 
   return (
     <Container>
+      <SearchForm />
       <ListHeader
         titles={['Название', 'Город', 'Заявки за неделю', 'Статус']}
       />
@@ -51,4 +46,4 @@ const WashList: React.FC<PropsFromRedux> = ({ washes, getWashesRequest }) => {
   );
 };
 
-export default connector(WashList);
+export default WashList;

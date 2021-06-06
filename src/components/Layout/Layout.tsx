@@ -1,6 +1,8 @@
 import React from 'react';
-import { Container, Content, Header } from './Layout.styled';
-import Sidebar from '../Sidebar/Sidebar';
+import { Helmet } from 'react-helmet';
+
+import { Container, Header } from './Layout.styled';
+import Sandwich from '../Sandwich/Sandwich';
 
 interface ILayout {
   title?: string;
@@ -10,14 +12,20 @@ interface ILayout {
 const Layout: React.FC<ILayout> = ({ title, action, children }) => {
   return (
     <Container>
-      <Sidebar />
-      <Content>
-        <Header>
-          {title && <h1>{title}</h1>}
-          {action}
-        </Header>
-        {children}
-      </Content>
+      <Helmet>
+        <meta charSet={'utf-8'} />
+        <title>Free Space{title ? ` — ${title}` : ''}</title>
+        <meta
+          name={'description'}
+          content={'Личный кабинет агрегатора автомоек'}
+        />
+      </Helmet>
+      <Header>
+        <Sandwich />
+        {title && <h1>{title}</h1>}
+        {action}
+      </Header>
+      {children}
     </Container>
   );
 };

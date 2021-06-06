@@ -5,11 +5,11 @@ import { Wash } from '../../interfaces/types';
 import DropdownMenu from '../DropdownMenu/DropdownMenu';
 import DropdownMenuLink from '../DropdownMenuLink/DropdownMenuLink';
 
-const WashCard: React.FC<Wash> = ({ name }) => {
+const WashCard: React.FC<Wash> = ({ name, city }) => {
   return (
     <Container>
       <Column>{name}</Column>
-      <Column>16.05.2021</Column>
+      <Column>{city}</Column>
       <Column>17</Column>
       <Column>Активна</Column>
       <DropdownMenu>

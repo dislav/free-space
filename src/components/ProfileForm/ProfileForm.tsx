@@ -8,6 +8,8 @@ import {
   Button,
   Select,
 } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
+import MediaQuery from 'react-responsive';
 
 import { Container, Column, Time } from './ProfileForm.styled';
 import ProfileAvatar from '../ProfileAvatar/ProfileAvatar';
@@ -33,7 +35,9 @@ const ProfileForm: React.FC = () => {
     watch,
   } = methods;
 
-  const { colors, variables } = useTheme();
+  const { t } = useTranslation('Profile');
+  const { colors, variables, breakpoints } = useTheme();
+
   const newPassword = watch('newPassword', '');
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
@@ -44,48 +48,57 @@ const ProfileForm: React.FC = () => {
     <Container onSubmit={handleSubmit(onSubmit)}>
       <FormProvider {...methods}>
         <Column>
-          <h2>Информация о мойке</h2>
+          <h2>{t('Washing information')}</h2>
           <ProfileAvatar />
-          <FormControl isInvalid={!!errors.name} mb={'32px'}>
+          <FormControl isInvalid={!!errors.name} mb={['20px', '20px', '32px']}>
             <Input
-              h={'58px'}
+              h={['44px', '44px', '58px']}
               bg={colors.white}
               borderRadius={variables.borderRadius}
-              placeholder={'Название автомойки'}
-              {...register('name', { required: 'Обязательное поле' })}
+              placeholder={t('Car wash name')}
+              {...register('name', {
+                required: `${t('Required field')}`,
+              })}
             />
             <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
           </FormControl>
-          <FormControl isInvalid={!!errors.address} mb={'32px'}>
+          <FormControl
+            isInvalid={!!errors.address}
+            mb={['20px', '20px', '32px']}
+          >
             <Input
-              h={'58px'}
+              h={['44px', '44px', '58px']}
               bg={colors.white}
               borderRadius={variables.borderRadius}
-              placeholder={'Адрес'}
-              {...register('address', { required: 'Обязательное поле' })}
+              placeholder={t('Address')}
+              {...register('address', {
+                required: `${t('Required field')}`,
+              })}
             />
             <FormErrorMessage>{errors.address?.message}</FormErrorMessage>
           </FormControl>
-          <FormControl isInvalid={!!errors.phone} mb={'32px'}>
+          <FormControl isInvalid={!!errors.phone} mb={['20px', '20px', '32px']}>
             <Input
-              h={'58px'}
+              h={['44px', '44px', '58px']}
               bg={colors.white}
               borderRadius={variables.borderRadius}
-              placeholder={'Телефон'}
-              {...register('phone', { required: 'Обязательное поле' })}
+              placeholder={t('Phone')}
+              {...register('phone', {
+                required: `${t('Required field')}`,
+              })}
             />
             <FormErrorMessage>{errors.phone?.message}</FormErrorMessage>
           </FormControl>
           <Time>
-            <p>Режим работы (начало - окончание рабочего дня)</p>
+            <p>{t('Working hours (start - end of the working day)')}</p>
             <FormControl isInvalid={!!errors.startTime} w={'30%'}>
               <Select
-                minH={'44px'}
-                borderRadius={'18px'}
+                h={['44px', '44px', '58px']}
+                borderRadius={variables.borderRadius}
                 defaultValue={'01'}
-                bg={'white'}
+                bg={colors.white}
                 {...register('startTime', {
-                  required: 'Обязательное поле',
+                  required: `${t('Required field')}`,
                 })}
               >
                 <option value="01">01</option>
@@ -96,12 +109,12 @@ const ProfileForm: React.FC = () => {
             <span>—</span>
             <FormControl isInvalid={!!errors.endTime} w={'30%'}>
               <Select
-                minH={'44px'}
-                borderRadius={'18px'}
+                h={['44px', '44px', '58px']}
+                borderRadius={variables.borderRadius}
                 defaultValue={'01'}
-                bg={'white'}
+                bg={colors.white}
                 {...register('endTime', {
-                  required: 'Обязательное поле',
+                  required: `${t('Required field')}`,
                 })}
               >
                 <option value="01">01</option>
@@ -110,65 +123,89 @@ const ProfileForm: React.FC = () => {
               <FormErrorMessage>{errors.endTime?.message}</FormErrorMessage>
             </FormControl>
           </Time>
-          <Button
-            h={'60px'}
-            bg={variables.blueGradient}
-            borderRadius={variables.borderRadius}
-            _hover={{
-              bg: variables.blueGradient,
-              opacity: 0.8,
-            }}
-            type={'submit'}
-          >
-            Сохранить
-          </Button>
+          <MediaQuery minWidth={breakpoints.xl}>
+            <Button
+              h={['50px', '50px', '60px']}
+              bg={variables.blueGradient}
+              borderRadius={variables.borderRadius}
+              _hover={{
+                bg: variables.blueGradient,
+                opacity: 0.8,
+              }}
+              type={'submit'}
+            >
+              {t('Save')}
+            </Button>
+          </MediaQuery>
         </Column>
         <Column>
-          <h2>Безопасность</h2>
+          <h2>{t('Safety')}</h2>
           <p>
-            Вы можете сменить пароль. Введите старый пароль и задайте новый.
+            {t(
+              'You can change your password. Enter the old password and set a new one.'
+            )}
           </p>
           <Input
-            h={'58px'}
+            h={['44px', '44px', '58px']}
             bg={colors.white}
             borderRadius={variables.borderRadius}
-            mb={'32px'}
+            mb={['20px', '20px', '32px']}
             type={'password'}
-            placeholder={'Старый пароль'}
+            placeholder={t('Old password')}
             {...register('oldPassword')}
           />
-          <FormControl isInvalid={!!errors.newPassword} mb={'32px'}>
+          <FormControl
+            isInvalid={!!errors.newPassword}
+            mb={['20px', '20px', '32px']}
+          >
             <Input
-              h={'58px'}
+              h={['44px', '44px', '58px']}
               bg={colors.white}
               borderRadius={variables.borderRadius}
               type={'password'}
-              placeholder={'Новый пароль'}
+              placeholder={t('New password')}
               {...register('newPassword', {
                 minLength: {
                   value: 6,
-                  message: 'Минимальная длина пароля 6 символов',
+                  message: `${t('Minimum value length')} 6`,
                 },
               })}
             />
             <FormErrorMessage>{errors.newPassword?.message}</FormErrorMessage>
           </FormControl>
-          <FormControl isInvalid={!!errors.confirmPassword} mb={'32px'}>
+          <FormControl
+            isInvalid={!!errors.confirmPassword}
+            mb={['20px', '20px', '32px']}
+          >
             <Input
-              h={'58px'}
+              h={['44px', '44px', '58px']}
               bg={colors.white}
               borderRadius={variables.borderRadius}
               type={'password'}
-              placeholder={'Подтверждение пароля'}
+              placeholder={t('Password confirmation')}
               {...register('confirmPassword', {
                 validate: (value) =>
-                  value === newPassword || 'Пароли не совпадают',
+                  value === newPassword || `${t('Password mismatch')}`,
               })}
             />
             <FormErrorMessage>
               {errors.confirmPassword?.message}
             </FormErrorMessage>
           </FormControl>
+          <MediaQuery maxWidth={breakpoints.xl}>
+            <Button
+              h={['50px', '50px', '60px']}
+              bg={variables.blueGradient}
+              borderRadius={variables.borderRadius}
+              _hover={{
+                bg: variables.blueGradient,
+                opacity: 0.8,
+              }}
+              type={'submit'}
+            >
+              {t('Save')}
+            </Button>
+          </MediaQuery>
         </Column>
       </FormProvider>
     </Container>

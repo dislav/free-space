@@ -1,21 +1,12 @@
 import React from 'react';
 import { Route, Redirect, RouteProps } from 'react-router-dom';
-import { connect, ConnectedProps } from 'react-redux';
-import { RootState } from '../../store/rootReducer';
 
-const mapStateToProps = ({ profile }: RootState) => ({ profile });
+import { useAppSelector } from '../../hooks/hooks';
+import { getIsLoggedIn } from '../../store/profile/selectors';
 
-const connector = connect(mapStateToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-const PrivateRoute: React.FC<RouteProps & PropsFromRedux> = ({
-  children,
-  profile,
-}) => {
-  return (
-    <Route>{profile.loggedIn ? children : <Redirect to={'/login'} />}</Route>
-  );
+const PrivateRoute: React.FC<RouteProps> = ({ children }) => {
+  const isLoggedIn = useAppSelector(getIsLoggedIn);
+  return <Route>{isLoggedIn ? children : <Redirect to={'/login'} />}</Route>;
 };
 
-export default connector(PrivateRoute);
+export default PrivateRoute;

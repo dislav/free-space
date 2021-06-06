@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
 import { useTheme } from 'styled-components';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import {
@@ -12,21 +11,11 @@ import {
 import { TileLayer, Marker, Popup, useMapEvent } from 'react-leaflet';
 import { DivIcon, LatLng } from 'leaflet';
 
-import { Container, Form, FormTime, Map } from './CreateWash.styled';
-import { RootState } from '../../store/rootReducer';
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
+import { getWashesState } from '../../store/washes/selectors';
 import { createWashRequest } from '../../store/washes/actions';
 
-const mapStateToProps = ({ washes }: RootState) => ({
-  washesStatus: washes.washesStatus.status,
-});
-
-const mapDispatchToProps = {
-  createWashRequest,
-};
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
+import { Container, Form, FormTime, Map } from './CreateWash.styled';
 
 interface Inputs {
   name: string;
@@ -69,16 +58,16 @@ const MapComponent: React.FC<{ setMarketCoord: (latlng: LatLng) => void }> = ({
   return null;
 };
 
-const CreateWash: React.FC<PropsFromRedux> = ({
-  washesStatus,
-  createWashRequest,
-}) => {
+const CreateWash: React.FC = () => {
   const {
     handleSubmit,
     register,
     formState: { errors },
     watch,
   } = useForm<Inputs>();
+
+  const dispatch = useAppDispatch();
+  const { washesStatus } = useAppSelector(getWashesState);
 
   const [markerCoord, setMarketCoord] = useState<LatLng>();
 
@@ -98,7 +87,7 @@ const CreateWash: React.FC<PropsFromRedux> = ({
       formData.append(key, value);
     });
 
-    createWashRequest(formData);
+    dispatch(createWashRequest(formData));
   };
 
   return (
@@ -198,7 +187,7 @@ const CreateWash: React.FC<PropsFromRedux> = ({
             bg: 'linear-gradient(to right, #9FD4D8, #B1E0F9)',
             opacity: 0.8,
           }}
-          isLoading={washesStatus === 'loading'}
+          isLoading={washesStatus.status === 'loading'}
         >
           Добавить
         </Button>
@@ -231,4 +220,4 @@ const CreateWash: React.FC<PropsFromRedux> = ({
   );
 };
 
-export default connector(CreateWash);
+export default CreateWash;

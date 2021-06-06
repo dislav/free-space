@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { up } from 'styled-breakpoints';
 import { rgba } from 'polished';
 
 import { Container as DropdownMenuLink } from '../DropdownMenuLink/DropdownMenuLink.styled';
@@ -13,7 +14,7 @@ export const Icon = styled.div`
   justify-content: center;
   width: 30px;
   height: 30px;
-  background-color: ${({ theme }) => theme.colors.green20};
+  background-color: ${({ theme }) => rgba(theme.colors.green20, 0.8)};
   border-radius: 50%;
   cursor: pointer;
 
@@ -26,13 +27,19 @@ export const Icon = styled.div`
 
 export const Menu = styled.div`
   position: absolute;
-  left: 50%;
+  right: 0;
   background-color: ${({ theme }) => theme.colors.white};
   border-radius: ${({ theme }) => theme.variables.borderRadius};
   box-shadow: 0 0 20px ${({ theme }) => rgba(theme.colors.black, 0.2)};
   padding: 14px 16px;
-  transform: translate(-50%, 10px);
+  transform: translateY(10px);
   z-index: 10;
+
+  ${up('xl')} {
+    left: 50%;
+    right: auto;
+    transform: translate(-50%, 10px);
+  }
 
   ${DropdownMenuLink} {
     margin-bottom: 10px;

@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react';
 
 import { Container, Link } from './SignIn.styled';
 import AuthForm from '../AuthForm/AuthForm';
+import RegisterForm from '../RegisterForm/RegisterForm';
 
 const SignIn: React.FC = () => {
   const [authType, setAuthType] = useState('login');
@@ -16,7 +17,7 @@ const SignIn: React.FC = () => {
       {
         {
           login: <AuthForm />,
-          register: <div>Register</div>,
+          register: <RegisterForm />,
         }[authType]
       }
       <Link onClick={switchAuthType}>Запросить доступ в кабинет</Link>

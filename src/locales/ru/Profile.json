@@ -1,0 +1,16 @@
+{
+  "Washing information": "Информация о мойке",
+  "Safety": "Безопасность",
+  "Working hours (start - end of the working day)": "Режим работы (начало - окончание рабочего дня)",
+  "You can change your password. Enter the old password and set a new one.": "Вы можете сменить пароль. Введите старый пароль и задайте новый.",
+  "Car wash name": "Название автомойки",
+  "Address": "Адрес",
+  "Phone": "Телефон",
+  "Old password": "Старый пароль",
+  "New password": "Новый пароль",
+  "Password confirmation": "Подтверждение пароля",
+  "Save": "Сохранить",
+  "Required field": "Обязательное поле",
+  "Minimum value length": "Минимальная длина значения",
+  "Password mismatch": "Пароли не совпадают"
+}

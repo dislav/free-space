@@ -14,7 +14,9 @@ const OrderCard: React.FC = () => {
         <Tag>Полировка кузова</Tag>
       </Column>
       <Column>+7 (344) 443 34 33</Column>
-      <Column>1</Column>
+      <Column>
+        <span>Бокс #</span>1
+      </Column>
       <Column>920 ₽</Column>
       <DropdownMenu>
         <DropdownMenuLink>Принять</DropdownMenuLink>

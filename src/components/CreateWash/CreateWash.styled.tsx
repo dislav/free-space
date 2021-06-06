@@ -6,7 +6,11 @@ export const Container = styled.div`
   display: flex;
   background-color: ${({ theme }) => theme.colors.blue10};
   border-radius: 18px;
-  padding: 76px 80px;
+  padding: 40px 12px;
+
+  ${up('xl')} {
+    padding: 76px 80px;
+  }
 `;
 
 export const Form = styled.form`

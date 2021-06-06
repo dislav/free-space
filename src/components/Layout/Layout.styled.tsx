@@ -1,36 +1,45 @@
 import styled from 'styled-components';
-import { Container as Sidebar } from '../Sidebar/Sidebar.styled';
 import { up } from 'styled-breakpoints';
+
+import { font } from '../../styles/utils';
 
 export const Container = styled.div`
   position: relative;
-  display: flex;
-
-  ${Sidebar} {
-    height: 100vh;
-    min-width: 420px;
-  }
-`;
-
-export const Content = styled.div`
-  position: relative;
+  padding: 40px 16px;
 
   ${up('xl')} {
-    width: 1280px;
-    max-width: 1280px;
-    margin: 0 auto;
-    padding-top: 80px;
+    margin-left: 280px;
+    padding: 30px 40px 0;
+  }
+
+  ${up('xxl')} {
+    margin-left: 420px;
+    padding: 60px 80px 0;
   }
 `;
 
 export const Header = styled.div`
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   justify-content: space-between;
-  margin-bottom: 44px;
+  margin-bottom: 26px;
+
+  ${up('xl')} {
+    margin-bottom: 44px;
+  }
 
   h1 {
-    font-size: 2.25rem;
+    width: 100%;
+    ${font('2xl')}
     font-weight: 700;
+    order: 1;
+    margin-top: 26px;
+
+    ${up('xl')} {
+      width: auto;
+      margin-top: 0;
+      order: inherit;
+    }
   }
 `;
