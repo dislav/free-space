@@ -16,8 +16,11 @@ export const Container = styled.div`
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
-  width: 320px;
-  min-width: 320px;
+
+  ${up('xl')} {
+    width: 320px;
+    min-width: 320px;
+  }
 `;
 
 export const FormTime = styled.div`

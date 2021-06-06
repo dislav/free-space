@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { TileLayer, Marker, Popup, useMapEvent } from 'react-leaflet';
 import { DivIcon, LatLng } from 'leaflet';
+import MediaQuery from 'react-responsive';
 
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { getWashesState } from '../../store/washes/selectors';
@@ -71,7 +72,7 @@ const CreateWash: React.FC = () => {
 
   const [markerCoord, setMarketCoord] = useState<LatLng>();
 
-  const { colors } = useTheme();
+  const { colors, breakpoints } = useTheme();
   const fields = watch();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
@@ -192,30 +193,32 @@ const CreateWash: React.FC = () => {
           Добавить
         </Button>
       </Form>
-      <Map center={[53.79462178802441, 87.15498449999993]} zoom={13}>
-        <TileLayer
-          attribution={
-            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          }
-          url={'https://tile.openstreetmap.org/{z}/{x}/{y}.png'}
-        />
-        {markerCoord && (
-          <Marker position={markerCoord} icon={MarkerIcon}>
-            <Popup>
-              Название: {fields?.name || '—'}
-              <br />
-              Город: {fields?.city || '—'}
-              <br />
-              Улица: {fields?.street || '—'}
-              <br />
-              Телефон: {fields?.phone || '—'}
-              <br />
-              Режим работы: {fields.startTime}:00 - {fields.endTime}:00
-            </Popup>
-          </Marker>
-        )}
-        <MapComponent setMarketCoord={setMarketCoord} />
-      </Map>
+      <MediaQuery minWidth={breakpoints.xl}>
+        <Map center={[53.79462178802441, 87.15498449999993]} zoom={13}>
+          <TileLayer
+            attribution={
+              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }
+            url={'https://tile.openstreetmap.org/{z}/{x}/{y}.png'}
+          />
+          {markerCoord && (
+            <Marker position={markerCoord} icon={MarkerIcon}>
+              <Popup>
+                Название: {fields?.name || '—'}
+                <br />
+                Город: {fields?.city || '—'}
+                <br />
+                Улица: {fields?.street || '—'}
+                <br />
+                Телефон: {fields?.phone || '—'}
+                <br />
+                Режим работы: {fields.startTime}:00 - {fields.endTime}:00
+              </Popup>
+            </Marker>
+          )}
+          <MapComponent setMarketCoord={setMarketCoord} />
+        </Map>
+      </MediaQuery>
     </Container>
   );
 };
