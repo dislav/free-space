@@ -1,9 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
-import { getWashesRequest } from '../../store/washes/actions';
-import { getWashesState } from '../../store/washes/selectors';
-import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
-
+import { useWash } from '../../lib/useWash';
 import { Container } from './WashList.styled';
 import ListHeader from '../ListHeader/ListHeader';
 import WashCard from '../WashCard/WashCard';
@@ -11,17 +8,9 @@ import WashCardSkeleton from '../WashCardSkeleton/WashCardSkeleton';
 import SearchForm from '../SearchForm/SearchForm';
 
 const WashList: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const washes = useAppSelector(getWashesState);
+  const { washes, loading } = useWash();
 
-  useEffect(() => {
-    dispatch(getWashesRequest());
-  }, [dispatch]);
-
-  if (washes.washesStatus.status === 'failed')
-    return <Container>Ошибка загрузки данных.</Container>;
-
-  if (washes.washesStatus.status === 'loading')
+  if (loading)
     return (
       <Container>
         <ListHeader
@@ -39,7 +28,7 @@ const WashList: React.FC = () => {
       <ListHeader
         titles={['Название', 'Город', 'Заявки за неделю', 'Статус']}
       />
-      {washes.washes.map((wash, index) => (
+      {washes?.map((wash, index) => (
         <WashCard key={index} {...wash} />
       ))}
     </Container>

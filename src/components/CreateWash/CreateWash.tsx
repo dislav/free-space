@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useTheme } from 'styled-components';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import {
@@ -7,15 +8,14 @@ import {
   Button,
   Input,
   Select,
+  useToast,
 } from '@chakra-ui/react';
 import { TileLayer, Marker, Popup, useMapEvent } from 'react-leaflet';
 import { DivIcon, LatLng } from 'leaflet';
 import MediaQuery from 'react-responsive';
+import cookie from 'cookie';
 
-import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
-import { getWashesState } from '../../store/washes/selectors';
-import { createWashRequest } from '../../store/washes/actions';
-
+import { createWash } from '../../lib/api';
 import { Container, Form, FormTime, Map } from './CreateWash.styled';
 
 interface Inputs {
@@ -67,28 +67,56 @@ const CreateWash: React.FC = () => {
     watch,
   } = useForm<Inputs>();
 
-  const dispatch = useAppDispatch();
-  const { washesStatus } = useAppSelector(getWashesState);
+  const history = useHistory();
+  const toast = useToast();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [markerCoord, setMarketCoord] = useState<LatLng>();
 
   const { colors, breakpoints } = useTheme();
   const fields = watch();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    setIsLoading(true);
     const formData = new FormData();
 
     const { phone, startTime, endTime, ...props } = data;
+    const ukey28 = cookie.parse(document.cookie)?.ukey28;
     const newData = {
       ...props,
-      geoid: `${markerCoord?.lat}:${markerCoord?.lng}`,
+      lat: markerCoord?.lat,
+      lon: markerCoord?.lng,
+      ukey28,
     };
 
     Object.entries(newData).forEach(([key, value]) => {
-      formData.append(key, value);
+      if (value) formData.append(key, value.toString());
     });
 
-    dispatch(createWashRequest(formData));
+    try {
+      const response = await createWash(formData);
+      if (!response.data.status) throw new Error(response.data.message);
+
+      toast({
+        title: 'Успешно',
+        description: `Мойка «${data.name}» успешно создана.`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+
+      setTimeout(() => history.push('/'), 200);
+      setIsLoading(false);
+    } catch (e) {
+      toast({
+        title: 'Ошибка',
+        description: e.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -188,7 +216,7 @@ const CreateWash: React.FC = () => {
             bg: 'linear-gradient(to right, #9FD4D8, #B1E0F9)',
             opacity: 0.8,
           }}
-          isLoading={washesStatus.status === 'loading'}
+          isLoading={isLoading}
         >
           Добавить
         </Button>

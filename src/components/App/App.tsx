@@ -5,7 +5,10 @@ import { ThemeProvider } from 'styled-components';
 import { ChakraProvider } from '@chakra-ui/react';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { I18nextProvider } from 'react-i18next';
+import dayjs from 'dayjs';
 import DayjsUtils from '@date-io/dayjs';
+import 'dayjs/locale/ru';
+
 import { GlobalStyle } from '../../styles/globalStyle';
 import store from '../../store/store';
 import theme from '../../styles/theme';
@@ -26,6 +29,8 @@ import Services from '../../pages/Services';
 import CreateService from '../../pages/CreateService';
 import Boxes from '../../pages/Boxes';
 import CreatePromotion from '../../pages/CreatePromotion';
+
+dayjs.locale('ru');
 
 const App: React.FC = () => {
   return (

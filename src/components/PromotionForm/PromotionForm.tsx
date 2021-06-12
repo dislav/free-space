@@ -9,15 +9,18 @@ import {
   Button,
 } from '@chakra-ui/react';
 import { KeyboardDatePicker } from '@material-ui/pickers';
+import Select from 'react-select';
 import { useTranslation } from 'react-i18next';
 import MediaQuery from 'react-responsive';
+import dayjs from 'dayjs';
 
-import { Container, Column } from './PromotionForm.styled';
+import { Container, Column, ExpireTo } from './PromotionForm.styled';
 
 interface IInputs {
   name: string;
   description?: string;
   date: Date;
+  services: string;
 }
 
 const PromotionForm: React.FC = () => {
@@ -57,14 +60,30 @@ const PromotionForm: React.FC = () => {
           placeholder={t('Description of the service')}
           {...register('description')}
         />
-        <Controller
-          name={'date'}
-          control={control}
-          defaultValue={new Date()}
-          render={({ field: { ref, ...props } }) => (
-            <KeyboardDatePicker format={'DD/MM/YYYY'} {...props} />
-          )}
-        />
+        <ExpireTo>
+          <p>Акция действует до</p>
+          <Controller
+            name={'date'}
+            control={control}
+            defaultValue={dayjs().toDate()}
+            render={({ field: { ref, ...props } }) => (
+              <KeyboardDatePicker
+                variant={'inline'}
+                inputVariant={'outlined'}
+                format={'DD MMM, YYYY'}
+                minDate={dayjs().toDate()}
+                disableToolbar={true}
+                className={'mui-picker'}
+                InputProps={{
+                  classes: {
+                    root: 'mui-picker__root',
+                  },
+                }}
+                {...props}
+              />
+            )}
+          />
+        </ExpireTo>
         <MediaQuery minWidth={breakpoints.xl}>
           <Button
             w={'100%'}
@@ -81,6 +100,24 @@ const PromotionForm: React.FC = () => {
         </MediaQuery>
       </Column>
       <Column>
+        <Controller
+          name={'services'}
+          control={control}
+          defaultValue={''}
+          render={({ field: { value, onChange, ...props } }) => (
+            <Select
+              options={[
+                { value: 'wash', label: 'Мойка' },
+                { value: 'washAndScrab', label: 'Мойка + Полировка' },
+              ]}
+              placeholder={'Выберите услугу'}
+              classNamePrefix={'react-select'}
+              onChange={(option) => onChange(option.map(({ value }) => value))}
+              isMulti
+              {...props}
+            />
+          )}
+        />
         <MediaQuery maxWidth={breakpoints.xl}>
           <Button
             w={'100%'}
