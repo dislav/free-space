@@ -20,15 +20,34 @@ export type Auth = {
   id: string;
   hash: string;
   hash2: string;
+  group: string[];
 };
 
-export type User = {
-  id: string | null;
-  mail: string | null;
-  username: string | null;
-  first_name?: string | null;
-  last_name?: string | null;
-  phone?: string | null;
+export type BaseUser = {
+  id: string;
+  mail: string;
+  username: string;
+  first_name: string;
+  last_name: string;
+  phone: string;
+};
+
+export type WashUser = {
+  id: string;
+  name: string;
+  active: string;
+  moderation: string;
+  description: string;
+  pic: string;
+  city: string;
+  street: string;
+  worktime: string;
+  phone: string;
+  legal_info: string;
+  created: string;
+  updated: string;
+  lat: string;
+  lon: string;
 };
 
 export type Wash = {
@@ -73,9 +92,8 @@ export type CarBody = {
 export type BaseService = {
   id: string;
   name: string;
-  active: string;
-  type: string;
-  created: string;
+  service_id: string;
+  about: string;
 };
 
 export type GeoCode = {
@@ -184,3 +202,18 @@ export type Promotion = {
   created: string;
   updated: string;
 };
+
+export type Order = {
+  id: string;
+  body: string;
+  price: string;
+  wash_id: string;
+  phone: string;
+  time: string;
+  date: string;
+  status: string;
+  box: string;
+  hash: string;
+  created: string;
+  updated: string
+}

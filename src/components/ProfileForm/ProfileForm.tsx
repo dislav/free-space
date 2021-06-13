@@ -11,8 +11,10 @@ import {
 import { useTranslation } from 'react-i18next';
 import MediaQuery from 'react-responsive';
 
+import { BaseUser, WashUser } from '../../interfaces/types';
 import { Container, Column, Time } from './ProfileForm.styled';
 import ProfileAvatar from '../ProfileAvatar/ProfileAvatar';
+import { useProfile } from '../../lib/useProfile';
 
 interface Inputs {
   name?: string;
@@ -27,6 +29,8 @@ interface Inputs {
 }
 
 const ProfileForm: React.FC = () => {
+  const { profile } = useProfile();
+
   const methods = useForm<Inputs>();
   const {
     handleSubmit,
@@ -39,6 +43,9 @@ const ProfileForm: React.FC = () => {
   const { colors, variables, breakpoints } = useTheme();
 
   const newPassword = watch('newPassword', '');
+
+  const isWashUser = (user?: BaseUser | WashUser): user is WashUser =>
+    (user as WashUser).street !== undefined;
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     console.log(data);
@@ -56,6 +63,7 @@ const ProfileForm: React.FC = () => {
               bg={colors.white}
               borderRadius={variables.borderRadius}
               placeholder={t('Car wash name')}
+              defaultValue={isWashUser(profile) ? profile?.name : ''}
               {...register('name', {
                 required: `${t('Required field')}`,
               })}
@@ -71,6 +79,7 @@ const ProfileForm: React.FC = () => {
               bg={colors.white}
               borderRadius={variables.borderRadius}
               placeholder={t('Address')}
+              defaultValue={isWashUser(profile) ? profile?.street : ''}
               {...register('address', {
                 required: `${t('Required field')}`,
               })}
@@ -83,6 +92,7 @@ const ProfileForm: React.FC = () => {
               bg={colors.white}
               borderRadius={variables.borderRadius}
               placeholder={t('Phone')}
+              defaultValue={profile?.phone || ''}
               {...register('phone', {
                 required: `${t('Required field')}`,
               })}

@@ -9,12 +9,12 @@ export const Container = styled.div`
 
   ${up('xl')} {
     margin-left: 280px;
-    padding: 30px 40px 0;
+    padding: 30px 40px 60px;
   }
 
   ${up('xxl')} {
     margin-left: 420px;
-    padding: 60px 80px 0;
+    padding: 60px 80px 80px;
   }
 `;
 

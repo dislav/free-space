@@ -24,7 +24,6 @@ import Login from '../../pages/Login';
 import CreateWash from '../../pages/CreateWash';
 import Promotions from '../../pages/Promotions';
 import Profile from '../../pages/Profile';
-import Orders from '../../pages/Orders';
 import Services from '../../pages/Services';
 import CreateService from '../../pages/CreateService';
 import Boxes from '../../pages/Boxes';
@@ -56,9 +55,6 @@ const App: React.FC = () => {
                   </PrivateRoute>
                   <PrivateRoute path={'/services'}>
                     <Services />
-                  </PrivateRoute>
-                  <PrivateRoute path={'/orders'}>
-                    <Orders />
                   </PrivateRoute>
                   <PrivateRoute path={'/create/promotion'}>
                     <CreatePromotion />

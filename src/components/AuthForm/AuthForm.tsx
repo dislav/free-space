@@ -1,34 +1,23 @@
 import React, { useState } from 'react';
 import { useTheme } from 'styled-components';
 import { useHistory } from 'react-router-dom';
-import { connect, ConnectedProps } from 'react-redux';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Button, FormControl, FormErrorMessage, Input } from '@chakra-ui/react';
 import cookie from 'cookie';
 
 import { auth } from '../../lib/api';
-import { setLoggedIn } from '../../store/profile/actions';
 import { Container, TextError } from './AuthForm.styled';
-
-const mapDispatchToProps = {
-  setLoggedIn,
-};
-
-const connector = connect(null, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface Inputs {
   login: string;
   pass: string;
 }
 
-const AuthForm: React.FC<PropsFromRedux> = ({ setLoggedIn }) => {
+const AuthForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   const history = useHistory();
-
   const { colors, variables } = useTheme();
 
   const {
@@ -52,12 +41,12 @@ const AuthForm: React.FC<PropsFromRedux> = ({ setLoggedIn }) => {
 
       document.cookie = cookie.serialize('ukey28', response.data.hash);
       document.cookie = cookie.serialize('sesid28', response.data.hash2);
+      localStorage.setItem('group', response.data.group[0]);
 
-      setLoggedIn(true);
       history.push('/');
     } catch (e) {
-      setIsLoading(false);
       setError(e.message);
+      setIsLoading(false);
     }
   };
 
@@ -113,4 +102,4 @@ const AuthForm: React.FC<PropsFromRedux> = ({ setLoggedIn }) => {
   );
 };
 
-export default connector(AuthForm);
+export default AuthForm;

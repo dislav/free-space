@@ -1,23 +1,41 @@
 import React from 'react';
 
+import { CarBody, Order } from '../../interfaces/types';
 import { Container, Column, Tag } from './OrderCard.styled';
 import DropdownMenu from '../DropdownMenu/DropdownMenu';
 import DropdownMenuLink from '../DropdownMenuLink/DropdownMenuLink';
 
-const OrderCard: React.FC = () => {
+interface IOrderCard extends Order {
+  bodies?: CarBody[];
+}
+
+const OrderCard: React.FC<IOrderCard> = ({
+  body,
+  bodies,
+  date,
+  time,
+  phone,
+  box,
+  price,
+}) => {
+  const carBody = bodies?.find(({ id }) => id === body);
+
   return (
     <Container>
-      <Column>Хетчбэк</Column>
-      <Column>30.05.2021 11:35</Column>
+      <Column>{carBody?.name}</Column>
+      <Column>
+        {date} {time}
+      </Column>
       <Column>
         <Tag>Ручная мойка кузова</Tag>
         <Tag>Полировка кузова</Tag>
       </Column>
-      <Column>+7 (344) 443 34 33</Column>
+      <Column>{phone.length > 0 ? phone : '—'}</Column>
       <Column>
-        <span>Бокс #</span>1
+        <span>Бокс #</span>
+        {box}
       </Column>
-      <Column>920 ₽</Column>
+      <Column>{price.length > 0 ? `${price} ₽` : '—'}</Column>
       <DropdownMenu>
         <DropdownMenuLink>Принять</DropdownMenuLink>
         <DropdownMenuLink>Отклонить</DropdownMenuLink>

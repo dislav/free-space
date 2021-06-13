@@ -11,7 +11,7 @@ const PromotionCard: React.FC<Promotion> = ({ name, description, active }) => {
     <Container>
       <Column>{name}</Column>
       <Column>
-        <Switch id={'active'} size={'lg'} isChecked={!!active} />
+        <Switch id={'active'} size={'lg'} defaultChecked={!!active} />
       </Column>
       <Column>{description}</Column>
       <DropdownMenu>

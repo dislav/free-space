@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { useTheme } from 'styled-components';
 import {
@@ -7,25 +7,31 @@ import {
   Input,
   Textarea,
   Button,
+  useToast,
 } from '@chakra-ui/react';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 import Select from 'react-select';
 import { useTranslation } from 'react-i18next';
 import MediaQuery from 'react-responsive';
 import dayjs from 'dayjs';
+import cookie from 'cookie';
 
+import { createPromotion } from '../../lib/api';
 import { Container, Column, ExpireTo } from './PromotionForm.styled';
 
 interface IInputs {
   name: string;
-  description?: string;
-  date: Date;
-  services: string;
+  about?: string;
+  timeto: Date;
+  list_services: string;
 }
 
 const PromotionForm: React.FC = () => {
   const { t } = useTranslation('PromotionForm');
   const { colors, variables, breakpoints } = useTheme();
+  const toast = useToast();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     handleSubmit,
@@ -35,7 +41,41 @@ const PromotionForm: React.FC = () => {
   } = useForm<IInputs>();
 
   const onSubmit: SubmitHandler<IInputs> = async (data) => {
-    console.log(data);
+    setIsLoading(true);
+
+    const formData = new FormData();
+    const newData = {
+      ...data,
+      timeto: `${dayjs(data.timeto).format('YYYY-MM-DD')} 00:00:00`,
+      ukey28: cookie.parse(document.cookie)?.ukey28,
+    };
+
+    Object.entries(newData).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+
+    try {
+      const response = await createPromotion(formData);
+      if (!response.data.status) throw new Error(response.data.message);
+
+      toast({
+        title: 'Успешно',
+        description: `Акция «${data.name}» успешно создана.`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+      setIsLoading(false);
+    } catch (e) {
+      toast({
+        title: 'Ошибка',
+        description: e.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -58,12 +98,12 @@ const PromotionForm: React.FC = () => {
           borderRadius={variables.borderRadius}
           mb={['14px', '14px', '32px']}
           placeholder={t('Description of the service')}
-          {...register('description')}
+          {...register('about')}
         />
         <ExpireTo>
           <p>Акция действует до</p>
           <Controller
-            name={'date'}
+            name={'timeto'}
             control={control}
             defaultValue={dayjs().toDate()}
             render={({ field: { ref, ...props } }) => (
@@ -94,6 +134,7 @@ const PromotionForm: React.FC = () => {
               opacity: 0.8,
             }}
             type={'submit'}
+            isLoading={isLoading}
           >
             {t('Add')}
           </Button>
@@ -101,14 +142,14 @@ const PromotionForm: React.FC = () => {
       </Column>
       <Column>
         <Controller
-          name={'services'}
+          name={'list_services'}
           control={control}
           defaultValue={''}
           render={({ field: { value, onChange, ...props } }) => (
             <Select
               options={[
-                { value: 'wash', label: 'Мойка' },
-                { value: 'washAndScrab', label: 'Мойка + Полировка' },
+                { value: '1', label: 'Мойка' },
+                { value: '2', label: 'Мойка + Полировка' },
               ]}
               placeholder={'Выберите услугу'}
               classNamePrefix={'react-select'}

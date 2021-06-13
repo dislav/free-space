@@ -1,12 +1,13 @@
 import React from 'react';
 
+import { Box } from '../../interfaces/types';
 import { Container, Column } from './BoxCard.styled';
 
-const BoxCard: React.FC = () => {
+const BoxCard: React.FC<Box> = ({ id, active }) => {
   return (
     <Container>
-      <Column>Бокс #1</Column>
-      <Column>Активен</Column>
+      <Column>Бокс #{id}</Column>
+      <Column>{!active ? 'Неактивен' : 'Активен'}</Column>
     </Container>
   );
 };

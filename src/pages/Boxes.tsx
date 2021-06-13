@@ -6,7 +6,10 @@ import LinkButton from '../components/LinkButton/LinkButton';
 
 const Boxes = () => {
   return (
-    <Layout title={'Боксы'} action={<LinkButton to={'#'}>+</LinkButton>}>
+    <Layout
+      title={'Боксы'}
+      action={<LinkButton to={'#'} onClick={() => console.log(1)} />}
+    >
       <BoxesList />
     </Layout>
   );

@@ -1,12 +1,13 @@
 import React from 'react';
 import { Route, Redirect, RouteProps } from 'react-router-dom';
 
-import { useAppSelector } from '../../hooks/hooks';
-import { getIsLoggedIn } from '../../store/profile/selectors';
+import { useProfile } from '../../lib/useProfile';
 
 const PrivateRoute: React.FC<RouteProps> = ({ children }) => {
-  const isLoggedIn = useAppSelector(getIsLoggedIn);
-  return <Route>{isLoggedIn ? children : <Redirect to={'/login'} />}</Route>;
+  const { isLoggedIn } = useProfile();
+
+  if (!isLoggedIn) return <Redirect to={'/login'} />;
+  return <Route>{children}</Route>;
 };
 
 export default PrivateRoute;
