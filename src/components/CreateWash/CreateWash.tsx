@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useTheme } from 'styled-components';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import useSwr from 'swr';
 import {
   FormControl,
   FormErrorMessage,
@@ -15,7 +16,9 @@ import { DivIcon, LatLng } from 'leaflet';
 import MediaQuery from 'react-responsive';
 import cookie from 'cookie';
 
+import { City } from '../../interfaces/types';
 import { createWash } from '../../lib/api';
+
 import { Container, Form, FormTime, Map } from './CreateWash.styled';
 
 interface Inputs {
@@ -60,6 +63,8 @@ const MapComponent: React.FC<{ setMarketCoord: (latlng: LatLng) => void }> = ({
 };
 
 const CreateWash: React.FC = () => {
+  const { data: cities } = useSwr<City[]>('/guide/cites');
+
   const {
     handleSubmit,
     register,
@@ -144,8 +149,11 @@ const CreateWash: React.FC = () => {
               required: 'Обязательное поле',
             })}
           >
-            <option value="Москва">Москва</option>
-            <option value="Новокузнецк">Новокузнецк</option>
+            {cities?.map(({ id, name }) => (
+              <option key={id} value={name}>
+                {name}
+              </option>
+            ))}
           </Select>
           <FormErrorMessage>{errors.city?.message}</FormErrorMessage>
         </FormControl>

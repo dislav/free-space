@@ -1,4 +1,4 @@
-import axios, { AxiosPromise } from 'axios';
+import axios, { AxiosPromise, AxiosResponse } from 'axios';
 import cookie from 'cookie';
 
 import { Auth, Response, CreateWash, Box } from '../interfaces/types';
@@ -10,8 +10,17 @@ const axiosInstance = axios.create({
   params: { ukey28: cookie.parse(document.cookie)?.ukey28 },
 });
 
-export const fetcher = (url: string) =>
-  axiosInstance.get(url).then((res) => res.data.data);
+export const fetcher = async (url: string) => {
+  const response: AxiosResponse<Response> = await axiosInstance.get(url);
+
+  if (response.statusText !== 'OK') {
+    const error = new Error();
+    error.message = 'An error occurred while fetching the data.';
+    throw error;
+  }
+
+  return response.data.data;
+};
 
 export const auth = (data: FormData): AxiosPromise<Response<Auth>> =>
   axiosInstance.post('/auth', data);
@@ -37,3 +46,6 @@ export const activateBox = (id: string): AxiosPromise<Response> =>
 
 export const activatePromotion = (id: string): AxiosPromise<Response> =>
   axiosInstance.post(`/promo/active/${id}`);
+
+export const updateProfile = (data: FormData): AxiosPromise<Response> =>
+  axiosInstance.post('/profile/update', data);

@@ -4,26 +4,18 @@ import useSwr from 'swr';
 import { Promotion } from '../../interfaces/types';
 
 import { Container } from './PromotionsList.styled';
-import ListHeader from '../ListHeader/ListHeader';
 import PromotionCard from '../PromotionCard/PromotionCard';
-import WashCardSkeleton from '../WashCardSkeleton/WashCardSkeleton';
 
 const PromotionsList: React.FC = () => {
   const { data, error, mutate } = useSwr<Promotion[]>('/promo/list');
+  const isAdmin = localStorage.getItem('group') === '1';
 
-  if (!data && !error)
-    return (
-      <Container>
-        <ListHeader titles={['Название', 'Активность', 'Описание акции']} />
-        <WashCardSkeleton />
-        <WashCardSkeleton />
-        <WashCardSkeleton />
-      </Container>
-    );
+  const titles = isAdmin
+    ? ['Название', 'Описание акции']
+    : ['Название', 'Активность', 'Описание акции'];
 
   return (
-    <Container>
-      <ListHeader titles={['Название', 'Активность', 'Описание акции']} />
+    <Container isLoading={!data && !error} titles={titles}>
       {data?.map((promotion) => (
         <PromotionCard key={promotion.id} onActivate={mutate} {...promotion} />
       ))}

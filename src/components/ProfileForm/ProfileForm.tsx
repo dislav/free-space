@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTheme } from 'styled-components';
 import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 import {
@@ -7,19 +7,23 @@ import {
   Input,
   Button,
   Select,
+  useToast,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import MediaQuery from 'react-responsive';
 
 import { BaseUser, WashUser } from '../../interfaces/types';
+import { useProfile } from '../../lib/useProfile';
+import { updateProfile } from '../../lib/api';
+
 import { Container, Column, Time } from './ProfileForm.styled';
 import ProfileAvatar from '../ProfileAvatar/ProfileAvatar';
-import { useProfile } from '../../lib/useProfile';
+import WithGroup from '../WithGroup/WithGroup';
 
 interface Inputs {
   name?: string;
-  image: string;
-  address: string;
+  image?: string;
+  street?: string;
   phone: string;
   oldPassword?: string;
   newPassword?: string;
@@ -29,7 +33,9 @@ interface Inputs {
 }
 
 const ProfileForm: React.FC = () => {
-  const { profile } = useProfile();
+  const { profile, mutate } = useProfile();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const methods = useForm<Inputs>();
   const {
@@ -41,14 +47,48 @@ const ProfileForm: React.FC = () => {
 
   const { t } = useTranslation('Profile');
   const { colors, variables, breakpoints } = useTheme();
+  const toast = useToast();
 
   const newPassword = watch('newPassword', '');
 
   const isWashUser = (user?: BaseUser | WashUser): user is WashUser =>
-    (user as WashUser).street !== undefined;
+    (user as WashUser)?.street !== undefined;
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    setIsLoading(true);
+
+    const formData = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+      if (typeof value === 'object') {
+        formData.append(key, value[0]);
+      } else {
+        formData.append(key, value);
+      }
+    });
+
+    try {
+      const response = await updateProfile(formData);
+      if (!response.data.status) throw new Error(response.data.message);
+
+      mutate();
+      setIsLoading(false);
+      toast({
+        title: 'Успешно',
+        description: 'Профиль успешно обновлен',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+    } catch (e) {
+      setIsLoading(false);
+      toast({
+        title: 'Ошибка',
+        description: e.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   };
 
   return (
@@ -56,36 +96,42 @@ const ProfileForm: React.FC = () => {
       <FormProvider {...methods}>
         <Column>
           <h2>{t('Washing information')}</h2>
-          <ProfileAvatar />
-          <FormControl isInvalid={!!errors.name} mb={['20px', '20px', '32px']}>
-            <Input
-              h={['44px', '44px', '58px']}
-              bg={colors.white}
-              borderRadius={variables.borderRadius}
-              placeholder={t('Car wash name')}
-              defaultValue={isWashUser(profile) ? profile?.name : ''}
-              {...register('name', {
-                required: `${t('Required field')}`,
-              })}
-            />
-            <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
-          </FormControl>
-          <FormControl
-            isInvalid={!!errors.address}
-            mb={['20px', '20px', '32px']}
-          >
-            <Input
-              h={['44px', '44px', '58px']}
-              bg={colors.white}
-              borderRadius={variables.borderRadius}
-              placeholder={t('Address')}
-              defaultValue={isWashUser(profile) ? profile?.street : ''}
-              {...register('address', {
-                required: `${t('Required field')}`,
-              })}
-            />
-            <FormErrorMessage>{errors.address?.message}</FormErrorMessage>
-          </FormControl>
+          <WithGroup available={['2']}>
+            <p>Загрузите логотип вашей автомойки</p>
+            <ProfileAvatar />
+            <FormControl
+              isInvalid={!!errors.name}
+              mb={['20px', '20px', '32px']}
+            >
+              <Input
+                h={['44px', '44px', '58px']}
+                bg={colors.white}
+                borderRadius={variables.borderRadius}
+                placeholder={t('Car wash name')}
+                defaultValue={isWashUser(profile) ? profile?.name : ''}
+                {...register('name', {
+                  required: `${t('Required field')}`,
+                })}
+              />
+              <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
+            </FormControl>
+            <FormControl
+              isInvalid={!!errors.street}
+              mb={['20px', '20px', '32px']}
+            >
+              <Input
+                h={['44px', '44px', '58px']}
+                bg={colors.white}
+                borderRadius={variables.borderRadius}
+                placeholder={t('Address')}
+                defaultValue={isWashUser(profile) ? profile?.street : ''}
+                {...register('street', {
+                  required: `${t('Required field')}`,
+                })}
+              />
+              <FormErrorMessage>{errors.street?.message}</FormErrorMessage>
+            </FormControl>
+          </WithGroup>
           <FormControl isInvalid={!!errors.phone} mb={['20px', '20px', '32px']}>
             <Input
               h={['44px', '44px', '58px']}
@@ -99,40 +145,42 @@ const ProfileForm: React.FC = () => {
             />
             <FormErrorMessage>{errors.phone?.message}</FormErrorMessage>
           </FormControl>
-          <Time>
-            <p>{t('Working hours (start - end of the working day)')}</p>
-            <FormControl isInvalid={!!errors.startTime} w={'30%'}>
-              <Select
-                h={['44px', '44px', '58px']}
-                borderRadius={variables.borderRadius}
-                defaultValue={'01'}
-                bg={colors.white}
-                {...register('startTime', {
-                  required: `${t('Required field')}`,
-                })}
-              >
-                <option value="01">01</option>
-                <option value="02">02</option>
-              </Select>
-              <FormErrorMessage>{errors.startTime?.message}</FormErrorMessage>
-            </FormControl>
-            <span>—</span>
-            <FormControl isInvalid={!!errors.endTime} w={'30%'}>
-              <Select
-                h={['44px', '44px', '58px']}
-                borderRadius={variables.borderRadius}
-                defaultValue={'01'}
-                bg={colors.white}
-                {...register('endTime', {
-                  required: `${t('Required field')}`,
-                })}
-              >
-                <option value="01">01</option>
-                <option value="02">02</option>
-              </Select>
-              <FormErrorMessage>{errors.endTime?.message}</FormErrorMessage>
-            </FormControl>
-          </Time>
+          <WithGroup available={['2']}>
+            <Time>
+              <p>{t('Working hours (start - end of the working day)')}</p>
+              <FormControl isInvalid={!!errors.startTime} w={'30%'}>
+                <Select
+                  h={['44px', '44px', '58px']}
+                  borderRadius={variables.borderRadius}
+                  defaultValue={'01'}
+                  bg={colors.white}
+                  {...register('startTime', {
+                    required: `${t('Required field')}`,
+                  })}
+                >
+                  <option value="01">01</option>
+                  <option value="02">02</option>
+                </Select>
+                <FormErrorMessage>{errors.startTime?.message}</FormErrorMessage>
+              </FormControl>
+              <span>—</span>
+              <FormControl isInvalid={!!errors.endTime} w={'30%'}>
+                <Select
+                  h={['44px', '44px', '58px']}
+                  borderRadius={variables.borderRadius}
+                  defaultValue={'01'}
+                  bg={colors.white}
+                  {...register('endTime', {
+                    required: `${t('Required field')}`,
+                  })}
+                >
+                  <option value="01">01</option>
+                  <option value="02">02</option>
+                </Select>
+                <FormErrorMessage>{errors.endTime?.message}</FormErrorMessage>
+              </FormControl>
+            </Time>
+          </WithGroup>
           <MediaQuery minWidth={breakpoints.xl}>
             <Button
               h={['50px', '50px', '60px']}
@@ -143,6 +191,7 @@ const ProfileForm: React.FC = () => {
                 opacity: 0.8,
               }}
               type={'submit'}
+              isLoading={isLoading}
             >
               {t('Save')}
             </Button>
@@ -212,6 +261,7 @@ const ProfileForm: React.FC = () => {
                 opacity: 0.8,
               }}
               type={'submit'}
+              isLoading={isLoading}
             >
               {t('Save')}
             </Button>

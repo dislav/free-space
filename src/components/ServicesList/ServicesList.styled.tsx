@@ -1,35 +1,22 @@
 import styled from 'styled-components';
 
-import {
-  Container as ListHeader,
-  Column as ListHeaderColumn,
-} from '../ListHeader/ListHeader.styled';
-import { Container as ServiceCard } from '../ServiceCard/ServiceCard.styled';
+import TableList from '../TableList/TableList';
+import { Column as TableListColumn } from '../TableList/TableList.styled';
 
-export const Container = styled.div`
-  ${ListHeader} {
-    ${ListHeaderColumn}:nth-child(1) {
-      flex: 1 1 25%;
-    }
-
-    ${ListHeaderColumn}:nth-child(2) {
-      flex: 1 1 15%;
-    }
-
-    ${ListHeaderColumn}:nth-child(3) {
-      flex: 1 1 50%;
-    }
-
-    ${ListHeaderColumn}:nth-child(4) {
-      flex: 1 1 10%;
-    }
+export const Container = styled(TableList)`
+  ${TableListColumn}:nth-child(1) {
+    flex: 1 1 25%;
   }
 
-  ${ServiceCard} {
-    margin-bottom: 20px;
+  ${TableListColumn}:nth-child(2) {
+    flex: 1 1 15%;
+  }
 
-    &:last-child {
-      margin-bottom: 0;
-    }
+  ${TableListColumn}:nth-child(3) {
+    flex: 1 1 50%;
+  }
+
+  ${TableListColumn}:nth-child(4) {
+    flex: 1 1 10%;
   }
 `;

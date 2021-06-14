@@ -44,6 +44,7 @@ const ServiceCard: React.FC<IServiceCard> = ({ id, name, about, prices }) => {
         isOpen={isOpen}
         onClose={closeModal}
         onSuccess={() => console.log(1)}
+        successText={'Удалить'}
         closeOnEsc={true}
       >
         Вы уверены, что хотите удалить услугу «{name}»?

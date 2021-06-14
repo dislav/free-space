@@ -7,6 +7,7 @@ import { Switch } from '@chakra-ui/react';
 import DropdownMenu from '../DropdownMenu/DropdownMenu';
 import DropdownMenuLink from '../DropdownMenuLink/DropdownMenuLink';
 import { activatePromotion } from '../../lib/api';
+import WithGroup from '../WithGroup/WithGroup';
 
 interface IPromotionCard extends Promotion {
   onActivate?: () => void;
@@ -51,15 +52,17 @@ const PromotionCard: React.FC<IPromotionCard> = ({
   return (
     <Container>
       <Column>{name}</Column>
-      <Column>
-        <Switch
-          id={'active'}
-          size={'lg'}
-          defaultChecked={isActive}
-          colorScheme={'telegram'}
-          onChange={onActivatePromotion}
-        />
-      </Column>
+      <WithGroup available={['2']}>
+        <Column>
+          <Switch
+            id={'active'}
+            size={'lg'}
+            defaultChecked={isActive}
+            colorScheme={'telegram'}
+            onChange={onActivatePromotion}
+          />
+        </Column>
+      </WithGroup>
       <Column>{description}</Column>
       <DropdownMenu>
         <DropdownMenuLink>Редактировать</DropdownMenuLink>

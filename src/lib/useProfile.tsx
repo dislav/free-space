@@ -7,7 +7,7 @@ export const useProfile = () => {
   const { data, mutate, error } = useSwr<BaseUser | WashUser>('/profile');
 
   const loading = !data && !error;
-  const isLoggedIn = !error && error?.status !== 401;
+  const isLoggedIn = !error && ![401, 403].includes(error?.status);
 
   useEffect(() => {
     if (data && isLoggedIn) localStorage.setItem('user', JSON.stringify(data));

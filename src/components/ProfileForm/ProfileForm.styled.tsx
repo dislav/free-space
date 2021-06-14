@@ -38,6 +38,7 @@ export const Column = styled.div`
     margin-bottom: 20px;
 
     ${up('xl')} {
+      ${font('2xl')};
       margin-bottom: 30px;
     }
   }
@@ -48,6 +49,7 @@ export const Column = styled.div`
     margin-bottom: 30px;
 
     ${up('xl')} {
+      ${font('lg')};
       margin-bottom: 40px;
     }
   }

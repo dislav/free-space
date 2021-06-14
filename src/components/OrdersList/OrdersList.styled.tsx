@@ -1,13 +1,5 @@
 import styled from 'styled-components';
 
-import { Container as OrderCard } from '../OrderCard/OrderCard.styled';
+import TableList from '../TableList/TableList';
 
-export const Container = styled.div`
-  ${OrderCard} {
-    margin-bottom: 20px;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-`;
+export const Container = styled(TableList)``;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from 'styled-components';
 import { useHistory } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -6,6 +6,7 @@ import { Button, FormControl, FormErrorMessage, Input } from '@chakra-ui/react';
 import cookie from 'cookie';
 
 import { auth } from '../../lib/api';
+
 import { Container, TextError } from './AuthForm.styled';
 
 interface Inputs {
@@ -43,7 +44,8 @@ const AuthForm: React.FC = () => {
       document.cookie = cookie.serialize('sesid28', response.data.hash2);
       localStorage.setItem('group', response.data.group[0]);
 
-      history.push('/');
+      setIsLoading(false);
+      setTimeout(() => history.push('/'), 600);
     } catch (e) {
       setError(e.message);
       setIsLoading(false);
