@@ -5,6 +5,7 @@ import { ThemeProvider } from 'styled-components';
 import { ChakraProvider } from '@chakra-ui/react';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { I18nextProvider } from 'react-i18next';
+import { SWRConfig } from 'swr';
 import dayjs from 'dayjs';
 import DayjsUtils from '@date-io/dayjs';
 import 'dayjs/locale/ru';
@@ -12,6 +13,7 @@ import 'dayjs/locale/ru';
 import { GlobalStyle } from '../../styles/globalStyle';
 import store from '../../store/store';
 import theme from '../../styles/theme';
+import { fetcher } from '../../lib/api';
 import i18next from '../../locales/i18n';
 import '../../styles/fonts.css';
 import 'leaflet/dist/leaflet.css';
@@ -38,38 +40,44 @@ const App: React.FC = () => {
         <ChakraProvider>
           <MuiPickersUtilsProvider utils={DayjsUtils}>
             <ThemeProvider theme={theme}>
-              <Router>
-                <Sidebar />
-                <Switch>
-                  <Route path={'/login'}>
-                    <Login />
-                  </Route>
-                  <PrivateRoute path={'/profile'}>
-                    <Profile />
-                  </PrivateRoute>
-                  <PrivateRoute path={'/promotions'}>
-                    <Promotions />
-                  </PrivateRoute>
-                  <PrivateRoute path={'/boxes'}>
-                    <Boxes />
-                  </PrivateRoute>
-                  <PrivateRoute path={'/services'}>
-                    <Services />
-                  </PrivateRoute>
-                  <PrivateRoute path={'/create/promotion'}>
-                    <CreatePromotion />
-                  </PrivateRoute>
-                  <PrivateRoute path={'/wash/create'}>
-                    <CreateWash />
-                  </PrivateRoute>
-                  <PrivateRoute path={'/service/create'}>
-                    <CreateService />
-                  </PrivateRoute>
-                  <PrivateRoute path={'/'}>
-                    <Dashboard />
-                  </PrivateRoute>
-                </Switch>
-              </Router>
+              <SWRConfig
+                value={{
+                  fetcher,
+                }}
+              >
+                <Router>
+                  <Sidebar />
+                  <Switch>
+                    <Route path={'/login'}>
+                      <Login />
+                    </Route>
+                    <PrivateRoute path={'/profile'}>
+                      <Profile />
+                    </PrivateRoute>
+                    <PrivateRoute path={'/promotions'}>
+                      <Promotions />
+                    </PrivateRoute>
+                    <PrivateRoute path={'/boxes'}>
+                      <Boxes />
+                    </PrivateRoute>
+                    <PrivateRoute path={'/services'}>
+                      <Services />
+                    </PrivateRoute>
+                    <PrivateRoute path={'/create/promotion'}>
+                      <CreatePromotion />
+                    </PrivateRoute>
+                    <PrivateRoute path={'/wash/create'}>
+                      <CreateWash />
+                    </PrivateRoute>
+                    <PrivateRoute path={'/service/create'}>
+                      <CreateService />
+                    </PrivateRoute>
+                    <PrivateRoute path={'/'}>
+                      <Dashboard />
+                    </PrivateRoute>
+                  </Switch>
+                </Router>
+              </SWRConfig>
               <GlobalStyle />
             </ThemeProvider>
           </MuiPickersUtilsProvider>

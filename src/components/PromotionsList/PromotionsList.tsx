@@ -1,15 +1,17 @@
 import React from 'react';
+import useSwr from 'swr';
 
-import { usePromotion } from '../../lib/usePromotion';
+import { Promotion } from '../../interfaces/types';
+
 import { Container } from './PromotionsList.styled';
 import ListHeader from '../ListHeader/ListHeader';
 import PromotionCard from '../PromotionCard/PromotionCard';
 import WashCardSkeleton from '../WashCardSkeleton/WashCardSkeleton';
 
 const PromotionsList: React.FC = () => {
-  const { promotions, loading } = usePromotion();
+  const { data, error, mutate } = useSwr<Promotion[]>('/promo/list');
 
-  if (loading)
+  if (!data && !error)
     return (
       <Container>
         <ListHeader titles={['Название', 'Активность', 'Описание акции']} />
@@ -22,8 +24,8 @@ const PromotionsList: React.FC = () => {
   return (
     <Container>
       <ListHeader titles={['Название', 'Активность', 'Описание акции']} />
-      {promotions?.map((promotion) => (
-        <PromotionCard key={promotion.id} {...promotion} />
+      {data?.map((promotion) => (
+        <PromotionCard key={promotion.id} onActivate={mutate} {...promotion} />
       ))}
     </Container>
   );

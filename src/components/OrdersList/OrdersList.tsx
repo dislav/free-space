@@ -1,7 +1,7 @@
 import React from 'react';
+import useSwr from 'swr';
 
-import { useOrders } from '../../lib/useOrders';
-import { useCarBodies } from '../../lib/useCarBodies';
+import { BaseService, CarBody, Order } from '../../interfaces/types';
 
 import { Container } from './OrdersList.styled';
 import ListHeader from '../ListHeader/ListHeader';
@@ -9,10 +9,11 @@ import OrderCard from '../OrderCard/OrderCard';
 import WashCardSkeleton from '../WashCardSkeleton/WashCardSkeleton';
 
 const OrdersList: React.FC = () => {
-  const { orders, loading } = useOrders();
-  const { bodies } = useCarBodies();
+  const { data: bodies } = useSwr<CarBody[]>('/guide/body');
+  const { data: services } = useSwr<BaseService[]>('/guide/service_list');
+  const { data: orders, error } = useSwr<Order[]>('/order/list');
 
-  if (loading)
+  if (!orders && !error)
     return (
       <Container>
         <ListHeader
@@ -44,7 +45,12 @@ const OrdersList: React.FC = () => {
         ]}
       />
       {orders?.map((order) => (
-        <OrderCard key={order.id} {...order} bodies={bodies} />
+        <OrderCard
+          {...order}
+          key={order.id}
+          bodies={bodies}
+          servicesList={services}
+        />
       ))}
     </Container>
   );

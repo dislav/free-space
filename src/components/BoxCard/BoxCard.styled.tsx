@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import { up } from 'styled-breakpoints';
 import { font } from '../../styles/utils';
 
+import { Container as DropdownMenu } from '../DropdownMenu/DropdownMenu.styled';
+
 export const Container = styled.div`
   position: relative;
   display: flex;
@@ -17,6 +19,14 @@ export const Container = styled.div`
     flex-wrap: nowrap;
     min-height: auto;
     padding: 38px 80px;
+  }
+
+  ${DropdownMenu} {
+    position: absolute;
+    top: 50%;
+    right: 60px;
+    transform: translateY(-50%);
+    z-index: 1;
   }
 `;
 

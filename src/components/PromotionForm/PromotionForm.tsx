@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import { useHistory } from 'react-router-dom';
 import { useTheme } from 'styled-components';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import useSwr from 'swr';
 import {
   FormControl,
   FormErrorMessage,
@@ -16,22 +18,29 @@ import MediaQuery from 'react-responsive';
 import dayjs from 'dayjs';
 import cookie from 'cookie';
 
+import { BaseService } from '../../interfaces/types';
 import { createPromotion } from '../../lib/api';
 import { Container, Column, ExpireTo } from './PromotionForm.styled';
 
 interface IInputs {
   name: string;
-  about?: string;
+  description?: string;
   timeto: Date;
   list_services: string;
 }
 
 const PromotionForm: React.FC = () => {
+  const { data: services } = useSwr<BaseService[]>('/guide/service_list');
+
   const { t } = useTranslation('PromotionForm');
   const { colors, variables, breakpoints } = useTheme();
   const toast = useToast();
+  const history = useHistory();
 
   const [isLoading, setIsLoading] = useState(false);
+  const servicesOptions = services?.length
+    ? services.map(({ id, name }) => ({ value: id, label: name }))
+    : [];
 
   const {
     handleSubmit,
@@ -66,6 +75,7 @@ const PromotionForm: React.FC = () => {
         isClosable: true,
       });
       setIsLoading(false);
+      setTimeout(() => history.push('/promotions'), 200);
     } catch (e) {
       toast({
         title: 'Ошибка',
@@ -98,20 +108,20 @@ const PromotionForm: React.FC = () => {
           borderRadius={variables.borderRadius}
           mb={['14px', '14px', '32px']}
           placeholder={t('Description of the service')}
-          {...register('about')}
+          {...register('description')}
         />
         <ExpireTo>
           <p>Акция действует до</p>
           <Controller
             name={'timeto'}
             control={control}
-            defaultValue={dayjs().toDate()}
+            defaultValue={dayjs().add(1, 'day').toDate()}
             render={({ field: { ref, ...props } }) => (
               <KeyboardDatePicker
                 variant={'inline'}
                 inputVariant={'outlined'}
                 format={'DD MMM, YYYY'}
-                minDate={dayjs().toDate()}
+                minDate={dayjs().add(1, 'day').toDate()}
                 disableToolbar={true}
                 className={'mui-picker'}
                 InputProps={{
@@ -147,10 +157,7 @@ const PromotionForm: React.FC = () => {
           defaultValue={''}
           render={({ field: { value, onChange, ...props } }) => (
             <Select
-              options={[
-                { value: '1', label: 'Мойка' },
-                { value: '2', label: 'Мойка + Полировка' },
-              ]}
+              options={servicesOptions}
               placeholder={'Выберите услугу'}
               classNamePrefix={'react-select'}
               onChange={(option) => onChange(option.map(({ value }) => value))}

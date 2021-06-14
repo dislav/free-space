@@ -1,6 +1,8 @@
 import React from 'react';
+import useSwr from 'swr';
 
-import { useWash } from '../../lib/useWash';
+import { Wash } from '../../interfaces/types';
+
 import { Container } from './WashList.styled';
 import ListHeader from '../ListHeader/ListHeader';
 import WashCard from '../WashCard/WashCard';
@@ -8,9 +10,9 @@ import WashCardSkeleton from '../WashCardSkeleton/WashCardSkeleton';
 import SearchForm from '../SearchForm/SearchForm';
 
 const WashList: React.FC = () => {
-  const { washes, loading } = useWash();
+  const { data, error } = useSwr<Wash[]>('/wash/list');
 
-  if (loading)
+  if (!data && !error)
     return (
       <Container>
         <ListHeader
@@ -28,7 +30,7 @@ const WashList: React.FC = () => {
       <ListHeader
         titles={['Название', 'Город', 'Заявки за неделю', 'Статус']}
       />
-      {washes?.map((wash, index) => (
+      {data?.map((wash, index) => (
         <WashCard key={index} {...wash} />
       ))}
     </Container>

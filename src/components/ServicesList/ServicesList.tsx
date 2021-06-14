@@ -1,6 +1,7 @@
 import React from 'react';
+import useSwr from 'swr';
 
-import { useServices } from '../../lib/useServices';
+import { Service, ServicePrice } from '../../interfaces/types';
 
 import { Container } from './ServicesList.styled';
 import ListHeader from '../ListHeader/ListHeader';
@@ -8,9 +9,13 @@ import ServiceCard from '../ServiceCard/ServiceCard';
 import WashCardSkeleton from '../WashCardSkeleton/WashCardSkeleton';
 
 const ServicesList: React.FC = () => {
-  const { services, loading } = useServices();
+  const { data, error } =
+    useSwr<{
+      list: Service[];
+      price: ServicePrice[];
+    }>('/services');
 
-  if (loading)
+  if (!data && !error)
     return (
       <Container>
         <ListHeader titles={['Название', 'Акция', 'Описание услуги', 'Цена']} />
@@ -23,8 +28,8 @@ const ServicesList: React.FC = () => {
   return (
     <Container>
       <ListHeader titles={['Название', 'Акция', 'Описание услуги', 'Цена']} />
-      {services?.list.map((service) => (
-        <ServiceCard key={service.id} {...service} />
+      {data?.list.map((service) => (
+        <ServiceCard key={service.id} {...service} prices={data?.price} />
       ))}
     </Container>
   );

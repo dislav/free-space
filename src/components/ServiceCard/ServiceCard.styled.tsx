@@ -76,6 +76,7 @@ export const Column = styled.div`
   &:nth-child(4) {
     display: none;
     flex: 1 1 100%;
+    white-space: nowrap;
 
     ${up('xl')} {
       display: block;

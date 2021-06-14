@@ -108,4 +108,5 @@ export const Tag = styled.div`
   padding: 2px 10px;
   margin-right: 8px;
   margin-bottom: 6px;
+  cursor: pointer;
 `;

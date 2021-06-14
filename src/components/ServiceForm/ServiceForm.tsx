@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useTheme } from 'styled-components';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import useSwr from 'swr';
 import {
   FormControl,
   FormLabel,
@@ -8,31 +10,74 @@ import {
   Input,
   Textarea,
   Button,
+  useToast,
 } from '@chakra-ui/react';
 import MediaQuery from 'react-responsive';
 
+import { CarBody } from '../../interfaces/types';
 import { Container, Column } from './ServiceForm.styled';
+import { createService } from '../../lib/api';
 
 interface Inputs {
+  [key: string]: string;
   name: string;
-  description: string;
-  hatchback: string;
-  sedan: string;
-  truck: string;
-  stationWagon: string;
+  about: string;
 }
 
 const ServiceForm = () => {
+  const { data, error } = useSwr<CarBody[]>('/guide/body');
+
+  const [isLoading, setIsLoading] = useState(false);
+  const { colors, variables, breakpoints } = useTheme();
+  const toast = useToast();
+  const history = useHistory();
+
   const {
     handleSubmit,
     register,
     formState: { errors },
   } = useForm<Inputs>();
 
-  const { colors, variables, breakpoints } = useTheme();
-
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    console.log(data);
+    setIsLoading(true);
+
+    const formData = new FormData();
+    Object.entries(data).map(([key, value]) => {
+      if (typeof value === 'object') {
+        const price = Object.entries(value).map((prices) => ({
+          price: prices[1],
+          type: prices[0],
+        }));
+
+        formData.append(key, JSON.stringify(price));
+      } else {
+        formData.append(key, value);
+      }
+    });
+
+    try {
+      const response = await createService(formData);
+      if (!response.data.status) throw new Error(response.data.message);
+
+      setIsLoading(false);
+      toast({
+        title: 'Успешно',
+        description: 'Услуга успешно создана.',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+      setTimeout(() => history.push('/services'), 200);
+    } catch (e) {
+      setIsLoading(false);
+      toast({
+        title: 'Успешно',
+        description: e.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   };
 
   return (
@@ -55,7 +100,7 @@ const ServiceForm = () => {
           mb={'32px'}
           borderRadius={variables.borderRadius}
           placeholder={'Описание услуги'}
-          {...register('description')}
+          {...register('about')}
         />
         <MediaQuery minWidth={breakpoints.xl}>
           <Button
@@ -74,77 +119,29 @@ const ServiceForm = () => {
         </MediaQuery>
       </Column>
       <Column>
-        <FormControl
-          isInvalid={!!errors.hatchback}
-          w={['100%', '100%', '45%']}
-          mb={'16px'}
-        >
-          <FormLabel>Цена для хэтчбека, ₽</FormLabel>
-          <Input
-            bg={colors.white}
-            h={'60px'}
-            borderRadius={variables.borderRadius}
-            {...register('hatchback', {
-              pattern: {
-                value: /^\d+$/,
-                message: 'Значение должно быть число',
-              },
-            })}
-          />
-          <FormErrorMessage>{errors.hatchback?.message}</FormErrorMessage>
-        </FormControl>
-        <FormControl
-          isInvalid={!!errors.sedan}
-          w={['100%', '100%', '45%']}
-          mb={'16px'}
-        >
-          <FormLabel>Цена для седана, ₽</FormLabel>
-          <Input
-            bg={colors.white}
-            h={'60px'}
-            borderRadius={variables.borderRadius}
-            {...register('sedan', {
-              pattern: {
-                value: /^\d+$/,
-                message: 'Значение должно быть число',
-              },
-            })}
-          />
-          <FormErrorMessage>{errors.sedan?.message}</FormErrorMessage>
-        </FormControl>
-        <FormControl isInvalid={!!errors.truck} w={['100%', '100%', '45%']}>
-          <FormLabel>Цена для грузовика, ₽</FormLabel>
-          <Input
-            bg={colors.white}
-            h={'60px'}
-            borderRadius={variables.borderRadius}
-            {...register('truck', {
-              pattern: {
-                value: /^\d+$/,
-                message: 'Значение должно быть число',
-              },
-            })}
-          />
-          <FormErrorMessage>{errors.truck?.message}</FormErrorMessage>
-        </FormControl>
-        <FormControl
-          isInvalid={!!errors.stationWagon}
-          w={['100%', '100%', '45%']}
-        >
-          <FormLabel>Цена для грузовика, ₽</FormLabel>
-          <Input
-            bg={colors.white}
-            h={'60px'}
-            borderRadius={variables.borderRadius}
-            {...register('stationWagon', {
-              pattern: {
-                value: /^\d+$/,
-                message: 'Значение должно быть число',
-              },
-            })}
-          />
-          <FormErrorMessage>{errors.stationWagon?.message}</FormErrorMessage>
-        </FormControl>
+        {!data && !error && <div>Загрузка...</div>}
+        {data?.map(({ id, name }) => (
+          <FormControl
+            key={id}
+            isInvalid={!!errors?.[id]}
+            w={['100%', '100%', '45%']}
+            mb={'16px'}
+          >
+            <FormLabel>Цена для {name}а, ₽</FormLabel>
+            <Input
+              bg={colors.white}
+              h={'60px'}
+              borderRadius={variables.borderRadius}
+              {...register(`price[${id}]`, {
+                pattern: {
+                  value: /^\d+$/,
+                  message: 'Значение должно быть число',
+                },
+              })}
+            />
+            <FormErrorMessage>{errors?.[id]?.message}</FormErrorMessage>
+          </FormControl>
+        ))}
         <MediaQuery maxWidth={breakpoints.xl}>
           <Button
             w={'100%'}
@@ -156,6 +153,7 @@ const ServiceForm = () => {
               opacity: 0.8,
             }}
             type={'submit'}
+            isLoading={isLoading}
           >
             Добавить
           </Button>

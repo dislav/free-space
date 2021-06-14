@@ -89,11 +89,19 @@ export type CarBody = {
   created: string;
 };
 
-export type BaseService = {
+export type Service = {
   id: string;
   name: string;
   service_id: string;
   about: string;
+};
+
+export type BaseService = {
+  id: string;
+  name: string;
+  active: string;
+  type: string;
+  created: string;
 };
 
 export type GeoCode = {
@@ -207,6 +215,7 @@ export type Order = {
   id: string;
   body: string;
   price: string;
+  services: string[];
   wash_id: string;
   phone: string;
   time: string;
@@ -215,5 +224,12 @@ export type Order = {
   box: string;
   hash: string;
   created: string;
-  updated: string
-}
+  updated: string;
+};
+
+export type ServicePrice = {
+  id: string;
+  price: string;
+  service_id: string;
+  type: string;
+};
