@@ -24,13 +24,13 @@ export const Container = styled.div`
     position: absolute;
     top: 20px;
     right: 22px;
+    z-index: 1;
 
     ${up('xl')} {
       top: 50%;
       right: 60px;
       transform: translateY(-50%);
     }
-  }
 `;
 
 export const Column = styled.div`

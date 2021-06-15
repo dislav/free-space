@@ -44,8 +44,8 @@ const AuthForm: React.FC = () => {
       document.cookie = cookie.serialize('sesid28', response.data.hash2);
       localStorage.setItem('group', response.data.group[0]);
 
+      history.push('/');
       setIsLoading(false);
-      setTimeout(() => history.push('/'), 600);
     } catch (e) {
       setError(e.message);
       setIsLoading(false);
