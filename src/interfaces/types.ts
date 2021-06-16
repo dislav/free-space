@@ -92,8 +92,10 @@ export type CarBody = {
 export type Service = {
   id: string;
   name: string;
-  service_id: string;
   about: string;
+  price: string[];
+  active: string;
+  service_id: string;
 };
 
 export type BaseService = {
@@ -225,11 +227,4 @@ export type Order = {
   hash: string;
   created: string;
   updated: string;
-};
-
-export type ServicePrice = {
-  id: string;
-  price: string;
-  service_id: string;
-  type: string;
 };

@@ -4,8 +4,9 @@ import { rgba } from 'polished';
 
 import { Container as DropdownMenuLink } from '../DropdownMenuLink/DropdownMenuLink.styled';
 
-export const Container = styled.div`
+export const Container = styled.div<{ isOpen?: boolean }>`
   position: relative;
+  z-index: ${({ isOpen }) => (isOpen ? 10 : 0)};
 `;
 
 export const Icon = styled.div`

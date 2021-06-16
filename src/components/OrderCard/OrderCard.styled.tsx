@@ -4,13 +4,22 @@ import { up } from 'styled-breakpoints';
 import { font } from '../../styles/utils';
 import { Container as DropdownMenu } from '../DropdownMenu/DropdownMenu.styled';
 
-export const Container = styled.div`
+const statusGradient: {
+  [key: number]: string;
+} = {
+  0: 'linear-gradient(to right, #D2EAF7, #CFECEE)',
+  1: 'linear-gradient(to right, #D2EAF7, #CBFFD6)',
+  2: 'linear-gradient(to right, #D2EAF7, #F7FFC9)',
+  3: 'linear-gradient(to right, #D2EAF7, #FFC9D3)',
+};
+
+export const Container = styled.div<{ orderStatus: number }>`
   position: relative;
   display: flex;
   flex-wrap: wrap;
   font-weight: 500;
   min-height: 150px;
-  background: ${({ theme }) => theme.variables.greenGradient};
+  background: ${({ orderStatus }) => statusGradient[orderStatus]};
   border-radius: ${({ theme }) => theme.variables.borderRadius};
   padding: 20px 22px;
 
@@ -23,7 +32,6 @@ export const Container = styled.div`
     position: absolute;
     top: 20px;
     right: 22px;
-    z-index: 1;
 
     ${up('xl')} {
       top: 50%;
@@ -35,7 +43,10 @@ export const Container = styled.div`
 
 export const Column = styled.div`
   flex: 1 1 100%;
-  padding-right: 40px;
+
+  ${up('xl')} {
+    padding-right: 40px;
+  }
 
   &:nth-child(1) {
     ${font('lg')};

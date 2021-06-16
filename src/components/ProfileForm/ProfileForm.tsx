@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { useTheme } from 'styled-components';
-import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
+import {
+  useForm,
+  FormProvider,
+  SubmitHandler,
+  Controller,
+} from 'react-hook-form';
 import {
   FormControl,
   FormErrorMessage,
@@ -32,8 +37,18 @@ interface Inputs {
   endTime?: string;
 }
 
+const TimeOptions = () => (
+  <>
+    {[...Array(24).keys()].map((key) => (
+      <option key={key} value={key}>
+        {key < 10 ? `0${key}` : key}
+      </option>
+    ))}
+  </>
+);
+
 const ProfileForm: React.FC = () => {
-  const { profile, mutate } = useProfile();
+  const { profile, loading, mutate } = useProfile();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -43,6 +58,7 @@ const ProfileForm: React.FC = () => {
     register,
     formState: { errors },
     watch,
+    control,
   } = methods;
 
   const { t } = useTranslation('Profile');
@@ -53,6 +69,16 @@ const ProfileForm: React.FC = () => {
 
   const isWashUser = (user?: BaseUser | WashUser): user is WashUser =>
     (user as WashUser)?.street !== undefined;
+
+  const phoneFormat = (value: string) => {
+    const phone = value.replace(/[^\d]/g, '');
+    if (/^\d{11}$/.test(phone))
+      return `${phone[0]} (${phone.slice(1, 4)}) ${phone.slice(
+        4,
+        7
+      )} ${phone.slice(7, 11)}`;
+    return phone;
+  };
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsLoading(true);
@@ -90,6 +116,8 @@ const ProfileForm: React.FC = () => {
       });
     }
   };
+
+  if (loading) return <></>;
 
   return (
     <Container onSubmit={handleSubmit(onSubmit)}>
@@ -133,15 +161,24 @@ const ProfileForm: React.FC = () => {
             </FormControl>
           </WithGroup>
           <FormControl isInvalid={!!errors.phone} mb={['20px', '20px', '32px']}>
-            <Input
-              h={['44px', '44px', '58px']}
-              bg={colors.white}
-              borderRadius={variables.borderRadius}
-              placeholder={t('Phone')}
-              defaultValue={profile?.phone || ''}
-              {...register('phone', {
-                required: `${t('Required field')}`,
-              })}
+            <Controller
+              name={'phone'}
+              control={control}
+              defaultValue={profile?.phone ? phoneFormat(profile?.phone) : ''}
+              rules={{
+                required: 'Обязательное поле',
+              }}
+              render={({ field: { onChange, ...field } }) => (
+                <Input
+                  minH={'44px'}
+                  borderRadius={'18px'}
+                  placeholder={'Телефон'}
+                  bg={'white'}
+                  maxLength={16}
+                  onChange={({ target }) => onChange(phoneFormat(target.value))}
+                  {...field}
+                />
+              )}
             />
             <FormErrorMessage>{errors.phone?.message}</FormErrorMessage>
           </FormControl>
@@ -152,14 +189,13 @@ const ProfileForm: React.FC = () => {
                 <Select
                   h={['44px', '44px', '58px']}
                   borderRadius={variables.borderRadius}
-                  defaultValue={'01'}
+                  defaultValue={'8'}
                   bg={colors.white}
                   {...register('startTime', {
                     required: `${t('Required field')}`,
                   })}
                 >
-                  <option value="01">01</option>
-                  <option value="02">02</option>
+                  <TimeOptions />
                 </Select>
                 <FormErrorMessage>{errors.startTime?.message}</FormErrorMessage>
               </FormControl>
@@ -168,14 +204,13 @@ const ProfileForm: React.FC = () => {
                 <Select
                   h={['44px', '44px', '58px']}
                   borderRadius={variables.borderRadius}
-                  defaultValue={'01'}
+                  defaultValue={'18'}
                   bg={colors.white}
                   {...register('endTime', {
                     required: `${t('Required field')}`,
                   })}
                 >
-                  <option value="01">01</option>
-                  <option value="02">02</option>
+                  <TimeOptions />
                 </Select>
                 <FormErrorMessage>{errors.endTime?.message}</FormErrorMessage>
               </FormControl>

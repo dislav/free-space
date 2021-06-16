@@ -45,9 +45,9 @@ const AuthForm: React.FC = () => {
       localStorage.setItem('group', response.data.group[0]);
 
       history.push('/');
-      setIsLoading(false);
     } catch (e) {
       setError(e.message);
+    } finally {
       setIsLoading(false);
     }
   };

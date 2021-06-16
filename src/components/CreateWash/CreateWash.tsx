@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useTheme } from 'styled-components';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import useSwr from 'swr';
 import {
   FormControl,
@@ -14,7 +14,6 @@ import {
 import { TileLayer, Marker, Popup, useMapEvent } from 'react-leaflet';
 import { DivIcon, LatLng } from 'leaflet';
 import MediaQuery from 'react-responsive';
-import cookie from 'cookie';
 
 import { City } from '../../interfaces/types';
 import { createWash } from '../../lib/api';
@@ -62,6 +61,16 @@ const MapComponent: React.FC<{ setMarketCoord: (latlng: LatLng) => void }> = ({
   return null;
 };
 
+const TimeOptions = () => (
+  <>
+    {[...Array(24).keys()].map((key) => (
+      <option key={key} value={key}>
+        {key < 10 ? `0${key}` : key}
+      </option>
+    ))}
+  </>
+);
+
 const CreateWash: React.FC = () => {
   const { data: cities } = useSwr<City[]>('/guide/cites');
 
@@ -70,6 +79,7 @@ const CreateWash: React.FC = () => {
     register,
     formState: { errors },
     watch,
+    control,
   } = useForm<Inputs>();
 
   const history = useHistory();
@@ -81,17 +91,26 @@ const CreateWash: React.FC = () => {
   const { colors, breakpoints } = useTheme();
   const fields = watch();
 
+  const phoneFormat = (value: string) => {
+    const phone = value.replace(/[^\d]/g, '');
+    if (/^\d{11}$/.test(phone))
+      return `${phone[0]} (${phone.slice(1, 4)}) ${phone.slice(
+        4,
+        7
+      )} ${phone.slice(7, 11)}`;
+    return phone;
+  };
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsLoading(true);
     const formData = new FormData();
 
-    const { phone, startTime, endTime, ...props } = data;
-    const ukey28 = cookie.parse(document.cookie)?.ukey28;
+    const { startTime, endTime, ...props } = data;
     const newData = {
       ...props,
       lat: markerCoord?.lat,
       lon: markerCoord?.lng,
-      ukey28,
+      worktime: `${startTime}:00-${endTime}:00`,
     };
 
     Object.entries(newData).forEach(([key, value]) => {
@@ -104,14 +123,13 @@ const CreateWash: React.FC = () => {
 
       toast({
         title: 'Успешно',
-        description: `Мойка «${data.name}» успешно создана.`,
+        description: `Мойка «${data.name}» успешно создана. Логин: ${response.data.data.nick}, пароль: ${response.data.data.pass}`,
         status: 'success',
-        duration: 5000,
+        duration: 20000,
         isClosable: true,
       });
 
-      setTimeout(() => history.push('/'), 200);
-      setIsLoading(false);
+      history.push('/');
     } catch (e) {
       toast({
         title: 'Ошибка',
@@ -120,6 +138,7 @@ const CreateWash: React.FC = () => {
         duration: 5000,
         isClosable: true,
       });
+    } finally {
       setIsLoading(false);
     }
   };
@@ -170,14 +189,24 @@ const CreateWash: React.FC = () => {
           <FormErrorMessage>{errors.street?.message}</FormErrorMessage>
         </FormControl>
         <FormControl isInvalid={!!errors.phone} mb={'30px'}>
-          <Input
-            minH={'44px'}
-            borderRadius={'18px'}
-            placeholder={'Телефон'}
-            bg={'white'}
-            {...register('phone', {
+          <Controller
+            name={'phone'}
+            control={control}
+            defaultValue={''}
+            rules={{
               required: 'Обязательное поле',
-            })}
+            }}
+            render={({ field: { onChange, ...field } }) => (
+              <Input
+                minH={'44px'}
+                borderRadius={'18px'}
+                placeholder={'Телефон'}
+                bg={'white'}
+                maxLength={16}
+                onChange={({ target }) => onChange(phoneFormat(target.value))}
+                {...field}
+              />
+            )}
           />
           <FormErrorMessage>{errors.phone?.message}</FormErrorMessage>
         </FormControl>
@@ -187,14 +216,13 @@ const CreateWash: React.FC = () => {
             <Select
               minH={'44px'}
               borderRadius={'18px'}
-              defaultValue={'01'}
+              defaultValue={'8'}
               bg={'white'}
               {...register('startTime', {
                 required: 'Обязательное поле',
               })}
             >
-              <option value="01">01</option>
-              <option value="02">02</option>
+              <TimeOptions />
             </Select>
             <FormErrorMessage>{errors.startTime?.message}</FormErrorMessage>
           </FormControl>
@@ -203,14 +231,13 @@ const CreateWash: React.FC = () => {
             <Select
               minH={'44px'}
               borderRadius={'18px'}
-              defaultValue={'01'}
+              defaultValue={'18'}
               bg={'white'}
               {...register('endTime', {
                 required: 'Обязательное поле',
               })}
             >
-              <option value="01">01</option>
-              <option value="02">02</option>
+              <TimeOptions />
             </Select>
             <FormErrorMessage>{errors.endTime?.message}</FormErrorMessage>
           </FormControl>

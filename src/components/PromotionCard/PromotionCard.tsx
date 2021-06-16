@@ -66,8 +66,6 @@ const PromotionCard: React.FC<IPromotionCard> = ({
       <Column>{description}</Column>
       <DropdownMenu>
         <DropdownMenuLink>Редактировать</DropdownMenuLink>
-        <hr />
-        <DropdownMenuLink>Удалить</DropdownMenuLink>
       </DropdownMenu>
     </Container>
   );

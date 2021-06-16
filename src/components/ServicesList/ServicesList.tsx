@@ -1,17 +1,13 @@
 import React from 'react';
 import useSwr from 'swr';
 
-import { Service, ServicePrice } from '../../interfaces/types';
+import { Service } from '../../interfaces/types';
 
 import { Container } from './ServicesList.styled';
 import ServiceCard from '../ServiceCard/ServiceCard';
 
 const ServicesList: React.FC = () => {
-  const { data, error } =
-    useSwr<{
-      list: Service[];
-      price: ServicePrice[];
-    }>('/services');
+  const { data, error } = useSwr<{ list: Service[] }>('/services');
 
   return (
     <Container
@@ -19,7 +15,7 @@ const ServicesList: React.FC = () => {
       titles={['Название', 'Акция', 'Описание услуги', 'Цена']}
     >
       {data?.list.map((service) => (
-        <ServiceCard key={service.id} {...service} prices={data?.price} />
+        <ServiceCard key={service.id} {...service} />
       ))}
     </Container>
   );

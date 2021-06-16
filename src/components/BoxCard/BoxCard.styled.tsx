@@ -23,10 +23,14 @@ export const Container = styled.div`
 
   ${DropdownMenu} {
     position: absolute;
-    top: 50%;
-    right: 60px;
-    transform: translateY(-50%);
-    z-index: 1;
+    top: 20px;
+    right: 22px;
+
+    ${up('xl')} {
+      top: 50%;
+      right: 60px;
+      transform: translateY(-50%);
+    }
   }
 `;
 

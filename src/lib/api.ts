@@ -1,7 +1,14 @@
 import axios, { AxiosPromise, AxiosResponse } from 'axios';
 import cookie from 'cookie';
 
-import { Auth, Response, CreateWash, Box } from '../interfaces/types';
+import {
+  Auth,
+  Response,
+  CreateWash,
+  Box,
+  Order,
+  Service,
+} from '../interfaces/types';
 
 // Basic
 const apiUrl = process.env.REACT_APP_API_URL;
@@ -65,5 +72,18 @@ export const activatePromotion = (id: string): AxiosPromise<Response> =>
 
 export const updateProfile = (data: FormData): AxiosPromise<Response> =>
   axiosInstance.post('/profile/update', data, {
+    params: { ukey28: getToken() },
+  });
+
+export const updateOrderStatus = (
+  id: string,
+  status: number
+): AxiosPromise<Response<Order>> =>
+  axiosInstance.post(`/order/${id}/status/${status}`, null, {
+    params: { ukey28: getToken() },
+  });
+
+export const activateService = (id: string): AxiosPromise<Response<Service>> =>
+  axiosInstance.post(`/service/active/${id}`, null, {
     params: { ukey28: getToken() },
   });
