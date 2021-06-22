@@ -8,6 +8,8 @@ import {
   Box,
   Order,
   Service,
+  Wash,
+  GeoCode,
 } from '../interfaces/types';
 
 // Basic
@@ -17,7 +19,7 @@ const axiosInstance = axios.create({ baseURL: apiUrl });
 const getToken = (): string | undefined =>
   cookie.parse(document.cookie)?.ukey28;
 
-// Fetcher for useSwr
+// SWR
 export const fetcher = async (url: string) => {
   const response: AxiosResponse<Response> = await axiosInstance.get(url, {
     params: { ukey28: getToken() },
@@ -86,4 +88,27 @@ export const updateOrderStatus = (
 export const activateService = (id: string): AxiosPromise<Response<Service>> =>
   axiosInstance.post(`/service/active/${id}`, null, {
     params: { ukey28: getToken() },
+  });
+
+export const getOrders = (params: any): AxiosPromise<Response<Wash[]>> =>
+  axiosInstance.get('/wash/list', {
+    params: {
+      ukey28: getToken(),
+      ...params,
+    },
+  });
+
+export const activeWash = (id: string): AxiosPromise<Response<Wash>> =>
+  axiosInstance.post(`/wash/active/${id}`, null, {
+    params: { ukey28: getToken() },
+  });
+
+export const getGeoCodeByAddress = (
+  address: string
+): AxiosPromise<Response<GeoCode>> =>
+  axiosInstance.get('/geocode', {
+    params: {
+      ukey28: getToken(),
+      q: address,
+    },
   });

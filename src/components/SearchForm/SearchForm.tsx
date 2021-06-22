@@ -1,21 +1,32 @@
 import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useTheme } from 'styled-components';
+
 import { Input, Button } from '@chakra-ui/react';
 
 import { Container } from './SearchForm.styled';
 
-interface IInputs {
+export interface IInputs {
   search: string;
 }
 
-const SearchForm: React.FC = () => {
-  const { handleSubmit, register } = useForm<IInputs>();
+interface ISearchForm {
+  searchText?: string;
+  onSearch?: (value: IInputs) => void;
+}
+
+const SearchForm: React.FC<ISearchForm> = ({ searchText, onSearch }) => {
+  const { handleSubmit, register, reset } = useForm<IInputs>();
 
   const { colors, variables } = useTheme();
 
-  const onSubmit: SubmitHandler<IInputs> = async (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<IInputs> = (data) => {
+    onSearch?.(data);
+  };
+
+  const onReset = () => {
+    onSearch?.({ search: '' });
+    reset({ search: '' });
   };
 
   return (
@@ -28,9 +39,16 @@ const SearchForm: React.FC = () => {
         placeholder={'Поиск'}
         {...register('search')}
       />
-      <Button borderRadius={variables.borderRadius} type={'submit'}>
-        Поиск
-      </Button>
+      {!searchText ? (
+        <Button borderRadius={variables.borderRadius} type={'submit'}>
+          Поиск
+        </Button>
+      ) : (
+        <Button borderRadius={variables.borderRadius} onClick={onReset}>
+          Сбросить
+        </Button>
+      )}
+      {searchText && <p>Найдено по запросу «{searchText}»</p>}
     </Container>
   );
 };

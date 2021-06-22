@@ -17,6 +17,7 @@
     "framer-motion": "^4",
     "i18next": "^20.3.1",
     "leaflet": "^1.7.1",
+    "leaflet-control-geocoder": "^2.3.0",
     "polished": "^4.1.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

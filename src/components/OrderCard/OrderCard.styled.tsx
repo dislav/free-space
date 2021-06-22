@@ -25,6 +25,10 @@ export const Container = styled.div<{ orderStatus: number }>`
 
   ${up('xl')} {
     flex-wrap: nowrap;
+    padding: 30px 40px;
+  }
+
+  ${up('xxl')} {
     padding: 38px 80px;
   }
 

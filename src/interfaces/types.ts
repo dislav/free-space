@@ -54,6 +54,7 @@ export type Wash = {
   id: string;
   name: string;
   description: string;
+  active: string;
   city: string;
   street: string;
   lat: string;
@@ -227,4 +228,9 @@ export type Order = {
   hash: string;
   created: string;
   updated: string;
+};
+
+export type OptionProps = {
+  label: string;
+  value: string;
 };

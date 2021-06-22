@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { up } from 'styled-breakpoints';
 import { rgba } from 'polished';
 
+import { font } from '../../styles/utils';
 import { Container as SidebarLink } from '../SidebarLink/SidebarLink.styled';
 
 interface ISidebar {
@@ -23,6 +24,7 @@ export const Container = styled.div<ISidebar>`
   z-index: 100;
 
   ${up('xl')} {
+    width: 240px;
     opacity: 1;
     visibility: visible;
     transform: inherit;
@@ -36,11 +38,11 @@ export const Container = styled.div<ISidebar>`
     width: 100%;
 
     ${up('xl')} {
-      max-width: 80%;
       margin-bottom: 12px;
     }
 
     ${up('xxl')} {
+      max-width: 80%;
       margin-bottom: 20px;
     }
 
@@ -67,12 +69,29 @@ export const ContainerLogo = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 52px 0;
+  padding: 20px 0 30px;
+
+  ${up('xl')} {
+    padding: 30px 0;
+  }
+
+  ${up('xxl')} {
+    padding: 52px 0;
+  }
 `;
 
 export const Logout = styled.div`
-  font-size: 20px;
+  ${font('base')};
   font-weight: 700;
-  margin: auto auto 60px;
+  margin: auto auto 40px;
   cursor: pointer;
+
+  ${up('xl')} {
+    ${font('lg')};
+  }
+
+  ${up('xxl')} {
+    ${font('lg')};
+    margin: auto auto 60px;
+  }
 `;

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 import { useTheme } from 'styled-components';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import useSwr from 'swr';
@@ -9,14 +9,15 @@ import {
   Button,
   Input,
   Select,
+  Skeleton,
   useToast,
 } from '@chakra-ui/react';
-import { TileLayer, Marker, Popup, useMapEvent } from 'react-leaflet';
-import { DivIcon, LatLng } from 'leaflet';
 import MediaQuery from 'react-responsive';
+import L, { DivIcon, LatLng, LatLngTuple } from 'leaflet';
+import { TileLayer, Marker, Popup, useMap, useMapEvent } from 'react-leaflet';
 
-import { City } from '../../interfaces/types';
-import { createWash } from '../../lib/api';
+import { City, Wash } from '../../interfaces/types';
+import { createWash, getGeoCodeByAddress } from '../../lib/api';
 
 import { Container, Form, FormTime, Map } from './CreateWash.styled';
 
@@ -54,10 +55,35 @@ const MarkerIcon = new DivIcon({
   </svg>`,
 });
 
-const MapComponent: React.FC<{ setMarketCoord: (latlng: LatLng) => void }> = ({
-  setMarketCoord,
-}) => {
-  useMapEvent('click', ({ latlng }) => setMarketCoord(latlng));
+const MapComponent: React.FC<{
+  setMarketCoord: (latlng: LatLng) => void;
+  onGetAddress?: (address: string) => void;
+  center?: LatLngTuple;
+}> = ({ setMarketCoord, onGetAddress, center }) => {
+  const map = useMap();
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const geocoder = L.Control.Geocoder.nominatim();
+
+  useMapEvent('click', ({ latlng }) => {
+    setMarketCoord(latlng);
+    geocoder.reverse(
+      latlng,
+      map.options.crs?.scale(map.getZoom()),
+      (results: any[]) => {
+        if (results[0]) onGetAddress?.(results[0].name);
+      }
+    );
+  });
+
+  useEffect(() => {
+    if (center) {
+      const [lat, lng] = center;
+      map.panTo(new LatLng(lat, lng));
+    }
+  }, [center]);
+
   return null;
 };
 
@@ -72,7 +98,21 @@ const TimeOptions = () => (
 );
 
 const CreateWash: React.FC = () => {
-  const { data: cities } = useSwr<City[]>('/guide/cites');
+  const { id } = useParams<{ id?: string }>();
+
+  const { data: cities, error: citiesError } = useSwr<City[]>('/guide/cites');
+  const { data: washInfo, error: washError } = useSwr<Wash>(
+    id ? `/wash/info/${id}` : null
+  );
+
+  const citiesLoading = !cities && !citiesError;
+  const washInfoLoading = !washInfo && !washError;
+
+  const workTime = washInfo?.worktime.length
+    ? washInfo?.worktime.split('-')
+    : undefined;
+  const startTime = workTime?.[0]?.split(':')?.[0];
+  const endTime = workTime?.[1]?.split(':')?.[0];
 
   const {
     handleSubmit,
@@ -80,15 +120,17 @@ const CreateWash: React.FC = () => {
     formState: { errors },
     watch,
     control,
+    setValue,
   } = useForm<Inputs>();
 
   const history = useHistory();
   const toast = useToast();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [center, setCenter] = useState<LatLngTuple>([55.7540471, 37.62045]);
   const [markerCoord, setMarketCoord] = useState<LatLng>();
 
-  const { colors, breakpoints } = useTheme();
+  const { colors, variables, breakpoints } = useTheme();
   const fields = watch();
 
   const phoneFormat = (value: string) => {
@@ -125,7 +167,7 @@ const CreateWash: React.FC = () => {
         title: 'Успешно',
         description: `Мойка «${data.name}» успешно создана. Логин: ${response.data.data.nick}, пароль: ${response.data.data.pass}`,
         status: 'success',
-        duration: 20000,
+        duration: 200000,
         isClosable: true,
       });
 
@@ -143,6 +185,27 @@ const CreateWash: React.FC = () => {
     }
   };
 
+  const getGeoCodeRequest = async (address: string) => {
+    try {
+      const { data } = await getGeoCodeByAddress(address);
+      setCenter([+data.data.geo_lat || 0, +data.data.geo_lon || 0]);
+    } catch (e) {
+      toast({
+        title: 'Ошибка',
+        description: e.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const onGetAddress = (address: string) => {
+    setValue('street', address);
+  };
+
+  if (washInfoLoading) return <></>;
+
   return (
     <Container>
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -151,6 +214,7 @@ const CreateWash: React.FC = () => {
             minH={'44px'}
             borderRadius={'18px'}
             placeholder={'Название объекта'}
+            defaultValue={washInfo?.name || ''}
             bg={colors.white}
             {...register('name', {
               required: 'Обязательное поле',
@@ -158,29 +222,40 @@ const CreateWash: React.FC = () => {
           />
           <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
         </FormControl>
-        <FormControl isInvalid={!!errors.city} mb={'20px'}>
-          <Select
-            minH={'44px'}
-            borderRadius={'18px'}
-            placeholder={'Выберите город'}
-            bg={'white'}
-            {...register('city', {
-              required: 'Обязательное поле',
-            })}
-          >
-            {cities?.map(({ id, name }) => (
-              <option key={id} value={name}>
-                {name}
-              </option>
-            ))}
-          </Select>
-          <FormErrorMessage>{errors.city?.message}</FormErrorMessage>
-        </FormControl>
+        {!citiesLoading ? (
+          <FormControl isInvalid={!!errors.city} mb={'20px'}>
+            <Select
+              h={['32px', '32px', '44px']}
+              borderRadius={'18px'}
+              placeholder={'Выберите город'}
+              defaultValue={washInfo?.city || ''}
+              bg={'white'}
+              {...register('city', {
+                required: 'Обязательное поле',
+              })}
+              onChange={({ target }) => getGeoCodeRequest(target.value)}
+            >
+              {cities?.map(({ id, name }) => (
+                <option key={id} value={name}>
+                  {name}
+                </option>
+              ))}
+            </Select>
+            <FormErrorMessage>{errors.city?.message}</FormErrorMessage>
+          </FormControl>
+        ) : (
+          <Skeleton
+            h={['32px', '32px', '44px']}
+            mb={'20px'}
+            borderRadius={variables.borderRadius}
+          />
+        )}
         <FormControl isInvalid={!!errors.street} mb={'20px'}>
           <Input
             minH={'44px'}
             borderRadius={'18px'}
             placeholder={'Адрес'}
+            defaultValue={washInfo?.street || ''}
             bg={colors.white}
             {...register('street', {
               required: 'Обязательное поле',
@@ -192,7 +267,7 @@ const CreateWash: React.FC = () => {
           <Controller
             name={'phone'}
             control={control}
-            defaultValue={''}
+            defaultValue={washInfo?.phone ? phoneFormat(washInfo.phone) : ''}
             rules={{
               required: 'Обязательное поле',
             }}
@@ -216,7 +291,7 @@ const CreateWash: React.FC = () => {
             <Select
               minH={'44px'}
               borderRadius={'18px'}
-              defaultValue={'8'}
+              defaultValue={startTime || '8'}
               bg={'white'}
               {...register('startTime', {
                 required: 'Обязательное поле',
@@ -231,7 +306,7 @@ const CreateWash: React.FC = () => {
             <Select
               minH={'44px'}
               borderRadius={'18px'}
-              defaultValue={'18'}
+              defaultValue={endTime || '18'}
               bg={'white'}
               {...register('endTime', {
                 required: 'Обязательное поле',
@@ -257,7 +332,7 @@ const CreateWash: React.FC = () => {
         </Button>
       </Form>
       <MediaQuery minWidth={breakpoints.xl}>
-        <Map center={[53.79462178802441, 87.15498449999993]} zoom={13}>
+        <Map center={center} zoom={13}>
           <TileLayer
             attribution={
               '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -279,7 +354,11 @@ const CreateWash: React.FC = () => {
               </Popup>
             </Marker>
           )}
-          <MapComponent setMarketCoord={setMarketCoord} />
+          <MapComponent
+            setMarketCoord={setMarketCoord}
+            onGetAddress={onGetAddress}
+            center={center}
+          />
         </Map>
       </MediaQuery>
     </Container>

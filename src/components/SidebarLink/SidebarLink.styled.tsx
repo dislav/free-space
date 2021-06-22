@@ -17,6 +17,10 @@ export const Container = styled.div<ISidebarLink>`
     ${up('xl')} {
       border-radius: ${({ theme }) =>
         `0 ${theme.variables.borderRadius} ${theme.variables.borderRadius} 0`};
+      padding: 12px 40px 12px 40px;
+    }
+
+    ${up('xxl')} {
       padding: 16px 80px 16px 100px;
     }
 

@@ -1,28 +1,46 @@
 import React from 'react';
+import { Select } from '@chakra-ui/react';
 
-import { Container, Titles, Column } from './TableList.styled';
+import { OptionProps } from '../../interfaces/types';
+
+import {
+  Container,
+  Header,
+  Titles,
+  Column,
+  EmptyList,
+} from './TableList.styled';
 import WashCardSkeleton from '../WashCardSkeleton/WashCardSkeleton';
+import { SadIcon } from '../../icons/icons';
+
+interface TitleOption {
+  title: string;
+  onChangeParam?: (value: string) => void;
+  options?: OptionProps[];
+}
 
 interface ITableList {
   className?: string;
-  titles?: string[];
-  isLoading: boolean;
+  header?: React.ReactNode;
+  titles?: Array<string | TitleOption>;
+  isLoading?: boolean;
+  isEmpty?: boolean;
 }
+
+const isTitleOption = (title: string | TitleOption): title is TitleOption =>
+  (title as TitleOption).title !== undefined;
 
 const TableList: React.FC<ITableList> = ({
   children,
   className,
+  header,
   titles,
   isLoading,
+  isEmpty,
 }) => {
   if (isLoading)
     return (
       <Container className={className}>
-        <Titles>
-          {titles?.map((title, index) => (
-            <Column key={index}>{title}</Column>
-          ))}
-        </Titles>
         <WashCardSkeleton />
         <WashCardSkeleton />
         <WashCardSkeleton />
@@ -31,12 +49,36 @@ const TableList: React.FC<ITableList> = ({
 
   return (
     <Container className={className}>
+      <Header>{header}</Header>
       <Titles>
         {titles?.map((title, index) => (
-          <Column key={index}>{title}</Column>
+          <Column key={index}>
+            {isTitleOption(title) ? (
+              <Select
+                variant={'unstyled'}
+                placeholder={title.title}
+                onChange={({ target }) => title.onChangeParam?.(target.value)}
+              >
+                {title.options?.map(({ label, value }, key) => (
+                  <option key={key} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </Select>
+            ) : (
+              title
+            )}
+          </Column>
         ))}
       </Titles>
-      {children}
+      {isEmpty ? (
+        <EmptyList>
+          Список пуст
+          <SadIcon />
+        </EmptyList>
+      ) : (
+        children
+      )}
     </Container>
   );
 };

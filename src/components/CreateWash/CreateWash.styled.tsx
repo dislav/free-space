@@ -18,8 +18,7 @@ export const Form = styled.form`
   flex-direction: column;
 
   ${up('xl')} {
-    width: 320px;
-    min-width: 320px;
+    width: 35%;
   }
 `;
 
@@ -43,7 +42,7 @@ export const Map = styled(MapContainer)`
   overflow: hidden;
 
   ${up('xl')} {
-    width: 65%;
+    width: 60%;
     max-height: 500px;
     margin-left: auto;
     border-radius: 18px;

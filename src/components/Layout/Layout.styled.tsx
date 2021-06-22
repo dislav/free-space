@@ -8,7 +8,7 @@ export const Container = styled.div`
   padding: 40px 16px;
 
   ${up('xl')} {
-    margin-left: 280px;
+    margin-left: 240px;
     padding: 30px 40px 60px;
   }
 

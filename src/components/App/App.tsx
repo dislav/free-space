@@ -69,6 +69,9 @@ const App: React.FC = () => {
                     <PrivateRoute path={'/wash/create'}>
                       <CreateWash />
                     </PrivateRoute>
+                    <PrivateRoute path={'/wash/update/:id'}>
+                      <CreateWash />
+                    </PrivateRoute>
                     <PrivateRoute path={'/service/create'}>
                       <CreateService />
                     </PrivateRoute>
