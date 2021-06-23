@@ -22,9 +22,9 @@ const ServiceCard: React.FC<Service> = ({ id, name, about, price, active }) => {
   const toast = useToast();
 
   const numPrices: number[] = [];
-  Object.values(price)?.forEach(
-    (value) => value?.length && numPrices.push(+value)
-  );
+  Object.values(price)?.forEach((value: any) => {
+    if (value?.length) numPrices.push(+value);
+  });
 
   const minPrice = Math.min(...numPrices);
   const maxPrice = Math.max(...numPrices);
@@ -70,7 +70,7 @@ const ServiceCard: React.FC<Service> = ({ id, name, about, price, active }) => {
         {minPrice} — {maxPrice} ₽
       </Column>
       <DropdownMenu>
-        <Link to={`/services/update/${id}`}>
+        <Link to={`/service/update/${id}`}>
           <DropdownMenuLink>Редактировать</DropdownMenuLink>
         </Link>
         <hr />

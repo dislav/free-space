@@ -19,7 +19,7 @@ import dayjs from 'dayjs';
 import cookie from 'cookie';
 
 import { BaseService, Promotion } from '../../interfaces/types';
-import { createPromotion } from '../../lib/api';
+import { createPromotion, updatePromotion } from '../../lib/api';
 
 import { Container, Column, ExpireTo } from './PromotionForm.styled';
 
@@ -81,28 +81,56 @@ const PromotionForm: React.FC = () => {
       formData.append(key, value);
     });
 
-    try {
-      const response = await createPromotion(formData);
-      if (!response.data.status) throw new Error(response.data.message);
+    if (id) {
+      // Save promo
+      try {
+        const response = await updatePromotion(id, formData);
+        if (!response.data.status) throw new Error(response.data.message);
 
-      toast({
-        title: 'Успешно',
-        description: `Акция «${data.name}» успешно создана.`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      });
-      setIsLoading(false);
-      setTimeout(() => history.push('/promotions'), 200);
-    } catch (e) {
-      toast({
-        title: 'Ошибка',
-        description: e.message,
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
-      setIsLoading(false);
+        toast({
+          title: 'Успешно',
+          description: `Акция «${data.name}» успешно обновлена.`,
+          status: 'success',
+          duration: 5000,
+          isClosable: true,
+        });
+        setTimeout(() => history.push('/promotions'), 200);
+      } catch (e) {
+        toast({
+          title: 'Ошибка',
+          description: e.message,
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      // Create promo
+      try {
+        const response = await createPromotion(formData);
+        if (!response.data.status) throw new Error(response.data.message);
+
+        toast({
+          title: 'Успешно',
+          description: `Акция «${data.name}» успешно создана.`,
+          status: 'success',
+          duration: 5000,
+          isClosable: true,
+        });
+        setTimeout(() => history.push('/promotions'), 200);
+      } catch (e) {
+        toast({
+          title: 'Ошибка',
+          description: e.message,
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -172,7 +200,7 @@ const PromotionForm: React.FC = () => {
             type={'submit'}
             isLoading={isLoading}
           >
-            {t('Add')}
+            {id ? t('Save') : t('Add')}
           </Button>
         </MediaQuery>
       </Column>
@@ -205,7 +233,7 @@ const PromotionForm: React.FC = () => {
             }}
             type={'submit'}
           >
-            {t('Add')}
+            {id ? t('Save') : t('Add')}
           </Button>
         </MediaQuery>
       </Column>

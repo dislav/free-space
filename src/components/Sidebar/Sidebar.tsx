@@ -17,6 +17,7 @@ import {
   PromotionIcon,
   ServiceIcon,
   SettingsIcon,
+  StatisticsIcon,
 } from '../../icons/icons';
 
 const Sidebar: React.FC = () => {
@@ -78,6 +79,10 @@ const Sidebar: React.FC = () => {
         <SidebarLink to={'/promotions'}>
           <PromotionIcon />
           Акции
+        </SidebarLink>
+        <SidebarLink to={'/statistics'}>
+          <StatisticsIcon />
+          Статистика
         </SidebarLink>
         <SidebarLink to={'/profile'}>
           <SettingsIcon />

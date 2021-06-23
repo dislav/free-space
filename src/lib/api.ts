@@ -10,6 +10,7 @@ import {
   Service,
   Wash,
   GeoCode,
+  Promotion,
 } from '../interfaces/types';
 
 // Basic
@@ -115,5 +116,29 @@ export const getGeoCodeByAddress = (
 
 export const updatePassword = (data: FormData): AxiosPromise<Response> =>
   axiosInstance.post('/password', data, {
+    params: { ukey28: getToken() },
+  });
+
+export const updateWash = (
+  id: string,
+  data: FormData
+): AxiosPromise<Response<CreateWash>> =>
+  axiosInstance.post(`/wash/update/${id}`, data, {
+    params: { ukey28: getToken() },
+  });
+
+export const updatePromotion = (
+  id: string,
+  data: FormData
+): AxiosPromise<Response<Promotion>> =>
+  axiosInstance.post(`/promo/update/${id}`, data, {
+    params: { ukey28: getToken() },
+  });
+
+export const updateService = (
+  id: string,
+  data: FormData
+): AxiosPromise<Response<Promotion>> =>
+  axiosInstance.post(`/service/update/${id}`, data, {
     params: { ukey28: getToken() },
   });

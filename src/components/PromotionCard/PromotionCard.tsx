@@ -8,6 +8,7 @@ import { activatePromotion } from '../../lib/api';
 import { Container, Column } from './PromotionCard.styled';
 import DropdownMenu from '../DropdownMenu/DropdownMenu';
 import DropdownMenuLink from '../DropdownMenuLink/DropdownMenuLink';
+import WithGroup from '../WithGroup/WithGroup';
 
 interface IPromotionCard extends Promotion {
   onActivate?: () => void;
@@ -62,11 +63,13 @@ const PromotionCard: React.FC<IPromotionCard> = ({
         />
       </Column>
       <Column>{description}</Column>
-      <DropdownMenu>
-        <Link to={`/promotion/update/${id}`}>
-          <DropdownMenuLink>Редактировать</DropdownMenuLink>
-        </Link>
-      </DropdownMenu>
+      <WithGroup available={['2']}>
+        <DropdownMenu>
+          <Link to={`/promotion/update/${id}`}>
+            <DropdownMenuLink>Редактировать</DropdownMenuLink>
+          </Link>
+        </DropdownMenu>
+      </WithGroup>
     </Container>
   );
 };

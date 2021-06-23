@@ -60,7 +60,6 @@ const WashCard: React.FC<Wash> = ({ id, name, city, active }) => {
       <Column>{city}</Column>
       <Column>{isActive ? 'Активна' : 'Неактивна'}</Column>
       <DropdownMenu>
-        <DropdownMenuLink>Статистика</DropdownMenuLink>
         <Link to={`/wash/update/${id}`}>
           <DropdownMenuLink>Редактировать</DropdownMenuLink>
         </Link>

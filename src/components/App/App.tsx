@@ -30,6 +30,7 @@ import Services from '../../pages/Services';
 import CreateService from '../../pages/CreateService';
 import Boxes from '../../pages/Boxes';
 import CreatePromotion from '../../pages/CreatePromotion';
+import Statistics from '../../pages/Statistics';
 
 dayjs.locale('ru');
 
@@ -69,14 +70,20 @@ const App: React.FC = () => {
                     <PrivateRoute path={'/services'}>
                       <Services />
                     </PrivateRoute>
+                    <PrivateRoute path={'/service/create'}>
+                      <CreateService />
+                    </PrivateRoute>
+                    <PrivateRoute path={'/service/update/:id'}>
+                      <CreateService />
+                    </PrivateRoute>
                     <PrivateRoute path={'/wash/create'}>
                       <CreateWash />
                     </PrivateRoute>
                     <PrivateRoute path={'/wash/update/:id'}>
                       <CreateWash />
                     </PrivateRoute>
-                    <PrivateRoute path={'/service/create'}>
-                      <CreateService />
+                    <PrivateRoute path={'/statistics'}>
+                      <Statistics />
                     </PrivateRoute>
                     <PrivateRoute path={'/'}>
                       <Dashboard />

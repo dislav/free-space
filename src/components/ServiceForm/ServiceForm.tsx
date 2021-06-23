@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 import { useTheme } from 'styled-components';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import useSwr from 'swr';
+import useSwr, { mutate } from 'swr';
 import {
   FormControl,
   FormLabel,
@@ -14,9 +14,10 @@ import {
 } from '@chakra-ui/react';
 import MediaQuery from 'react-responsive';
 
-import { CarBody } from '../../interfaces/types';
+import { CarBody, Service } from '../../interfaces/types';
+import { createService, updateService } from '../../lib/api';
+
 import { Container, Column } from './ServiceForm.styled';
-import { createService } from '../../lib/api';
 
 interface Inputs {
   [key: string]: string;
@@ -24,8 +25,20 @@ interface Inputs {
   about: string;
 }
 
-const ServiceForm = () => {
+const ServiceForm: React.FC = () => {
+  const { id } = useParams<{ id?: string }>();
   const { data, error } = useSwr<CarBody[]>('/guide/body');
+  const {
+    data: service,
+    error: serviceError,
+    mutate: refetch,
+  } = useSwr<Service>(id ? `/service/${id}` : null);
+
+  useEffect(() => {
+    refetch();
+  }, []);
+
+  const serviceLoading = !service && !serviceError;
 
   const [isLoading, setIsLoading] = useState(false);
   const { colors, variables, breakpoints } = useTheme();
@@ -55,30 +68,59 @@ const ServiceForm = () => {
       }
     });
 
-    try {
-      const response = await createService(formData);
-      if (!response.data.status) throw new Error(response.data.message);
+    if (id) {
+      try {
+        const response = await updateService(id, formData);
+        if (!response.data.status) throw new Error(response.data.message);
 
-      setIsLoading(false);
-      toast({
-        title: 'Успешно',
-        description: 'Услуга успешно создана.',
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      });
-      setTimeout(() => history.push('/services'), 200);
-    } catch (e) {
-      setIsLoading(false);
-      toast({
-        title: 'Успешно',
-        description: e.message,
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
+        toast({
+          title: 'Успешно',
+          description: 'Услуга успешно сохранена.',
+          status: 'success',
+          duration: 5000,
+          isClosable: true,
+        });
+        mutate('/services');
+        setTimeout(() => history.push('/services'), 200);
+      } catch (e) {
+        toast({
+          title: 'Ошибка',
+          description: e.message,
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      try {
+        const response = await createService(formData);
+        if (!response.data.status) throw new Error(response.data.message);
+
+        toast({
+          title: 'Успешно',
+          description: 'Услуга успешно создана.',
+          status: 'success',
+          duration: 5000,
+          isClosable: true,
+        });
+        setTimeout(() => history.push('/services'), 200);
+      } catch (e) {
+        toast({
+          title: 'Ошибка',
+          description: e.message,
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
+
+  if (id && serviceLoading) return <></>;
 
   return (
     <Container onSubmit={handleSubmit(onSubmit)}>
@@ -89,6 +131,7 @@ const ServiceForm = () => {
             h={'60px'}
             borderRadius={variables.borderRadius}
             placeholder={'Название'}
+            defaultValue={service?.name || ''}
             {...register('name', { required: 'Обязательное поле' })}
           />
           <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
@@ -100,6 +143,7 @@ const ServiceForm = () => {
           mb={'32px'}
           borderRadius={variables.borderRadius}
           placeholder={'Описание услуги'}
+          defaultValue={service?.about || ''}
           {...register('about')}
         />
         <MediaQuery minWidth={breakpoints.xl}>
@@ -114,13 +158,13 @@ const ServiceForm = () => {
             }}
             type={'submit'}
           >
-            Добавить
+            {id ? 'Сохранить' : 'Добавить'}
           </Button>
         </MediaQuery>
       </Column>
       <Column>
         {!data && !error && <div>Загрузка...</div>}
-        {data?.map(({ id, name }) => (
+        {data?.map(({ id, name }, index) => (
           <FormControl
             key={id}
             isInvalid={!!errors?.[id]}
@@ -132,6 +176,7 @@ const ServiceForm = () => {
               bg={colors.white}
               h={'60px'}
               borderRadius={variables.borderRadius}
+              defaultValue={service?.price?.[index].price || ''}
               {...register(`price[${id}]`, {
                 pattern: {
                   value: /^\d+$/,
@@ -155,7 +200,7 @@ const ServiceForm = () => {
             type={'submit'}
             isLoading={isLoading}
           >
-            Добавить
+            {id ? 'Сохранить' : 'Добавить'}
           </Button>
         </MediaQuery>
       </Column>

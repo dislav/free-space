@@ -94,7 +94,7 @@ export type Service = {
   id: string;
   name: string;
   about: string;
-  price: string[];
+  price: any;
   active: string;
   service_id: string;
 };
@@ -236,4 +236,18 @@ export type Order = {
 export type OptionProps = {
   label: string;
   value: string;
+};
+
+export type StatProps = {
+  wash_list: string[];
+  orders: number;
+  orders_done: number;
+  orders_approved: number;
+  orders_cancel: number;
+  sum: number;
+  sum_done: number;
+  sum_approved: number;
+  sum_cancel: number;
+  date: string;
+  date_micro: number;
 };

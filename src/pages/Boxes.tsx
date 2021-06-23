@@ -9,7 +9,7 @@ import BoxesList from '../components/BoxesList/BoxesList';
 import LinkButton from '../components/LinkButton/LinkButton';
 
 const Boxes = () => {
-  const { mutate } = useBoxes();
+  const { boxes, loading, mutate } = useBoxes();
   const toast = useToast();
 
   const onClick = async () => {
@@ -36,8 +36,15 @@ const Boxes = () => {
     }
   };
 
+  const boxCount = boxes?.length || 0;
+
   return (
-    <Layout title={'Боксы'} action={<LinkButton to={'#'} onClick={onClick} />}>
+    <Layout
+      title={'Боксы'}
+      action={
+        boxCount < 10 && !loading && <LinkButton to={'#'} onClick={onClick} />
+      }
+    >
       <BoxesList />
     </Layout>
   );

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useTheme } from 'styled-components';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
-import useSwr from 'swr';
+import useSwr, { mutate } from 'swr';
 import {
   FormControl,
   FormErrorMessage,
@@ -17,7 +17,7 @@ import L, { DivIcon, LatLng, LatLngTuple } from 'leaflet';
 import { TileLayer, Marker, Popup, useMap, useMapEvent } from 'react-leaflet';
 
 import { City, Wash } from '../../interfaces/types';
-import { createWash, getGeoCodeByAddress } from '../../lib/api';
+import { createWash, getGeoCodeByAddress, updateWash } from '../../lib/api';
 
 import { Container, Form, FormTime, Map } from './CreateWash.styled';
 
@@ -163,49 +163,77 @@ const CreateWash: React.FC = () => {
       if (value) formData.append(key, value.toString());
     });
 
-    try {
-      const response = await createWash(formData);
-      if (!response.data.status) throw new Error(response.data.message);
+    if (id) {
+      try {
+        const response = await updateWash(id, formData);
+        if (!response.data.status) throw new Error(response.data.message);
 
-      const loginAndPassword = `Логин: ${response.data.data.nick}\nПароль: ${response.data.data.pass}`;
+        toast({
+          title: 'Успешно',
+          description: `Мойка «${data.name}» успешно обновлена.`,
+          status: 'success',
+          duration: 5000,
+          isClosable: true,
+        });
 
-      toast({
-        title: 'Успешно',
-        description: (
-          <span>
-            Мойка «{data.name}» успешно создана.
-            <br />
-            <br />
-            Логин: {response.data.data.nick}
-            <br />
-            Пароль: {response.data.data.pass}
-            <br />
-            <br />
-            <Button
-              color={colors.white}
-              colorScheme={'blackAlpha'}
-              onClick={() => onCopyData(loginAndPassword)}
-            >
-              Скопировать
-            </Button>
-          </span>
-        ),
-        status: 'success',
-        duration: 200000,
-        isClosable: true,
-      });
+        mutate('/wash/list');
+        history.push('/');
+      } catch (e) {
+        toast({
+          title: 'Ошибка',
+          description: e.message,
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      try {
+        const response = await createWash(formData);
+        if (!response.data.status) throw new Error(response.data.message);
 
-      history.push('/');
-    } catch (e) {
-      toast({
-        title: 'Ошибка',
-        description: e.message,
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
-    } finally {
-      setIsLoading(false);
+        const loginAndPassword = `Логин: ${response.data.data.nick}\nПароль: ${response.data.data.pass}`;
+
+        toast({
+          title: 'Успешно',
+          description: (
+            <span>
+              Мойка «{data.name}» успешно создана.
+              <br />
+              <br />
+              Логин: {response.data.data.nick}
+              <br />
+              Пароль: {response.data.data.pass}
+              <br />
+              <br />
+              <Button
+                color={colors.white}
+                colorScheme={'blackAlpha'}
+                onClick={() => onCopyData(loginAndPassword)}
+              >
+                Скопировать
+              </Button>
+            </span>
+          ),
+          status: 'success',
+          duration: 200000,
+          isClosable: true,
+        });
+
+        history.push('/');
+      } catch (e) {
+        toast({
+          title: 'Ошибка',
+          description: e.message,
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -352,7 +380,7 @@ const CreateWash: React.FC = () => {
           }}
           isLoading={isLoading}
         >
-          Добавить
+          {id ? 'Сохранить' : 'Добавить'}
         </Button>
       </Form>
       <MediaQuery minWidth={breakpoints.xl}>
