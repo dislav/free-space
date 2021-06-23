@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { mutate } from 'swr';
 import { useToast } from '@chakra-ui/react';
 
@@ -69,7 +70,9 @@ const ServiceCard: React.FC<Service> = ({ id, name, about, price, active }) => {
         {minPrice} — {maxPrice} ₽
       </Column>
       <DropdownMenu>
-        <DropdownMenuLink>Редактировать</DropdownMenuLink>
+        <Link to={`/services/update/${id}`}>
+          <DropdownMenuLink>Редактировать</DropdownMenuLink>
+        </Link>
         <hr />
         {!isActive ? (
           <DropdownMenuLink onClick={activateServiceRequest}>

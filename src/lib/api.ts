@@ -112,3 +112,8 @@ export const getGeoCodeByAddress = (
       q: address,
     },
   });
+
+export const updatePassword = (data: FormData): AxiosPromise<Response> =>
+  axiosInstance.post('/password', data, {
+    params: { ukey28: getToken() },
+  });

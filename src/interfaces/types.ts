@@ -205,6 +205,9 @@ export type Promotion = {
   active: string;
   name: string;
   description: string;
+  service: {
+    service_id: string;
+  }[];
   start: string;
   startlimit: string;
   end: string;

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useState, useMemo } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 import { useTheme } from 'styled-components';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import useSwr from 'swr';
@@ -18,8 +18,9 @@ import MediaQuery from 'react-responsive';
 import dayjs from 'dayjs';
 import cookie from 'cookie';
 
-import { BaseService } from '../../interfaces/types';
+import { BaseService, Promotion } from '../../interfaces/types';
 import { createPromotion } from '../../lib/api';
+
 import { Container, Column, ExpireTo } from './PromotionForm.styled';
 
 interface IInputs {
@@ -30,17 +31,34 @@ interface IInputs {
 }
 
 const PromotionForm: React.FC = () => {
+  const { id } = useParams<{ id?: string }>();
   const { data: services } = useSwr<BaseService[]>('/guide/service_list');
+  const { data: promotion, error } = useSwr<Promotion>(
+    id ? `/promo/info/${id}` : null
+  );
 
   const { t } = useTranslation('PromotionForm');
   const { colors, variables, breakpoints } = useTheme();
   const toast = useToast();
   const history = useHistory();
 
+  const promotionLoading = !promotion && !error;
+
   const [isLoading, setIsLoading] = useState(false);
-  const servicesOptions = services?.length
-    ? services.map(({ id, name }) => ({ value: id, label: name }))
-    : [];
+
+  const servicesOptions = useMemo(
+    () =>
+      services?.length
+        ? services.map(({ id, name }) => ({
+            value: id,
+            label: name,
+            selected: promotion?.service?.find(
+              ({ service_id }) => service_id === id
+            ),
+          }))
+        : [],
+    [services, promotion]
+  );
 
   const {
     handleSubmit,
@@ -88,6 +106,8 @@ const PromotionForm: React.FC = () => {
     }
   };
 
+  if (id && promotionLoading) return <></>;
+
   return (
     <Container onSubmit={handleSubmit(onSubmit)}>
       <Column>
@@ -97,6 +117,7 @@ const PromotionForm: React.FC = () => {
             borderRadius={variables.borderRadius}
             h={['44px', '44px', '58px']}
             placeholder={t('Name')}
+            defaultValue={promotion?.name || ''}
             {...register('name', {
               required: `${t('Required field')}`,
             })}
@@ -107,6 +128,7 @@ const PromotionForm: React.FC = () => {
           bg={colors.white}
           borderRadius={variables.borderRadius}
           mb={['14px', '14px', '32px']}
+          defaultValue={promotion?.description || ''}
           placeholder={t('Description of the service')}
           {...register('description')}
         />
@@ -115,7 +137,11 @@ const PromotionForm: React.FC = () => {
           <Controller
             name={'timeto'}
             control={control}
-            defaultValue={dayjs().add(1, 'day').toDate()}
+            defaultValue={
+              promotion?.end
+                ? dayjs(promotion.end).toDate()
+                : dayjs().add(1, 'day').toDate()
+            }
             render={({ field: { ref, ...props } }) => (
               <KeyboardDatePicker
                 variant={'inline'}
@@ -161,6 +187,8 @@ const PromotionForm: React.FC = () => {
               placeholder={'Выберите услугу'}
               classNamePrefix={'react-select'}
               onChange={(option) => onChange(option.map(({ value }) => value))}
+              defaultValue={servicesOptions?.filter(({ selected }) => selected)}
+              defaultOptions={servicesOptions}
               isMulti
               {...props}
             />

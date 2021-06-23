@@ -8,6 +8,7 @@ export const Container = styled.form`
   flex-direction: column;
   background-color: ${({ theme }) => theme.colors.blue10};
   border-radius: ${({ theme }) => theme.variables.borderRadius};
+  padding: 30px 14px;
 
   ${up('xl')} {
     flex-direction: row;
@@ -17,7 +18,15 @@ export const Container = styled.form`
 `;
 
 export const Column = styled.div`
-  width: 46%;
+  &:last-child {
+    .react-select__control {
+      margin-bottom: 32px;
+    }
+  }
+
+  ${up('xl')} {
+    width: 46%;
+  }
 `;
 
 export const ExpireTo = styled.div`
@@ -27,10 +36,11 @@ export const ExpireTo = styled.div`
 
   p {
     flex: 0 0 auto;
-    margin-right: 40px;
+    margin-right: 20px;
 
     ${up('xl')} {
       ${font('lg')};
+      margin-right: 40px;
     }
   }
 

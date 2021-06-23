@@ -10,7 +10,11 @@ import DropdownMenu from '../DropdownMenu/DropdownMenu';
 import DropdownMenuLink from '../DropdownMenuLink/DropdownMenuLink';
 import Modal from '../Modal/Modal';
 
-const BoxCard: React.FC<Box> = ({ id, active }) => {
+interface IBoxCard extends Box {
+  number: number;
+}
+
+const BoxCard: React.FC<IBoxCard> = ({ id, active, number }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpenActiveModal, setIsOpenActiveModal] = useState(false);
   const toast = useToast();
@@ -31,7 +35,7 @@ const BoxCard: React.FC<Box> = ({ id, active }) => {
       setIsLoading(false);
       toast({
         title: 'Успешно',
-        description: `Бокс #${id} успешно ${
+        description: `Бокс #${number} успешно ${
           !active ? 'активирован' : 'деактивирован'
         }.`,
         status: 'success',
@@ -53,7 +57,7 @@ const BoxCard: React.FC<Box> = ({ id, active }) => {
 
   return (
     <Container>
-      <Column>Бокс #{id}</Column>
+      <Column>Бокс #{number}</Column>
       <Column>{!active ? 'Неактивен' : 'Активен'}</Column>
       <DropdownMenu>
         <DropdownMenuLink onClick={openActiveModal}>
@@ -70,7 +74,7 @@ const BoxCard: React.FC<Box> = ({ id, active }) => {
         closeOnEsc={true}
       >
         Вы уверены, что хотите {!active ? 'активировать' : 'деактивировать'}{' '}
-        Бокс #{id}?
+        Бокс #{number}?
       </Modal>
     </Container>
   );

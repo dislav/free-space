@@ -1,13 +1,13 @@
 import React, { useCallback } from 'react';
-import { useToast } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
+import { Switch, useToast } from '@chakra-ui/react';
 
 import { Promotion } from '../../interfaces/types';
+import { activatePromotion } from '../../lib/api';
+
 import { Container, Column } from './PromotionCard.styled';
-import { Switch } from '@chakra-ui/react';
 import DropdownMenu from '../DropdownMenu/DropdownMenu';
 import DropdownMenuLink from '../DropdownMenuLink/DropdownMenuLink';
-import { activatePromotion } from '../../lib/api';
-import WithGroup from '../WithGroup/WithGroup';
 
 interface IPromotionCard extends Promotion {
   onActivate?: () => void;
@@ -52,20 +52,20 @@ const PromotionCard: React.FC<IPromotionCard> = ({
   return (
     <Container>
       <Column>{name}</Column>
-      <WithGroup available={['2']}>
-        <Column>
-          <Switch
-            id={'active'}
-            size={'lg'}
-            defaultChecked={isActive}
-            colorScheme={'telegram'}
-            onChange={onActivatePromotion}
-          />
-        </Column>
-      </WithGroup>
+      <Column>
+        <Switch
+          id={'active'}
+          size={'lg'}
+          defaultChecked={isActive}
+          colorScheme={'telegram'}
+          onChange={onActivatePromotion}
+        />
+      </Column>
       <Column>{description}</Column>
       <DropdownMenu>
-        <DropdownMenuLink>Редактировать</DropdownMenuLink>
+        <Link to={`/promotion/update/${id}`}>
+          <DropdownMenuLink>Редактировать</DropdownMenuLink>
+        </Link>
       </DropdownMenu>
     </Container>
   );

@@ -143,6 +143,10 @@ const CreateWash: React.FC = () => {
     return phone;
   };
 
+  const onCopyData = (data: string) => {
+    navigator.clipboard.writeText(data);
+  };
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsLoading(true);
     const formData = new FormData();
@@ -163,9 +167,29 @@ const CreateWash: React.FC = () => {
       const response = await createWash(formData);
       if (!response.data.status) throw new Error(response.data.message);
 
+      const loginAndPassword = `Логин: ${response.data.data.nick}\nПароль: ${response.data.data.pass}`;
+
       toast({
         title: 'Успешно',
-        description: `Мойка «${data.name}» успешно создана. Логин: ${response.data.data.nick}, пароль: ${response.data.data.pass}`,
+        description: (
+          <span>
+            Мойка «{data.name}» успешно создана.
+            <br />
+            <br />
+            Логин: {response.data.data.nick}
+            <br />
+            Пароль: {response.data.data.pass}
+            <br />
+            <br />
+            <Button
+              color={colors.white}
+              colorScheme={'blackAlpha'}
+              onClick={() => onCopyData(loginAndPassword)}
+            >
+              Скопировать
+            </Button>
+          </span>
+        ),
         status: 'success',
         duration: 200000,
         isClosable: true,
@@ -204,7 +228,7 @@ const CreateWash: React.FC = () => {
     setValue('street', address);
   };
 
-  if (washInfoLoading) return <></>;
+  if (id && washInfoLoading) return <></>;
 
   return (
     <Container>

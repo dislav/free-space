@@ -12,5 +12,6 @@
   "Save": "Сохранить",
   "Required field": "Обязательное поле",
   "Minimum value length": "Минимальная длина значения",
-  "Password mismatch": "Пароли не совпадают"
+  "Password mismatch": "Пароли не совпадают",
+  "Change password": "Изменить пароль"
 }

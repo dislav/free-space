@@ -10,8 +10,8 @@ const BoxesList: React.FC = () => {
 
   return (
     <Container isLoading={loading} titles={['Номер бокса', 'Статус']}>
-      {boxes?.map((box) => (
-        <BoxCard key={box.id} {...box} />
+      {boxes?.map((box, index) => (
+        <BoxCard key={box.id} number={index + 1} {...box} />
       ))}
     </Container>
   );

@@ -57,14 +57,17 @@ const App: React.FC = () => {
                     <PrivateRoute path={'/promotions'}>
                       <Promotions />
                     </PrivateRoute>
+                    <PrivateRoute path={'/create/promotion'}>
+                      <CreatePromotion />
+                    </PrivateRoute>
+                    <PrivateRoute path={'/promotion/update/:id'}>
+                      <CreatePromotion />
+                    </PrivateRoute>
                     <PrivateRoute path={'/boxes'}>
                       <Boxes />
                     </PrivateRoute>
                     <PrivateRoute path={'/services'}>
                       <Services />
-                    </PrivateRoute>
-                    <PrivateRoute path={'/create/promotion'}>
-                      <CreatePromotion />
                     </PrivateRoute>
                     <PrivateRoute path={'/wash/create'}>
                       <CreateWash />

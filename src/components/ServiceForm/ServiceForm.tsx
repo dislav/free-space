@@ -127,7 +127,7 @@ const ServiceForm = () => {
             w={['100%', '100%', '45%']}
             mb={'16px'}
           >
-            <FormLabel>Цена для {name}а, ₽</FormLabel>
+            <FormLabel>{name} цена, ₽</FormLabel>
             <Input
               bg={colors.white}
               h={'60px'}
