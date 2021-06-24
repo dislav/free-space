@@ -11,6 +11,7 @@ import {
   Wash,
   GeoCode,
   Promotion,
+  ChatMessageProps,
 } from '../interfaces/types';
 
 // Basic
@@ -141,4 +142,29 @@ export const updateService = (
 ): AxiosPromise<Response<Promotion>> =>
   axiosInstance.post(`/service/update/${id}`, data, {
     params: { ukey28: getToken() },
+  });
+
+export const getStatistics = (): AxiosPromise<Response> =>
+  axiosInstance.get('/stat/all/30', {
+    params: { ukey28: getToken() },
+  });
+
+export const getStatisticsById = (id: string): AxiosPromise<Response> =>
+  axiosInstance.get(`/stat/get/${id}/30?`, {
+    params: { ukey28: getToken() },
+  });
+
+export const getChatMessagesById = (
+  id: string
+): AxiosPromise<Response<ChatMessageProps[]>> =>
+  axiosInstance.get(`/message/pull/${id}`, {
+    params: { ukey28: getToken() },
+  });
+
+export const sendMessage = (id: string, text: string): AxiosPromise<Response> =>
+  axiosInstance.post(`/message/send/${id}`, null, {
+    params: {
+      text,
+      user: 1,
+    },
   });

@@ -31,6 +31,7 @@ import CreateService from '../../pages/CreateService';
 import Boxes from '../../pages/Boxes';
 import CreatePromotion from '../../pages/CreatePromotion';
 import Statistics from '../../pages/Statistics';
+import Chat from '../../pages/Chat';
 
 dayjs.locale('ru');
 
@@ -84,6 +85,9 @@ const App: React.FC = () => {
                     </PrivateRoute>
                     <PrivateRoute path={'/statistics'}>
                       <Statistics />
+                    </PrivateRoute>
+                    <PrivateRoute path={'/chat'}>
+                      <Chat />
                     </PrivateRoute>
                     <PrivateRoute path={'/'}>
                       <Dashboard />

@@ -18,6 +18,7 @@ import {
   ServiceIcon,
   SettingsIcon,
   StatisticsIcon,
+  ChatIcon,
 } from '../../icons/icons';
 
 const Sidebar: React.FC = () => {
@@ -88,6 +89,12 @@ const Sidebar: React.FC = () => {
           <SettingsIcon />
           Настройки
         </SidebarLink>
+        <WithGroup available={['1']}>
+          <SidebarLink to={'/chat'}>
+            <ChatIcon />
+            Чат
+          </SidebarLink>
+        </WithGroup>
         <Logout onClick={logout}>Выйти</Logout>
       </Container>
     </>

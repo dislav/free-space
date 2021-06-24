@@ -29,6 +29,9 @@ const theme = {
 
     green20: '#A2D6DA',
     green30: '#64B2B8',
+
+    line: '#D8E0F6',
+    circle: '#D2EAF7',
   },
   fontSize: {
     xs: [10, 12],

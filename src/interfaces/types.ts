@@ -251,3 +251,19 @@ export type StatProps = {
   date: string;
   date_micro: number;
 };
+
+export type ChatProps = {
+  id: string;
+  key: string;
+  messagetime: string;
+  created: string;
+};
+
+export type ChatMessageProps = {
+  id: string;
+  text: string;
+  status: string;
+  user: string;
+  hash: string;
+  created: string;
+};
