@@ -9,9 +9,12 @@ export const Container = styled.div`
   display: flex;
   height: 100%;
   max-height: 74vh;
-  background-color: ${({ theme }) => theme.colors.blue10};
   border-radius: ${({ theme }) => theme.variables.borderRadius};
-  padding: 56px;
+
+  ${up('xl')} {
+    background-color: ${({ theme }) => theme.colors.blue10};
+    padding: 56px;
+  }
 
   ${up('xxl')} {
     min-height: 76vh;
@@ -20,19 +23,39 @@ export const Container = styled.div`
 `;
 
 export const Sidebar = styled.div`
-  width: 26%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   background: ${({ theme }) => theme.variables.greenGradient};
   border-radius: ${({ theme }) => theme.variables.borderRadius};
-  padding: 40px 30px;
-  margin-right: 60px;
+  padding: 30px 0;
+
+  ${up('xl')} {
+    width: 34%;
+    margin-right: 40px;
+    padding: 40px 30px 0;
+  }
+
+  ${up('xxl')} {
+    width: 26%;
+    margin-right: 60px;
+  }
 
   ${ChatTab} {
-    margin-bottom: 20px;
+    border-top: 1px solid #9fd4d8;
+
+    ${up('xl')} {
+      border-top: none;
+      margin-bottom: 20px;
+    }
 
     &:last-child {
+      border-bottom: 1px solid #9fd4d8;
       margin-bottom: 0;
+
+      ${up('xl')} {
+        border-bottom: none;
+      }
     }
   }
 `;
@@ -69,5 +92,13 @@ export const LogoText = styled.div`
     ${font('sm')};
     line-height: 1;
     font-weight: 500;
+  }
+`;
+
+export const TabsWrapper = styled.div`
+  overflow-y: scroll;
+
+  ${up('xl')} {
+    width: calc(100% + 32px);
   }
 `;

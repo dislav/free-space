@@ -6,18 +6,22 @@ import { font } from '../../styles/utils';
 export const Container = styled.div<{ active?: boolean }>`
   display: flex;
   flex-direction: column;
-  width: calc(100% + 32px);
+  ${font('base')};
+  font-weight: 500;
   background-color: ${({ theme, active }) =>
     active ? theme.colors.blue10 : null};
-  border-radius: ${({ theme }) =>
-    `${theme.variables.borderRadius} 0 0 ${theme.variables.borderRadius}`};
   transition: background-color 0.3s;
   padding: 16px 20px;
   cursor: pointer;
 
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.blue10};
+  }
+
   ${up('xl')} {
-    ${font('xl')};
-    font-weight: 500;
+    ${font('lg')};
+    border-radius: ${({ theme }) =>
+      `${theme.variables.borderRadius} 0 0 ${theme.variables.borderRadius}`};
   }
 
   span {

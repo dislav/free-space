@@ -79,6 +79,11 @@ export const updateProfile = (data: FormData): AxiosPromise<Response> =>
     params: { ukey28: getToken() },
   });
 
+export const updateProfileImage = (data: FormData): AxiosPromise<Response> =>
+  axiosInstance.post('/wash/photo', data, {
+    params: { ukey28: getToken() },
+  });
+
 export const updateOrderStatus = (
   id: string,
   status: number

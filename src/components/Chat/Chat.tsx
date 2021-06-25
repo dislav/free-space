@@ -5,7 +5,14 @@ import useSwr from 'swr';
 
 import { ChatProps } from '../../interfaces/types';
 
-import { Container, Sidebar, Header, Logo, LogoText } from './Chat.styled';
+import {
+  Container,
+  Sidebar,
+  Header,
+  Logo,
+  LogoText,
+  TabsWrapper,
+} from './Chat.styled';
 import { ChatLogo } from '../../icons/icons';
 import ChatTab from '../ChatTab/ChatTab';
 import ChatBody from '../ChatBody/ChatBody';
@@ -43,17 +50,25 @@ const Chat = () => {
             margin={'auto'}
           />
         ) : (
-          data?.map(({ key: appId, ...props }) => (
-            <ChatTab
-              active={appId === currentChat}
-              key={props.id}
-              onClickTab={() => onSelectChat(appId)}
-              {...props}
-            />
-          ))
+          <TabsWrapper>
+            {data?.map(({ key: appId, ...props }) => (
+              <ChatTab
+                active={appId === currentChat}
+                key={props.id}
+                onClickTab={() => onSelectChat(appId)}
+                {...props}
+              />
+            ))}
+          </TabsWrapper>
         )}
       </Sidebar>
-      {currentChat && <ChatBody id={currentChat} />}
+      {currentChat && (
+        <ChatBody
+          id={currentChat}
+          userId={data?.find(({ key }) => key === currentChat)?.id}
+          clearChat={() => setCurrentChat(undefined)}
+        />
+      )}
     </Container>
   );
 };

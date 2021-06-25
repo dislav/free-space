@@ -30,6 +30,7 @@ export type BaseUser = {
   first_name: string;
   last_name: string;
   phone: string;
+  pic: string;
 };
 
 export type WashUser = {

@@ -29,7 +29,11 @@ const CameraIcon = () => {
   );
 };
 
-const ProfileAvatar: React.FC = () => {
+interface IProfileAvatar {
+  imageUrl?: string;
+}
+
+const ProfileAvatar: React.FC<IProfileAvatar> = ({ imageUrl }) => {
   const [url, setUrl] = useState('');
 
   const { colors, variables } = useTheme();
@@ -46,10 +50,12 @@ const ProfileAvatar: React.FC = () => {
     setUrl('');
   };
 
+  const hasImage = url || imageUrl;
+
   return (
     <Container>
       <Image>
-        {url ? <img src={url} alt="" /> : <CameraIcon />}
+        {hasImage ? <img src={hasImage} alt="" /> : <CameraIcon />}
         <input
           type={'file'}
           accept={'image/jpg,image/png,image/jpeg'}

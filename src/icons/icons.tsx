@@ -608,3 +608,22 @@ export const SendIcon: React.FC = () => {
     </svg>
   );
 };
+
+export const BackIcon: React.FC = () => {
+  return (
+    <svg
+      width="13"
+      height="22"
+      viewBox="0 0 13 22"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M0.93934 9.93945L9.93934 0.939453L12.0607 3.06077L4.12132 11.0001L12.0607 18.9395L9.93934 21.0608L0.93934 12.0608C0.353553 11.475 0.353553 10.5252 0.93934 9.93945Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+};

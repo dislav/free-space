@@ -17,7 +17,7 @@ import {
 } from 'react-hook-form';
 
 import { BaseUser, WashUser } from '../../interfaces/types';
-import { updateProfile } from '../../lib/api';
+import { updateProfile, updateProfileImage } from '../../lib/api';
 
 import { Container, Time } from './InfoForm.styled';
 import ProfileAvatar from '../ProfileAvatar/ProfileAvatar';
@@ -46,7 +46,7 @@ const InfoForm: React.FC = () => {
   const { profile, loading, mutate } = useProfile();
 
   const { t } = useTranslation('Profile');
-  const { colors, variables, breakpoints } = useTheme();
+  const { colors, variables } = useTheme();
   const toast = useToast();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -75,8 +75,10 @@ const InfoForm: React.FC = () => {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsLoading(true);
 
+    const { image, ...otherData } = data;
+
     const formData = new FormData();
-    Object.entries(data).forEach(([key, value]) => {
+    Object.entries(otherData).forEach(([key, value]) => {
       if (typeof value === 'object') {
         formData.append(key, value[0]);
       } else {
@@ -87,6 +89,15 @@ const InfoForm: React.FC = () => {
     try {
       const response = await updateProfile(formData);
       if (!response.data.status) throw new Error(response.data.message);
+
+      if (image) {
+        const fileData = new FormData();
+        console.log(image[0]);
+        fileData.append('file', image[0]);
+
+        const response = await updateProfileImage(fileData);
+        if (!response.data.status) throw new Error(response.data.message);
+      }
 
       mutate();
       toast({
@@ -116,7 +127,13 @@ const InfoForm: React.FC = () => {
       <FormProvider {...methods}>
         <h2>{t('Washing information')}</h2>
         <p>Загрузите логотип вашей автомойки</p>
-        <ProfileAvatar />
+        <ProfileAvatar
+          imageUrl={
+            profile?.pic
+              ? `https://wash.rj28.ru/files/${profile.pic}`
+              : undefined
+          }
+        />
         <FormControl isInvalid={!!errors.name} mb={['20px', '20px', '32px']}>
           <Input
             h={['44px', '44px', '58px']}

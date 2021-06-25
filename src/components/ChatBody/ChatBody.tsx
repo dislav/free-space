@@ -9,12 +9,13 @@ import { ChatMessageProps } from '../../interfaces/types';
 
 import {
   Container,
+  Header,
   Content,
   ContentFooter,
   Message,
   Button,
 } from './ChatBody.styled';
-import { SendIcon } from '../../icons/icons';
+import { SendIcon, BackIcon } from '../../icons/icons';
 
 interface Inputs {
   message: string;
@@ -22,9 +23,11 @@ interface Inputs {
 
 interface IChatBody {
   id: string;
+  userId?: string;
+  clearChat?: () => void;
 }
 
-const ChatBody: React.FC<IChatBody> = ({ id }) => {
+const ChatBody: React.FC<IChatBody> = ({ id, userId, clearChat }) => {
   const { data, error, mutate } = useSwr<ChatMessageProps[]>(
     `/message/pull/${id}`
   );
@@ -56,17 +59,26 @@ const ChatBody: React.FC<IChatBody> = ({ id }) => {
 
   if (isChatLoading)
     return (
-      <Spinner
-        size={'xl'}
-        thickness={'4px'}
-        speed={'0.65s'}
-        color={colors.blue40}
-        margin={'auto'}
-      />
+      <Container>
+        <Spinner
+          size={'xl'}
+          thickness={'4px'}
+          speed={'0.65s'}
+          color={colors.blue40}
+          margin={'auto'}
+        />
+      </Container>
     );
 
   return (
     <Container onSubmit={handleSubmit(onSubmit)}>
+      <Header>
+        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
+        <div onClick={clearChat}>
+          <BackIcon />
+        </div>
+        Пользователь #{userId}
+      </Header>
       <Content>
         {sortedMessages?.map(({ id, text, user }) => {
           const selfMessage = +user !== 0;
