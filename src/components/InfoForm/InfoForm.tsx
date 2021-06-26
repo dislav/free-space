@@ -90,9 +90,8 @@ const InfoForm: React.FC = () => {
       const response = await updateProfile(formData);
       if (!response.data.status) throw new Error(response.data.message);
 
-      if (image) {
+      if (image.length) {
         const fileData = new FormData();
-        console.log(image[0]);
         fileData.append('file', image[0]);
 
         const response = await updateProfileImage(fileData);
