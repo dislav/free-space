@@ -40,8 +40,11 @@ const AuthForm: React.FC = () => {
       const { data: response } = await auth(formData);
       if (!response.status) throw new Error(response.message);
 
-      document.cookie = cookie.serialize('ukey28', response.data.hash);
-      document.cookie = cookie.serialize('sesid28', response.data.hash2);
+      setTimeout(() => {
+        document.cookie = cookie.serialize('ukey28', response.data.hash);
+        document.cookie = cookie.serialize('sesid28', response.data.hash2);
+      });
+
       localStorage.setItem('group', response.data.group[0]);
 
       setTimeout(() => history.push('/'), 400);

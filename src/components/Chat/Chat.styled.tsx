@@ -12,13 +12,14 @@ export const Container = styled.div`
   border-radius: ${({ theme }) => theme.variables.borderRadius};
 
   ${up('xl')} {
+    min-height: 80vh;
+    max-height: 80vh;
     background-color: ${({ theme }) => theme.colors.blue10};
-    padding: 56px;
+    padding: 30px;
   }
 
   ${up('xxl')} {
-    min-height: 76vh;
-    max-height: 76vh;
+    padding: 56px;
   }
 `;
 

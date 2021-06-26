@@ -13,6 +13,10 @@ export const Container = styled.form`
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
+    padding: 30px;
+  }
+
+  ${up('xxl')} {
     padding: 48px 80px;
   }
 `;

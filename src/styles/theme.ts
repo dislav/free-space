@@ -12,7 +12,7 @@ const theme = {
     md: '768px',
     lg: '992px',
     xl: '1200px',
-    xxl: '1440px',
+    xxl: '1536px',
     fhd: '1900px',
   },
   colors: {

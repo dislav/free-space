@@ -11,8 +11,9 @@ const ServicesList: React.FC = () => {
 
   return (
     <Container
-      isLoading={!data && !error}
       titles={['Название', 'Акция', 'Описание услуги', 'Цена']}
+      isLoading={!data && !error}
+      isEmpty={!data?.list?.length}
     >
       {data?.list.map((service) => (
         <ServiceCard key={service.id} {...service} />

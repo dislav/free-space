@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from 'styled-components';
 import { Spinner } from '@chakra-ui/react';
 import useSwr from 'swr';
@@ -17,13 +17,17 @@ import { ChatLogo } from '../../icons/icons';
 import ChatTab from '../ChatTab/ChatTab';
 import ChatBody from '../ChatBody/ChatBody';
 
-const Chat = () => {
+const Chat: React.FC = () => {
   const { data, error } = useSwr<ChatProps[]>('/message/chat');
   const chatsLoading = !data && !error;
 
   const { colors } = useTheme();
 
   const [currentChat, setCurrentChat] = useState<string | undefined>();
+
+  useEffect(() => {
+    if (data) setCurrentChat(data[0].key);
+  }, [data]);
 
   const onSelectChat = (id: string) => {
     setCurrentChat(id);

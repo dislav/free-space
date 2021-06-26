@@ -11,8 +11,9 @@ const PromotionsList: React.FC = () => {
 
   return (
     <Container
-      isLoading={!data && !error}
       titles={['Название', 'Активность', 'Описание акции']}
+      isLoading={!data && !error}
+      isEmpty={!data?.length}
     >
       {data?.map((promotion) => (
         <PromotionCard key={promotion.id} onActivate={mutate} {...promotion} />

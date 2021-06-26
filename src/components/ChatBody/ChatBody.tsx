@@ -41,6 +41,10 @@ const ChatBody: React.FC<IChatBody> = ({ id, userId, clearChat }) => {
     [data]
   );
 
+  const scrollToBottom = (target: HTMLDivElement | null) => {
+    if (target) target.scrollTo(0, target.scrollHeight);
+  };
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
       const responseMessage = await sendMessage(id, data.message);
@@ -79,7 +83,7 @@ const ChatBody: React.FC<IChatBody> = ({ id, userId, clearChat }) => {
         </div>
         Пользователь #{userId}
       </Header>
-      <Content>
+      <Content ref={scrollToBottom}>
         {sortedMessages?.map(({ id, text, user }) => {
           const selfMessage = +user !== 0;
           return (

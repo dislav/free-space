@@ -13,6 +13,10 @@ export const Container = styled.form`
   ${up('xl')} {
     flex-direction: row;
     justify-content: space-between;
+    padding: 30px;
+  }
+
+  ${up('xxl')} {
     padding: 52px 80px;
   }
 `;

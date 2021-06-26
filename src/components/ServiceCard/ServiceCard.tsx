@@ -62,7 +62,7 @@ const ServiceCard: React.FC<Service> = ({ id, name, about, price, active }) => {
   };
 
   return (
-    <Container>
+    <Container active={isActive}>
       <Column>{name}</Column>
       <Column>{isActive ? 'Действует' : 'Неактивна'}</Column>
       <Column>{about}</Column>

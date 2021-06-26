@@ -9,7 +9,11 @@ const BoxesList: React.FC = () => {
   const { boxes, loading } = useBoxes();
 
   return (
-    <Container isLoading={loading} titles={['Номер бокса', 'Статус']}>
+    <Container
+      titles={['Номер бокса', 'Статус']}
+      isLoading={loading}
+      isEmpty={!boxes?.length}
+    >
       {boxes?.map((box, index) => (
         <BoxCard key={box.id} number={index + 1} {...box} />
       ))}

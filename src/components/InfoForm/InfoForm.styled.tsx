@@ -50,6 +50,7 @@ export const Time = styled.div`
   }
 
   p {
+    width: 100%;
     margin-bottom: 16px;
   }
 

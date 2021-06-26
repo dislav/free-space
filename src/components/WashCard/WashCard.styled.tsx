@@ -17,6 +17,10 @@ export const Container = styled.div`
     min-height: auto;
     flex-wrap: nowrap;
     align-items: center;
+    padding: 38px 40px;
+  }
+
+  ${up('xxl')} {
     padding: 38px 80px;
   }
 
@@ -27,8 +31,12 @@ export const Container = styled.div`
 
     ${up('xl')} {
       top: 50%;
-      right: 60px;
+      right: 40px;
       transform: translateY(-50%);
+    }
+
+    ${up('xxl')} {
+      right: 60px;
     }
 `;
 

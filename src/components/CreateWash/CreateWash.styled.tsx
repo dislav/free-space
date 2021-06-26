@@ -9,6 +9,10 @@ export const Container = styled.div`
   padding: 40px 12px;
 
   ${up('xl')} {
+    padding: 30px;
+  }
+
+  ${up('xxl')} {
     padding: 76px 80px;
   }
 `;

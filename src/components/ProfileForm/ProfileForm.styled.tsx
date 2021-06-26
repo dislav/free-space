@@ -14,6 +14,10 @@ export const Container = styled.div`
   ${up('xl')} {
     flex-direction: row;
     justify-content: space-between;
+    padding: 30px 30px;
+  }
+
+  ${up('xxl')} {
     padding: 60px 80px;
   }
 
@@ -25,7 +29,7 @@ export const Container = styled.div`
     }
 
     ${up('xl')} {
-      width: 46%;
+      width: 48%;
       margin-bottom: 0;
     }
   }

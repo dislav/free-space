@@ -170,7 +170,7 @@ const InfoForm: React.FC = () => {
             }}
             render={({ field: { onChange, ...field } }) => (
               <Input
-                minH={'44px'}
+                h={['44px', '44px', '58px']}
                 borderRadius={'18px'}
                 placeholder={'Телефон'}
                 bg={'white'}

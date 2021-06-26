@@ -14,7 +14,6 @@ const OrdersList: React.FC = () => {
 
   return (
     <Container
-      isLoading={isLoading}
       titles={[
         'Тип кузова',
         'Дата посещения',
@@ -23,6 +22,8 @@ const OrdersList: React.FC = () => {
         'Бокс',
         'Цена',
       ]}
+      isLoading={isLoading}
+      isEmpty={!orders?.length}
     >
       {orders?.map((order) => (
         <OrderCard

@@ -179,10 +179,6 @@ const Statistics: React.FC = () => {
           <h2>Средний чек</h2>
           <p>{averagePrice} ₽</p>
         </StatisticsItem>
-        <StatisticsItem>
-          <h2>Количество услуг</h2>
-          <p>{prices.length}</p>
-        </StatisticsItem>
       </StatisticsNumbers>
     </Container>
   );
