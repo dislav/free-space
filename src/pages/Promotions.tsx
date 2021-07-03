@@ -5,7 +5,7 @@ import PromotionsList from '../components/PromotionsList/PromotionsList';
 import WithGroup from '../components/WithGroup/WithGroup';
 import LinkButton from '../components/LinkButton/LinkButton';
 
-const Promotions = () => {
+const Promotions: React.FC = () => {
   return (
     <Layout
       title={'Акции'}

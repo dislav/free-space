@@ -45,6 +45,11 @@ export const Titles = styled.div`
   }
 `;
 
+export const TitleHead = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 export const Column = styled.div`
   flex: 1 1 100%;
   padding-right: 40px;

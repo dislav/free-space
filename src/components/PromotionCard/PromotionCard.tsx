@@ -31,6 +31,7 @@ const PromotionCard: React.FC<IPromotionCard> = ({
 
       toast({
         title: 'Успешно',
+        position: 'top-right',
         description: `Акция «${name}» успешно ${
           !isActive ? 'активирована' : 'деактивирована'
         }.`,
@@ -42,6 +43,7 @@ const PromotionCard: React.FC<IPromotionCard> = ({
     } catch (e) {
       toast({
         title: 'Ошибка',
+        position: 'top-right',
         description: e.message,
         status: 'error',
         duration: 5000,

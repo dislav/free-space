@@ -12,6 +12,12 @@ export const Container = styled.div`
   padding: 40px 14px;
 
   ${up('md')} {
+    width: 460px;
+    max-width: 520px;
+    padding: 30px;
+  }
+
+  ${up('xxl')} {
     width: 520px;
     max-width: 520px;
     padding: 3.75rem 5.625rem;
@@ -23,6 +29,10 @@ export const Container = styled.div`
     margin-bottom: 16px;
 
     ${up('xl')} {
+      margin-bottom: 20px;
+    }
+
+    ${up('xxl')} {
       ${font('3xl')}
       margin-bottom: 46px;
     }

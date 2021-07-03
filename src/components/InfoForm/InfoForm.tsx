@@ -26,7 +26,6 @@ import { useProfile } from '../../lib/useProfile';
 interface Inputs {
   name: string;
   image: string;
-  street: string;
   phone: string;
   startTime: string;
   endTime: string;
@@ -101,6 +100,7 @@ const InfoForm: React.FC = () => {
       mutate();
       toast({
         title: 'Успешно',
+        position: 'top-right',
         description: 'Профиль успешно обновлен',
         status: 'success',
         duration: 5000,
@@ -109,6 +109,7 @@ const InfoForm: React.FC = () => {
     } catch (e) {
       toast({
         title: 'Ошибка',
+        position: 'top-right',
         description: e.message,
         status: 'error',
         duration: 5000,
@@ -145,19 +146,6 @@ const InfoForm: React.FC = () => {
             })}
           />
           <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
-        </FormControl>
-        <FormControl isInvalid={!!errors.street} mb={['20px', '20px', '32px']}>
-          <Input
-            h={['44px', '44px', '58px']}
-            bg={colors.white}
-            borderRadius={variables.borderRadius}
-            placeholder={t('Address')}
-            defaultValue={isWashUser(profile) ? profile?.street : ''}
-            {...register('street', {
-              required: `${t('Required field')}`,
-            })}
-          />
-          <FormErrorMessage>{errors.street?.message}</FormErrorMessage>
         </FormControl>
         <FormControl isInvalid={!!errors.phone} mb={['20px', '20px', '32px']}>
           <Controller

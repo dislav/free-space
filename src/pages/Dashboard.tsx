@@ -4,7 +4,7 @@ import WashList from '../components/WashList/WashList';
 import LinkButton from '../components/LinkButton/LinkButton';
 import OrdersList from '../components/OrdersList/OrdersList';
 
-const Dashboard = () => {
+const Dashboard: React.FC = () => {
   const isAdmin = localStorage.getItem('group') === '1';
 
   if (isAdmin)

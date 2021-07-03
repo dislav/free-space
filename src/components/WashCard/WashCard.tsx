@@ -32,6 +32,7 @@ const WashCard: React.FC<Wash> = ({ id, name, city, active }) => {
       setIsLoading(false);
       toast({
         title: 'Успешно',
+        position: 'top-right',
         description: `Мойка «${name}» успешно ${
           !isActive ? 'активирована' : 'деактивирована'
         }.`,
@@ -45,6 +46,7 @@ const WashCard: React.FC<Wash> = ({ id, name, city, active }) => {
     } catch (e) {
       toast({
         title: 'Ошибка',
+        position: 'top-right',
         description: e.message,
         status: 'error',
         duration: 5000,
@@ -55,7 +57,7 @@ const WashCard: React.FC<Wash> = ({ id, name, city, active }) => {
   };
 
   return (
-    <Container>
+    <Container isActive={isActive}>
       <Column>{name}</Column>
       <Column>{city}</Column>
       <Column>{isActive ? 'Активна' : 'Неактивна'}</Column>

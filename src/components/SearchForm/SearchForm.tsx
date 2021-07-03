@@ -40,11 +40,19 @@ const SearchForm: React.FC<ISearchForm> = ({ searchText, onSearch }) => {
         {...register('search')}
       />
       {!searchText ? (
-        <Button borderRadius={variables.borderRadius} type={'submit'}>
+        <Button
+          borderRadius={variables.borderRadius}
+          minW={'80px'}
+          type={'submit'}
+        >
           Поиск
         </Button>
       ) : (
-        <Button borderRadius={variables.borderRadius} onClick={onReset}>
+        <Button
+          borderRadius={variables.borderRadius}
+          minW={'80px'}
+          onClick={onReset}
+        >
           Сбросить
         </Button>
       )}

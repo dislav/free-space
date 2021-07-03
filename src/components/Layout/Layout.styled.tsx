@@ -37,6 +37,7 @@ export const Header = styled.div`
     margin-top: 26px;
 
     ${up('xl')} {
+      ${font('3xl')}
       width: auto;
       margin-top: 0;
       order: inherit;

@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import ServiceForm from '../components/ServiceForm/ServiceForm';
 
-const CreateService = () => {
+const CreateService: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
   const title = id ? 'Редактирование' : 'Добавление';
 

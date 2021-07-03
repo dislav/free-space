@@ -170,6 +170,7 @@ const CreateWash: React.FC = () => {
 
         toast({
           title: 'Успешно',
+          position: 'top-right',
           description: `Мойка «${data.name}» успешно обновлена.`,
           status: 'success',
           duration: 5000,
@@ -181,6 +182,7 @@ const CreateWash: React.FC = () => {
       } catch (e) {
         toast({
           title: 'Ошибка',
+          position: 'top-right',
           description: e.message,
           status: 'error',
           duration: 5000,
@@ -198,6 +200,7 @@ const CreateWash: React.FC = () => {
 
         toast({
           title: 'Успешно',
+          position: 'top-right',
           description: (
             <span>
               Мойка «{data.name}» успешно создана.
@@ -226,6 +229,7 @@ const CreateWash: React.FC = () => {
       } catch (e) {
         toast({
           title: 'Ошибка',
+          position: 'top-right',
           description: e.message,
           status: 'error',
           duration: 5000,
@@ -244,6 +248,7 @@ const CreateWash: React.FC = () => {
     } catch (e) {
       toast({
         title: 'Ошибка',
+        position: 'top-right',
         description: e.message,
         status: 'error',
         duration: 5000,

@@ -2,7 +2,7 @@ import React from 'react';
 import Layout from '../components/Layout/Layout';
 import ProfileForm from '../components/ProfileForm/ProfileForm';
 
-const Profile = () => {
+const Profile: React.FC = () => {
   return (
     <Layout title={'Настройки'}>
       <ProfileForm />

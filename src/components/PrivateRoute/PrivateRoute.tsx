@@ -4,9 +4,9 @@ import { Route, Redirect, RouteProps } from 'react-router-dom';
 import { useProfile } from '../../lib/useProfile';
 
 const PrivateRoute: React.FC<RouteProps> = ({ children, ...props }) => {
-  const { loading, isLoggedIn } = useProfile();
+  const { profile, isLoggedIn } = useProfile();
 
-  if (!loading && !isLoggedIn) return <Redirect to={'/login'} />;
+  if (!profile && !isLoggedIn) return <Redirect to={'/login'} />;
   return <Route {...props}>{children}</Route>;
 };
 

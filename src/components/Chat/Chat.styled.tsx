@@ -101,5 +101,6 @@ export const TabsWrapper = styled.div`
 
   ${up('xl')} {
     width: calc(100% + 32px);
+    padding-bottom: 20px;
   }
 `;

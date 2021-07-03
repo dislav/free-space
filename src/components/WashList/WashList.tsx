@@ -1,22 +1,31 @@
 import React, { useState, useMemo } from 'react';
+import { Select } from '@chakra-ui/react';
 import useSwr from 'swr';
 
-import { City, Wash } from '../../interfaces/types';
+import { City, Wash, PaginationProps } from '../../interfaces/types';
 import { getOrders } from '../../lib/api';
 
-import { Container } from './WashList.styled';
+import { Container, Header, Section } from './WashList.styled';
 import WashCard from '../WashCard/WashCard';
 import SearchForm, { IInputs } from '../SearchForm/SearchForm';
 
 const WashList: React.FC = () => {
   const [search, setSearch] = useState('');
   const [city, setCity] = useState('');
+  const [citySort, setCitySort] = useState(false);
 
-  const { data, error, mutate } = useSwr<Wash[]>('/wash/list');
+  const { data, error, mutate } = useSwr<PaginationProps<Wash[]>>('/wash/list');
   const { data: cities } = useSwr<City[]>('/guide/cites');
 
   const optionsCities = useMemo(
-    () => cities?.map(({ name }) => ({ value: name, label: name })),
+    () =>
+      cities
+        ?.sort((a, b) => {
+          if (a.name > b.name) return 1;
+          if (a.name < b.name) return -1;
+          return 0;
+        })
+        .map(({ name }) => ({ value: name, label: name })),
     [cities]
   );
 
@@ -33,6 +42,27 @@ const WashList: React.FC = () => {
     }
   }, [search, city]);
 
+  const categoriesWashes = useMemo(() => {
+    const categories = new Map<string, Wash[]>();
+    data?.list.forEach((wash) => {
+      categories.set(
+        wash.active,
+        categories.has(wash.active)
+          ? [...(categories.get(wash.active) as Wash[]), wash]
+          : [wash]
+      );
+    });
+
+    return categories;
+  }, [data?.list]);
+
+  const statusTitle: {
+    [key: number]: string;
+  } = {
+    0: 'Неактивные мойки',
+    1: 'Активные мойки',
+  };
+
   const onChangeSearch = ({ search }: IInputs) => {
     setSearch(search);
   };
@@ -43,18 +73,44 @@ const WashList: React.FC = () => {
 
   return (
     <Container
-      header={<SearchForm searchText={search} onSearch={onChangeSearch} />}
+      header={
+        <Header>
+          <SearchForm searchText={search} onSearch={onChangeSearch} />
+          <Select
+            variant={'unstyled'}
+            placeholder={'Город'}
+            onChange={({ target }) => onChangeCity(target.value)}
+          >
+            {optionsCities?.map(({ label, value }, key) => (
+              <option key={key} value={value}>
+                {label}
+              </option>
+            ))}
+          </Select>
+        </Header>
+      }
       titles={[
         'Название',
-        { title: 'Город', options: optionsCities, onChangeParam: onChangeCity },
+        {
+          title: 'Город',
+          isSortable: citySort,
+          onChangeParam: setCitySort,
+        },
         'Статус',
       ]}
       isLoading={!data && !error}
-      isEmpty={!data?.length}
+      isEmpty={!data?.list.length}
     >
-      {data?.map((wash, index) => (
-        <WashCard key={index} {...wash} />
-      ))}
+      {Array.from(categoriesWashes.keys())
+        ?.sort((a, b) => +b - +a)
+        .map((status) => (
+          <Section key={status}>
+            <h2>{statusTitle[+status]}</h2>
+            {categoriesWashes.get(status)?.map((wash) => (
+              <WashCard key={wash.id} {...wash} />
+            ))}
+          </Section>
+        ))}
     </Container>
   );
 };

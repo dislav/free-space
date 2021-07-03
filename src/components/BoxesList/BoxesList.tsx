@@ -12,9 +12,9 @@ const BoxesList: React.FC = () => {
     <Container
       titles={['Номер бокса', 'Статус']}
       isLoading={loading}
-      isEmpty={!boxes?.length}
+      isEmpty={!boxes?.list.length}
     >
-      {boxes?.map((box, index) => (
+      {boxes?.list.map((box, index) => (
         <BoxCard key={box.id} number={index + 1} {...box} />
       ))}
     </Container>

@@ -3,7 +3,7 @@ import React from 'react';
 import Layout from '../components/Layout/Layout';
 import ChatComponent from '../components/Chat/Chat';
 
-const Chat = () => {
+const Chat: React.FC = () => {
   return (
     <Layout title={'Чат технической поддержки'}>
       <ChatComponent />

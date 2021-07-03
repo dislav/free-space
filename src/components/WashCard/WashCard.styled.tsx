@@ -3,13 +3,16 @@ import { up } from 'styled-breakpoints';
 
 import { Container as DropdownMenu } from '../DropdownMenu/DropdownMenu.styled';
 
-export const Container = styled.div`
+export const Container = styled.div<{ isActive?: boolean }>`
   position: relative;
   display: flex;
   flex-wrap: wrap;
   font-weight: 500;
   min-height: 150px;
-  background: ${({ theme }) => theme.variables.greenGradient};
+  background: ${({ theme, isActive }) =>
+    isActive
+      ? theme.variables.greenGradient
+      : 'linear-gradient(to right, #D2EAF7, #FFC9D3)'};
   border-radius: ${({ theme }) => theme.variables.borderRadius};
   padding: 20px 22px;
 

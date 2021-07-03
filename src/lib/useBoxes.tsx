@@ -1,9 +1,9 @@
 import useSwr from 'swr';
 
-import { Box } from '../interfaces/types';
+import { Box, PaginationProps } from '../interfaces/types';
 
 export const useBoxes = () => {
-  const { data, error, mutate } = useSwr<Box[]>('/boxs');
+  const { data, error, mutate } = useSwr<PaginationProps<Box[]>>('/boxs');
   const loading = !data && !error;
 
   return {

@@ -1,8 +1,9 @@
 import useSwr from 'swr';
-import { Order } from '../interfaces/types';
+import { Order, PaginationProps } from '../interfaces/types';
 
 export const useOrders = () => {
-  const { data, error, mutate } = useSwr<Order[]>('/order/list');
+  const { data, error, mutate } =
+    useSwr<PaginationProps<Order[]>>('/order/list');
   const isLoading = !data && !error;
 
   return {

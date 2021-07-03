@@ -41,6 +41,7 @@ const ServiceCard: React.FC<Service> = ({ id, name, about, price, active }) => {
 
       toast({
         title: 'Успешно',
+        position: 'top-right',
         description: `Услуга успешно ${
           !isActive ? 'активирована' : 'деактивирована'
         }.`,
@@ -51,6 +52,7 @@ const ServiceCard: React.FC<Service> = ({ id, name, about, price, active }) => {
     } catch (e) {
       toast({
         title: 'Ошибка',
+        position: 'top-right',
         description: e.message,
         status: 'error',
         duration: 5000,

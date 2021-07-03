@@ -8,7 +8,7 @@ import Layout from '../components/Layout/Layout';
 import BoxesList from '../components/BoxesList/BoxesList';
 import LinkButton from '../components/LinkButton/LinkButton';
 
-const Boxes = () => {
+const Boxes: React.FC = () => {
   const { boxes, loading, mutate } = useBoxes();
   const toast = useToast();
 
@@ -19,7 +19,8 @@ const Boxes = () => {
 
       toast({
         title: 'Успешно',
-        description: `Бокс #${data.data.id} успешно создан.`,
+        position: 'top-right',
+        description: 'Бокс успешно создан.',
         status: 'success',
         duration: 5000,
         isClosable: true,
@@ -27,6 +28,7 @@ const Boxes = () => {
       mutate();
     } catch (e) {
       toast({
+        position: 'top-right',
         title: 'Ошибка',
         description: e.message,
         status: 'error',
@@ -36,7 +38,7 @@ const Boxes = () => {
     }
   };
 
-  const boxCount = boxes?.length || 0;
+  const boxCount = boxes?.list.length || 0;
 
   return (
     <Layout

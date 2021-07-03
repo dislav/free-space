@@ -1,9 +1,10 @@
 import React from 'react';
 import { Box } from '@chakra-ui/react';
+
 import SignIn from '../components/SignIn/SignIn';
 import { Logo } from '../icons/icons';
 
-const Login = () => {
+const Login: React.FC = () => {
   return (
     <Box
       d={'flex'}

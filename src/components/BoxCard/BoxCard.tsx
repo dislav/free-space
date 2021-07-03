@@ -35,6 +35,7 @@ const BoxCard: React.FC<IBoxCard> = ({ id, active, number }) => {
       setIsLoading(false);
       toast({
         title: 'Успешно',
+        position: 'top-right',
         description: `Бокс #${number} успешно ${
           !active ? 'активирован' : 'деактивирован'
         }.`,
@@ -46,6 +47,7 @@ const BoxCard: React.FC<IBoxCard> = ({ id, active, number }) => {
     } catch (e) {
       toast({
         title: 'Ошибка',
+        position: 'top-right',
         description: e.message,
         status: 'error',
         duration: 5000,

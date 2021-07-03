@@ -39,7 +39,7 @@ export const Container = styled.div<{ orderStatus: number }>`
 
     ${up('xl')} {
       top: 50%;
-      right: 60px;
+      right: 30px;
       transform: translateY(-50%);
     }
   }
@@ -112,6 +112,12 @@ export const Column = styled.div`
     ${up('xl')} {
       margin-bottom: 0;
     }
+  }
+
+  &:nth-child(7) {
+    flex: 1 1 50%;
+    text-align: right;
+    padding-right: 0;
   }
 `;
 

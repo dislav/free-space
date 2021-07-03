@@ -230,6 +230,7 @@ export type Order = {
   status: string;
   box: string;
   hash: string;
+  uname: string;
   created: string;
   updated: string;
 };
@@ -267,4 +268,11 @@ export type ChatMessageProps = {
   user: string;
   hash: string;
   created: string;
+};
+
+export type PaginationProps<T extends {} = any> = {
+  list: T;
+  page: number;
+  page_count: number;
+  limit: number;
 };

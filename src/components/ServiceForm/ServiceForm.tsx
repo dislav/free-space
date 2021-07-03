@@ -75,6 +75,7 @@ const ServiceForm: React.FC = () => {
 
         toast({
           title: 'Успешно',
+          position: 'top-right',
           description: 'Услуга успешно сохранена.',
           status: 'success',
           duration: 5000,
@@ -85,6 +86,7 @@ const ServiceForm: React.FC = () => {
       } catch (e) {
         toast({
           title: 'Ошибка',
+          position: 'top-right',
           description: e.message,
           status: 'error',
           duration: 5000,
@@ -100,6 +102,7 @@ const ServiceForm: React.FC = () => {
 
         toast({
           title: 'Успешно',
+          position: 'top-right',
           description: 'Услуга успешно создана.',
           status: 'success',
           duration: 5000,
@@ -109,6 +112,7 @@ const ServiceForm: React.FC = () => {
       } catch (e) {
         toast({
           title: 'Ошибка',
+          position: 'top-right',
           description: e.message,
           status: 'error',
           duration: 5000,

@@ -89,6 +89,7 @@ const PromotionForm: React.FC = () => {
 
         toast({
           title: 'Успешно',
+          position: 'top-right',
           description: `Акция «${data.name}» успешно обновлена.`,
           status: 'success',
           duration: 5000,
@@ -98,6 +99,7 @@ const PromotionForm: React.FC = () => {
       } catch (e) {
         toast({
           title: 'Ошибка',
+          position: 'top-right',
           description: e.message,
           status: 'error',
           duration: 5000,
@@ -114,6 +116,7 @@ const PromotionForm: React.FC = () => {
 
         toast({
           title: 'Успешно',
+          position: 'top-right',
           description: `Акция «${data.name}» успешно создана.`,
           status: 'success',
           duration: 5000,
@@ -123,6 +126,7 @@ const PromotionForm: React.FC = () => {
       } catch (e) {
         toast({
           title: 'Ошибка',
+          position: 'top-right',
           description: e.message,
           status: 'error',
           duration: 5000,

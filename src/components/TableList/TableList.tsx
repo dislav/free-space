@@ -1,34 +1,32 @@
 import React from 'react';
-import { Select } from '@chakra-ui/react';
-
-import { OptionProps } from '../../interfaces/types';
 
 import {
   Container,
   Header,
   Titles,
+  TitleHead,
   Column,
   EmptyList,
 } from './TableList.styled';
 import WashCardSkeleton from '../WashCardSkeleton/WashCardSkeleton';
 import { SadIcon } from '../../icons/icons';
 
-interface TitleOption {
+interface Title {
   title: string;
-  onChangeParam?: (value: string) => void;
-  options?: OptionProps[];
+  isSortable?: boolean;
+  onChangeParam?: (value: boolean) => void;
 }
 
 interface ITableList {
   className?: string;
   header?: React.ReactNode;
-  titles?: Array<string | TitleOption>;
+  titles?: Array<string | Title>;
   isLoading?: boolean;
   isEmpty?: boolean;
 }
 
-const isTitleOption = (title: string | TitleOption): title is TitleOption =>
-  (title as TitleOption).title !== undefined;
+const isTitleOption = (title: string | Title): title is Title =>
+  (title as Title).title !== undefined;
 
 const TableList: React.FC<ITableList> = ({
   children,
@@ -54,17 +52,12 @@ const TableList: React.FC<ITableList> = ({
         {titles?.map((title, index) => (
           <Column key={index}>
             {isTitleOption(title) ? (
-              <Select
-                variant={'unstyled'}
-                placeholder={title.title}
-                onChange={({ target }) => title.onChangeParam?.(target.value)}
+              <TitleHead
+                onClick={() => title.onChangeParam?.(!title.isSortable)}
               >
-                {title.options?.map(({ label, value }, key) => (
-                  <option key={key} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </Select>
+                {title.title}
+                {title.isSortable?.toString()}
+              </TitleHead>
             ) : (
               title
             )}

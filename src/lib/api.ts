@@ -12,6 +12,7 @@ import {
   GeoCode,
   Promotion,
   ChatMessageProps,
+  PaginationProps,
 } from '../interfaces/types';
 
 // Basic
@@ -22,9 +23,9 @@ const getToken = (): string | undefined =>
   cookie.parse(document.cookie)?.ukey28;
 
 // SWR
-export const fetcher = async (url: string) => {
+export const fetcher = async (url: string, limitPage?: number) => {
   const response: AxiosResponse<Response> = await axiosInstance.get(url, {
-    params: { ukey28: getToken() },
+    params: { ukey28: getToken(), limit_page: limitPage },
   });
 
   if (response.statusText !== 'OK') {
@@ -97,7 +98,9 @@ export const activateService = (id: string): AxiosPromise<Response<Service>> =>
     params: { ukey28: getToken() },
   });
 
-export const getOrders = (params: any): AxiosPromise<Response<Wash[]>> =>
+export const getOrders = (
+  params: any
+): AxiosPromise<Response<PaginationProps<Wash[]>>> =>
   axiosInstance.get('/wash/list', {
     params: {
       ukey28: getToken(),
@@ -149,14 +152,27 @@ export const updateService = (
     params: { ukey28: getToken() },
   });
 
-export const getStatistics = (): AxiosPromise<Response> =>
-  axiosInstance.get('/stat/all/30', {
-    params: { ukey28: getToken() },
+export const getStatistics = (
+  days = '30',
+  params?: any
+): AxiosPromise<Response> =>
+  axiosInstance.get(`/stat/all/${days}`, {
+    params: {
+      ...params,
+      ukey28: getToken(),
+    },
   });
 
-export const getStatisticsById = (id: string): AxiosPromise<Response> =>
-  axiosInstance.get(`/stat/get/${id}/30?`, {
-    params: { ukey28: getToken() },
+export const getStatisticsById = (
+  id: string,
+  days = '30',
+  params?: any
+): AxiosPromise<Response> =>
+  axiosInstance.get(`/stat/get/${id}/${days}?`, {
+    params: {
+      ...params,
+      ukey28: getToken(),
+    },
   });
 
 export const getChatMessagesById = (

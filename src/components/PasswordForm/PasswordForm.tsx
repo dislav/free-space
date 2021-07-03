@@ -54,6 +54,7 @@ const PasswordForm: React.FC = () => {
 
       toast({
         title: 'Успешно',
+        position: 'top-right',
         description: 'Пароль успешно обновлен',
         status: 'success',
         duration: 5000,
@@ -68,6 +69,7 @@ const PasswordForm: React.FC = () => {
     } catch (e) {
       toast({
         title: 'Ошибка',
+        position: 'top-right',
         description: e.message,
         status: 'error',
         duration: 5000,
