@@ -31,31 +31,33 @@ const SearchForm: React.FC<ISearchForm> = ({ searchText, onSearch }) => {
 
   return (
     <Container onSubmit={handleSubmit(onSubmit)}>
-      <Input
-        bg={colors.white}
-        borderRadius={variables.borderRadius}
-        mr={'14px'}
-        maxW={['auto', 'auto', '210px']}
-        placeholder={'Поиск'}
-        {...register('search')}
-      />
-      {!searchText ? (
-        <Button
+      <div>
+        <Input
+          bg={colors.white}
           borderRadius={variables.borderRadius}
-          minW={'80px'}
-          type={'submit'}
-        >
-          Поиск
-        </Button>
-      ) : (
-        <Button
-          borderRadius={variables.borderRadius}
-          minW={'80px'}
-          onClick={onReset}
-        >
-          Сбросить
-        </Button>
-      )}
+          mr={'14px'}
+          maxW={['auto', 'auto', '210px']}
+          placeholder={'Поиск'}
+          {...register('search')}
+        />
+        {!searchText ? (
+          <Button
+            borderRadius={variables.borderRadius}
+            minW={'80px'}
+            type={'submit'}
+          >
+            Поиск
+          </Button>
+        ) : (
+          <Button
+            borderRadius={variables.borderRadius}
+            minW={'80px'}
+            onClick={onReset}
+          >
+            Сбросить
+          </Button>
+        )}
+      </div>
       {searchText && <p>Найдено по запросу «{searchText}»</p>}
     </Container>
   );
