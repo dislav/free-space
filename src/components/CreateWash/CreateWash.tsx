@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useTheme } from 'styled-components';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
@@ -15,6 +15,7 @@ import {
 import MediaQuery from 'react-responsive';
 import L, { DivIcon, LatLng, LatLngTuple } from 'leaflet';
 import { TileLayer, Marker, Popup, useMap, useMapEvent } from 'react-leaflet';
+import { useDebounce } from 'use-debounce';
 
 import { City, Wash } from '../../interfaces/types';
 import { createWash, getGeoCodeByAddress, updateWash } from '../../lib/api';
@@ -108,6 +109,16 @@ const CreateWash: React.FC = () => {
   const citiesLoading = !cities && !citiesError;
   const washInfoLoading = !washInfo && !washError;
 
+  const sortedCities = useMemo(
+    () =>
+      cities?.sort((a, b) => {
+        if (a.name > b.name) return 1;
+        if (a.name < b.name) return -1;
+        return 0;
+      }),
+    [cities]
+  );
+
   const workTime = washInfo?.worktime.length
     ? washInfo?.worktime.split('-')
     : undefined;
@@ -133,6 +144,8 @@ const CreateWash: React.FC = () => {
   const { colors, variables, breakpoints } = useTheme();
   const fields = watch();
 
+  const [debounceStreet] = useDebounce(fields?.street, 800);
+
   const phoneFormat = (value: string) => {
     const phone = value.replace(/[^\d]/g, '');
     if (/^\d{11}$/.test(phone))
@@ -144,7 +157,7 @@ const CreateWash: React.FC = () => {
   };
 
   const onCopyData = (data: string) => {
-    navigator.clipboard.writeText(data);
+    navigator?.clipboard.writeText(data);
   };
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
@@ -257,6 +270,13 @@ const CreateWash: React.FC = () => {
     }
   };
 
+  useMemo(() => {
+    if (!debounceStreet?.length) return;
+    getGeoCodeRequest(
+      `${fields?.city ? `${fields.city}, ` : ''}${debounceStreet}`
+    );
+  }, [fields?.city, debounceStreet]);
+
   const onGetAddress = (address: string) => {
     setValue('street', address);
   };
@@ -292,7 +312,7 @@ const CreateWash: React.FC = () => {
               })}
               onChange={({ target }) => getGeoCodeRequest(target.value)}
             >
-              {cities?.map(({ id, name }) => (
+              {sortedCities?.map(({ id, name }) => (
                 <option key={id} value={name}>
                   {name}
                 </option>

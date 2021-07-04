@@ -9,7 +9,7 @@ import {
   EmptyList,
 } from './TableList.styled';
 import WashCardSkeleton from '../WashCardSkeleton/WashCardSkeleton';
-import { SadIcon } from '../../icons/icons';
+import { SadIcon, ArrowIcon } from '../../icons/icons';
 
 interface Title {
   title: string;
@@ -54,9 +54,10 @@ const TableList: React.FC<ITableList> = ({
             {isTitleOption(title) ? (
               <TitleHead
                 onClick={() => title.onChangeParam?.(!title.isSortable)}
+                isSortable={title.isSortable}
               >
                 {title.title}
-                {title.isSortable?.toString()}
+                <ArrowIcon />
               </TitleHead>
             ) : (
               title

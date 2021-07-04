@@ -95,3 +95,18 @@ export const Logout = styled.div`
     margin: auto auto 60px;
   }
 `;
+
+export const ChatLink = styled.span`
+  position: relative;
+`;
+
+export const ChatNotice = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #e34343;
+  transform: translateX(100%);
+`;

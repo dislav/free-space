@@ -4,16 +4,28 @@ import { up } from 'styled-breakpoints';
 import TableList from '../TableList/TableList';
 import { font } from '../../styles/utils';
 
-export const Container = styled(TableList)``;
+export const Container = styled(TableList)`
+  margin-bottom: 40px;
+`;
 
 export const Header = styled.div`
   display: flex;
-  align-items: center;
+  flex-direction: column;
   margin-bottom: 20px;
 
+  ${up('xl')} {
+    align-items: center;
+    flex-direction: row;
+  }
+
   .chakra-select__wrapper {
-    max-width: 240px;
-    margin-left: 40px;
+    margin-top: 20px;
+
+    ${up('xl')} {
+      max-width: 240px;
+      margin-left: 40px;
+      margin-top: 0;
+    }
   }
 `;
 

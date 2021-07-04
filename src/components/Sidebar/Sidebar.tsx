@@ -1,12 +1,20 @@
 import React, { useCallback } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
+import useSwr from 'swr';
 import cookie from 'cookie';
 
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { getSandwich } from '../../store/sandwich/selectors';
 import { setSandwich } from '../../store/sandwich/actions';
 
-import { Container, Backdrop, ContainerLogo, Logout } from './Sidebar.styled';
+import {
+  Container,
+  Backdrop,
+  ContainerLogo,
+  Logout,
+  ChatLink,
+  ChatNotice,
+} from './Sidebar.styled';
 import SidebarLink from '../SidebarLink/SidebarLink';
 import WithGroup from '../WithGroup/WithGroup';
 
@@ -24,6 +32,14 @@ import {
 const Sidebar: React.FC = () => {
   const dispatch = useAppDispatch();
   const isSandwichOpen = useAppSelector(getSandwich);
+
+  const isAdmin = localStorage.getItem('group') === '1';
+  const { data } = useSwr<{
+    new: boolean;
+    list: {
+      [key: string]: number;
+    };
+  }>(isAdmin ? '/message/checknew' : null);
 
   const history = useHistory();
   const location = useLocation();
@@ -92,7 +108,10 @@ const Sidebar: React.FC = () => {
         <WithGroup available={['1']}>
           <SidebarLink to={'/chat'}>
             <ChatIcon />
-            Чат
+            <ChatLink>
+              Чат
+              {data?.new && <ChatNotice />}
+            </ChatLink>
           </SidebarLink>
         </WithGroup>
         <Logout onClick={logout}>Выйти</Logout>

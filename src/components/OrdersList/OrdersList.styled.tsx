@@ -6,6 +6,8 @@ import TableList from '../TableList/TableList';
 import { Column as TableListColumn } from '../TableList/TableList.styled';
 
 export const Container = styled(TableList)`
+  margin-bottom: 40px;
+
   ${TableListColumn} {
     &:nth-child(1) {
       ${font('lg')};

@@ -1,16 +1,19 @@
-import React, { useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import useSwr from 'swr';
 
 import { CarBody, Service, Order } from '../../interfaces/types';
+import { useOrders } from '../../lib/useOrders';
 
 import { Container, Section } from './OrdersList.styled';
 import OrderCard from '../OrderCard/OrderCard';
-import { useOrders } from '../../lib/useOrders';
+import Pagination from '../Pagination/Pagination';
 
 const OrdersList: React.FC = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+
   const { data: bodies } = useSwr<CarBody[]>('/guide/body');
   const { data: services } = useSwr<{ list: Service[] }>('/services');
-  const { orders, isLoading } = useOrders();
+  const { orders, isLoading } = useOrders(currentPage);
 
   const categoriesOrders = useMemo(() => {
     const categories = new Map<string, Order[]>();
@@ -36,36 +39,44 @@ const OrdersList: React.FC = () => {
   };
 
   return (
-    <Container
-      titles={[
-        'Тип кузова',
-        'Дата посещения',
-        'Вид услуг',
-        'Телефон',
-        'Имя',
-        'Бокс',
-        'Цена',
-      ]}
-      isLoading={isLoading}
-      isEmpty={!orders?.list.length}
-    >
-      {Array.from(categoriesOrders?.keys() || []).map((status) => (
-        <Section key={status}>
-          <h2>{statusTitle[+status]}</h2>
-          {categoriesOrders
-            .get(status)
-            ?.sort((a, b) => +b - +a)
-            .map((order) => (
-              <OrderCard
-                {...order}
-                key={order.id}
-                bodies={bodies}
-                servicesList={services?.list}
-              />
-            ))}
-        </Section>
-      ))}
-    </Container>
+    <>
+      <Container
+        titles={[
+          'Тип кузова',
+          'Дата посещения',
+          'Вид услуг',
+          'Телефон',
+          'Имя',
+          'Бокс',
+          'Цена',
+        ]}
+        isLoading={isLoading}
+        isEmpty={!orders?.list.length}
+      >
+        {Array.from(categoriesOrders?.keys() || []).map((status) => (
+          <Section key={status}>
+            <h2>{statusTitle[+status]}</h2>
+            {categoriesOrders
+              .get(status)
+              ?.sort((a, b) => +b - +a)
+              .map((order) => (
+                <OrderCard
+                  {...order}
+                  key={order.id}
+                  bodies={bodies}
+                  servicesList={services?.list}
+                />
+              ))}
+          </Section>
+        ))}
+      </Container>
+      <Pagination
+        pageCount={orders?.page_count || 1}
+        pageRangeDisplayed={2}
+        marginPagesDisplayed={5}
+        onPageChange={({ selected }) => setCurrentPage(selected + 1)}
+      />
+    </>
   );
 };
 

@@ -29,7 +29,7 @@ interface IChatBody {
 
 const ChatBody: React.FC<IChatBody> = ({ id, userId, clearChat }) => {
   const { data, error, mutate } = useSwr<ChatMessageProps[]>(
-    `/message/pull/${id}`
+    `/message/pull/${id}?message_read=1`
   );
   const isChatLoading = !data && !error;
 

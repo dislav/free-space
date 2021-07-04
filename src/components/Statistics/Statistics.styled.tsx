@@ -12,10 +12,20 @@ export const Header = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 18px;
+
+  .mui-picker {
+    margin-right: 20px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 `;
 
 export const Content = styled.div`
   position: relative;
+  display: flex;
+  align-items: center;
   background-color: ${({ theme }) => theme.colors.blue10};
   border-radius: ${({ theme }) => theme.variables.borderRadius};
   padding: 20px;
@@ -49,29 +59,33 @@ export const Content = styled.div`
 
 export const StatisticsNumbers = styled.div`
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
 
   ${up('xl')} {
     width: 50%;
+    flex-direction: row;
+    flex-wrap: wrap;
   }
 `;
 
 export const StatisticsItem = styled.div`
-  width: 50%;
   padding-right: 20px;
+  margin-bottom: 20px;
 
   ${up('xl')} {
+    width: 50%;
     padding-right: 40px;
+    margin-bottom: 40px;
   }
 
   h2 {
     ${font('base')};
     font-weight: 700;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
 
     ${up('xl')} {
       ${font('2xl')};
-      margin-bottom: 20px;
+      margin-bottom: 8px;
     }
   }
 

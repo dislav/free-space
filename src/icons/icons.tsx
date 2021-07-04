@@ -627,3 +627,22 @@ export const BackIcon: React.FC = () => {
     </svg>
   );
 };
+
+export const ArrowIcon: React.FC = () => {
+  return (
+    <svg
+      width="14"
+      height="9"
+      viewBox="0 0 14 9"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M6.99992 8.41422L0.292818 1.70711L1.70703 0.292894L6.99992 5.58579L12.2928 0.292894L13.707 1.70711L6.99992 8.41422Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+};

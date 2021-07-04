@@ -6,6 +6,7 @@ import { Column as TableListColumn } from '../TableList/TableList.styled';
 export const Container = styled(TableList)`
   display: flex;
   flex-direction: column;
+  margin-bottom: 40px;
 
   ${TableListColumn}:nth-child(1) {
     flex: 1 1 60%;

@@ -18,6 +18,13 @@ import ChatTab from '../ChatTab/ChatTab';
 import ChatBody from '../ChatBody/ChatBody';
 
 const Chat: React.FC = () => {
+  const { data: newMessages, mutate } =
+    useSwr<{
+      new: boolean;
+      list: {
+        [key: string]: number;
+      };
+    }>('/message/checknew');
   const { data, error } = useSwr<ChatProps[]>('/message/chat');
   const chatsLoading = !data && !error;
 
@@ -28,6 +35,10 @@ const Chat: React.FC = () => {
   useEffect(() => {
     if (data) setCurrentChat(data[0].key);
   }, [data]);
+
+  useEffect(() => {
+    mutate();
+  }, [currentChat]);
 
   const onSelectChat = (id: string) => {
     setCurrentChat(id);
@@ -60,6 +71,7 @@ const Chat: React.FC = () => {
                 active={appId === currentChat}
                 key={props.id}
                 onClickTab={() => onSelectChat(appId)}
+                isNew={!!newMessages?.list[appId]}
                 {...props}
               />
             ))}

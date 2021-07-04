@@ -35,7 +35,7 @@ const SearchForm: React.FC<ISearchForm> = ({ searchText, onSearch }) => {
         bg={colors.white}
         borderRadius={variables.borderRadius}
         mr={'14px'}
-        maxW={'210px'}
+        maxW={['auto', 'auto', '210px']}
         placeholder={'Поиск'}
         {...register('search')}
       />

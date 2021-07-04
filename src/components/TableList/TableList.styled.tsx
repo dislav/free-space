@@ -45,9 +45,15 @@ export const Titles = styled.div`
   }
 `;
 
-export const TitleHead = styled.div`
+export const TitleHead = styled.div<{ isSortable?: boolean }>`
   display: flex;
   align-items: center;
+  cursor: pointer;
+
+  svg {
+    margin-left: 40px;
+    transform: rotate(${({ isSortable }) => (isSortable ? '180deg' : null)});
+  }
 `;
 
 export const Column = styled.div`

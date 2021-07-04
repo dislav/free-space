@@ -1,17 +1,15 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import useSwr from 'swr';
 import { useTheme } from 'styled-components';
-import { Select, Skeleton } from '@chakra-ui/react';
+import { Select, Skeleton, Spinner } from '@chakra-ui/react';
 import { useForm, Controller } from 'react-hook-form';
 import { ChartOptions } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import { useDebounce } from 'use-debounce';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 import dayjs from 'dayjs';
 
 import { PaginationProps, StatProps, Wash } from '../../interfaces/types';
 import { useProfile } from '../../lib/useProfile';
-import { getStatistics, getStatisticsById } from '../../lib/api';
 
 import {
   Container,
@@ -32,41 +30,44 @@ const Statistics: React.FC = () => {
   const { profile } = useProfile();
   const { colors, variables } = useTheme();
 
-  const [aspectRatio, setAspectRatio] = useState(
-    window.innerWidth / window.innerHeight
-  );
-  const [debounceAspectRatio] = useDebounce(aspectRatio, 300);
-
   const isAdmin = localStorage.getItem('group') === '1';
 
-  const {
-    data: statistics,
-    error: statisticsError,
-    mutate,
-  } = useSwr<StatProps[]>(
-    isAdmin ? 'stat/all/30' : profile?.id ? `/stat/get/${profile?.id}/30` : null
+  const { register, control, watch } = useForm<Inputs>();
+  const fields = watch();
+
+  const params = useMemo(() => {
+    const formatStart = fields?.start
+      ? dayjs(fields?.start).format('YYYY-MM-DD')
+      : undefined;
+    const formatEnd = fields?.end
+      ? dayjs(fields?.end).format('YYYY-MM-DD')
+      : undefined;
+
+    return `?${formatStart ? `start=${formatStart}` : ''}${
+      formatEnd ? `&end=${formatEnd}` : ''
+    }`;
+  }, [fields?.start, fields?.end]);
+
+  const days = useMemo(() => {
+    if (fields?.start || fields?.end) return 0;
+    return fields?.days || 30;
+  }, [fields?.days, fields?.start, fields?.end]);
+
+  const { data: statistics, error: statisticsError } = useSwr<StatProps[]>(
+    isAdmin
+      ? fields?.wash
+        ? `/stat/get/${fields?.wash}/${days}${params}`
+        : `stat/all/${days}${params}`
+      : profile?.id
+      ? `/stat/get/${profile?.id}/${days}${params}`
+      : null
   );
   const { data: washes, error: washesError } = useSwr<PaginationProps<Wash[]>>(
     isAdmin ? ['/wash/list', 10000] : null
   );
 
-  const { register, control, watch } = useForm<Inputs>();
-  const fields = watch();
-
   const statisticsLoading = !statistics && !statisticsError;
   const washesLoading = !washes && !washesError;
-
-  const onWindonResize = () => {
-    setAspectRatio(window.innerWidth / window.innerHeight);
-  };
-
-  useEffect(() => {
-    window.addEventListener('resize', onWindonResize);
-
-    return () => {
-      window.removeEventListener('resize', onWindonResize);
-    };
-  }, []);
 
   const prices = useMemo(() => {
     const pricesDone: number[] = [];
@@ -77,65 +78,22 @@ const Statistics: React.FC = () => {
     return pricesDone;
   }, [statistics]);
 
-  const averagePrice = prices.length
-    ? prices.reduce((sum, price) => sum + price, 0) / prices.length
-    : 0;
+  const totalPrice = prices.reduce((sum, price) => sum + +price, 0);
 
-  const fetchStatistics = async (id?: string, start?: string, end?: string) => {
-    const hasDate = start || end;
-    const days = hasDate ? '0' : '30';
-
-    if (isAdmin) {
-      if (id?.length) {
-        try {
-          const { data } = await getStatisticsById(id, days, {
-            start,
-            end,
-          });
-          if (!data.status) throw new Error(data.message);
-          mutate(data.data, false);
-        } catch (e) {
-          console.log(e.message);
-        }
-      } else {
-        try {
-          const { data } = await getStatistics(days, {
-            start,
-            end,
-          });
-          if (!data.status) throw new Error(data.message);
-          mutate(data.data, false);
-        } catch (e) {
-          console.log(e.message);
-        }
-      }
-    } else {
-      if (!profile?.id) return;
-      try {
-        const { data } = await getStatisticsById(profile.id, days, {
-          start,
-          end,
-        });
-        if (!data.status) throw new Error(data.message);
-        mutate(data.data, false);
-      } catch (e) {
-        console.log(e.message);
-      }
-    }
-  };
-
-  useMemo(() => {
-    if (!Object.keys(fields)?.length) return;
-
-    const formatStart = fields?.start
-      ? dayjs(fields?.start).format('YYYY-MM-DD')
-      : undefined;
-    const formatEnd = fields?.end
-      ? dayjs(fields?.end).format('YYYY-MM-DD')
-      : undefined;
-
-    fetchStatistics(fields?.wash, formatStart, formatEnd);
-  }, [fields?.wash, fields?.start, fields?.end]);
+  const ordersCount = useMemo(
+    () => ({
+      total: statistics?.reduce((sum, { orders }) => sum + +orders, 0) || 0,
+      completed:
+        statistics?.reduce((sum, { orders_done }) => sum + +orders_done, 0) ||
+        0,
+      cancel:
+        statistics?.reduce(
+          (sum, { orders_cancel }) => sum + +orders_cancel,
+          0
+        ) || 0,
+    }),
+    [statistics]
+  );
 
   const statsData = (canvas: HTMLCanvasElement | null) => {
     const ctx = canvas?.getContext('2d');
@@ -160,14 +118,20 @@ const Statistics: React.FC = () => {
           backgroundColor: g,
           borderColor: colors.line,
           tension: 0.5,
-          radius: 8,
+          pointBackgroundColor: 'transparent',
+          pointBorderWidth: 0,
+          pointHoverBackgroundColor: colors.line,
+          pointHoverBorderWidth: 2,
+          pointHoverBorderColor: 'white',
+          pointRadius: 4,
+          pointHoverRadius: 8,
         },
       ],
     };
   };
 
   const options: ChartOptions = {
-    aspectRatio: debounceAspectRatio,
+    aspectRatio: window.innerWidth / window.innerHeight,
     scales: {
       x: {
         grid: {
@@ -176,6 +140,9 @@ const Statistics: React.FC = () => {
         },
       },
       y: {
+        ticks: {
+          stepSize: 1,
+        },
         grid: {
           drawBorder: false,
           color: () => 'transparent',
@@ -189,8 +156,6 @@ const Statistics: React.FC = () => {
     },
   };
 
-  if (statisticsLoading) return <></>;
-
   return (
     <Container>
       <Header>
@@ -198,13 +163,13 @@ const Statistics: React.FC = () => {
           <>
             {washesLoading ? (
               <Skeleton
-                height={['32px', '32px', '44px']}
+                height={['32px', '32px', '56px']}
                 borderRadius={variables.borderRadius}
               />
             ) : (
               <Select
                 maxW={'180px'}
-                h={['32px', '32px', '44px']}
+                h={['32px', '32px', '56px']}
                 borderRadius={variables.borderRadius}
                 placeholder={'Все мойки'}
                 bg={colors.blue10}
@@ -269,12 +234,38 @@ const Statistics: React.FC = () => {
         />
       </Header>
       <Content>
-        <Line data={statsData} options={options} type={'line'} />
+        {statisticsLoading ? (
+          <Spinner
+            size={'xl'}
+            thickness={'4px'}
+            speed={'0.65s'}
+            color={colors.blue40}
+            margin={'auto'}
+          />
+        ) : (
+          <Line data={statsData} options={options} type={'line'} />
+        )}
       </Content>
       <StatisticsNumbers>
         <StatisticsItem>
+          <h2>Общая сумма</h2>
+          <p>{totalPrice || 0} ₽</p>
+        </StatisticsItem>
+        <StatisticsItem>
           <h2>Средний чек</h2>
-          <p>{averagePrice} ₽</p>
+          <p>{totalPrice ? (totalPrice / prices.length).toFixed() : 0} ₽</p>
+        </StatisticsItem>
+        <StatisticsItem>
+          <h2>Всего заявок</h2>
+          <p>{ordersCount.total}</p>
+        </StatisticsItem>
+        <StatisticsItem>
+          <h2>Завершенные заявки</h2>
+          <p>{ordersCount.completed}</p>
+        </StatisticsItem>
+        <StatisticsItem>
+          <h2>Отмененные заявки</h2>
+          <p>{ordersCount.cancel}</p>
         </StatisticsItem>
       </StatisticsNumbers>
     </Container>
