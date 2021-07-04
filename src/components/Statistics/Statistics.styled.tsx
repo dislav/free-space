@@ -10,14 +10,25 @@ export const Container = styled.div`
 
 export const Header = styled.div`
   display: flex;
-  align-items: center;
+  flex-direction: column;
   margin-bottom: 18px;
 
+  ${up('xl')} {
+    flex-direction: row;
+    align-items: center;
+  }
+
   .mui-picker {
-    margin-right: 20px;
+    margin-bottom: 14px;
+
+    ${up('xl')} {
+      margin-right: 20px;
+      margin-bottom: 0;
+    }
 
     &:last-child {
       margin-right: 0;
+      margin-bottom: 0;
     }
   }
 `;

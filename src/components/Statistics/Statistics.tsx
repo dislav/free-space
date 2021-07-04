@@ -162,18 +162,16 @@ const Statistics: React.FC = () => {
         {isAdmin && (
           <>
             {washesLoading ? (
-              <Skeleton
-                height={['32px', '32px', '56px']}
-                borderRadius={variables.borderRadius}
-              />
+              <Skeleton height={'56px'} borderRadius={variables.borderRadius} />
             ) : (
               <Select
-                maxW={'180px'}
-                h={['32px', '32px', '56px']}
+                maxW={['auto', 'auto', '180px']}
+                h={'56px'}
                 borderRadius={variables.borderRadius}
                 placeholder={'Все мойки'}
                 bg={colors.blue10}
                 mr={'20px'}
+                mb={['14px', '14px', '0']}
                 {...register('wash')}
               >
                 {washes?.list.map(({ id, name }) => (
