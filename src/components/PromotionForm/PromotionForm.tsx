@@ -18,7 +18,7 @@ import MediaQuery from 'react-responsive';
 import dayjs from 'dayjs';
 import cookie from 'cookie';
 
-import { BaseService, Promotion } from '../../interfaces/types';
+import { Service, Promotion, PaginationProps } from '../../interfaces/types';
 import { createPromotion, updatePromotion } from '../../lib/api';
 
 import { Container, Column, ExpireTo } from './PromotionForm.styled';
@@ -32,7 +32,10 @@ interface IInputs {
 
 const PromotionForm: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
-  const { data: services } = useSwr<BaseService[]>('/guide/service_list');
+  const { data: services } = useSwr<PaginationProps<Service[]>>([
+    '/services',
+    10000,
+  ]);
   const { data: promotion, error } = useSwr<Promotion>(
     id ? `/promo/info/${id}` : null
   );
@@ -48,15 +51,13 @@ const PromotionForm: React.FC = () => {
 
   const servicesOptions = useMemo(
     () =>
-      services?.length
-        ? services.map(({ id, name }) => ({
-            value: id,
-            label: name,
-            selected: promotion?.service?.find(
-              ({ service_id }) => service_id === id
-            ),
-          }))
-        : [],
+      services?.list.map(({ id, name }) => ({
+        value: id,
+        label: name,
+        selected: promotion?.service?.find(
+          ({ service_id }) => service_id === id
+        ),
+      })),
     [services, promotion]
   );
 
