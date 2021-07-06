@@ -17,10 +17,18 @@ import L, { DivIcon, LatLng, LatLngTuple } from 'leaflet';
 import { TileLayer, Marker, Popup, useMap, useMapEvent } from 'react-leaflet';
 import { useDebounce } from 'use-debounce';
 
+import ReactSelect from 'react-select';
+
 import { City, Wash } from '../../interfaces/types';
 import { createWash, getGeoCodeByAddress, updateWash } from '../../lib/api';
 
-import { Container, Form, FormTime, Map } from './CreateWash.styled';
+import {
+  Container,
+  Form,
+  FormSelect,
+  FormTime,
+  Map,
+} from './CreateWash.styled';
 
 interface Inputs {
   name: string;
@@ -111,11 +119,13 @@ const CreateWash: React.FC = () => {
 
   const sortedCities = useMemo(
     () =>
-      cities?.sort((a, b) => {
-        if (a.name > b.name) return 1;
-        if (a.name < b.name) return -1;
-        return 0;
-      }),
+      cities
+        ?.sort((a, b) => {
+          if (a.name > b.name) return 1;
+          if (a.name < b.name) return -1;
+          return 0;
+        })
+        .map(({ name }) => ({ value: name, label: name })),
     [cities]
   );
 
@@ -163,6 +173,8 @@ const CreateWash: React.FC = () => {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsLoading(true);
     const formData = new FormData();
+
+    console.log(markerCoord);
 
     const { startTime, endTime, ...props } = data;
     const newData = {
@@ -258,6 +270,7 @@ const CreateWash: React.FC = () => {
     try {
       const { data } = await getGeoCodeByAddress(address);
       setCenter([+data.data.geo_lat || 0, +data.data.geo_lon || 0]);
+      setMarketCoord(new LatLng(+data.data.geo_lat, +data.data.geo_lon));
     } catch (e) {
       toast({
         title: 'Ошибка',
@@ -300,26 +313,36 @@ const CreateWash: React.FC = () => {
           <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
         </FormControl>
         {!citiesLoading ? (
-          <FormControl isInvalid={!!errors.city} mb={'20px'}>
-            <Select
-              h={['32px', '32px', '44px']}
-              borderRadius={'18px'}
-              placeholder={'Выберите город'}
-              defaultValue={washInfo?.city || ''}
-              bg={'white'}
-              {...register('city', {
+          <FormSelect error={!!errors.city}>
+            <Controller
+              name={'city'}
+              control={control}
+              rules={{
                 required: 'Обязательное поле',
-              })}
-              onChange={({ target }) => getGeoCodeRequest(target.value)}
-            >
-              {sortedCities?.map(({ id, name }) => (
-                <option key={id} value={name}>
-                  {name}
-                </option>
-              ))}
-            </Select>
-            <FormErrorMessage>{errors.city?.message}</FormErrorMessage>
-          </FormControl>
+              }}
+              render={({ field: { value, onChange, ...props } }) => (
+                <ReactSelect
+                  className={'react-select'}
+                  classNamePrefix={'react-select'}
+                  placeholder={'Выберите город'}
+                  noOptionsMessage={() => 'Список пуст'}
+                  defaultValue={
+                    washInfo?.city
+                      ? { value: washInfo.city, label: washInfo.city }
+                      : null
+                  }
+                  options={sortedCities}
+                  onChange={(option) => {
+                    getGeoCodeRequest(option?.value || 'Москва');
+                    onChange(option?.value);
+                  }}
+                  isClearable={true}
+                  {...props}
+                />
+              )}
+            />
+            {errors.city && <p>{errors.city.message}</p>}
+          </FormSelect>
         ) : (
           <Skeleton
             h={['32px', '32px', '44px']}

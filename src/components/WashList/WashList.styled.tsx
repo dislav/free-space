@@ -18,13 +18,20 @@ export const Header = styled.div`
     flex-direction: row;
   }
 
-  .chakra-select__wrapper {
+  .react-select {
+    width: 100%;
     margin-top: 20px;
 
     ${up('xl')} {
-      max-width: 240px;
-      margin-left: 40px;
+      width: auto;
+      min-width: 240px;
+      margin-left: 20px;
       margin-top: 0;
+    }
+
+    &__control {
+      min-height: auto;
+      height: 40px;
     }
   }
 `;

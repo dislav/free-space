@@ -26,6 +26,31 @@ export const Form = styled.form`
   }
 `;
 
+export const FormSelect = styled.div<{ error?: boolean }>`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+
+  .react-select {
+    &__control {
+      height: 44px;
+      min-height: auto;
+      border: ${({ error }) =>
+        error ? '2px solid var(--chakra-colors-red-500)' : null};
+    }
+
+    &__value-container {
+      padding: 2px 16px;
+    }
+  }
+
+  p {
+    font-size: 14px;
+    color: var(--chakra-colors-red-500);
+    margin-top: 8px;
+  }
+`;
+
 export const FormTime = styled.div`
   display: flex;
   align-items: center;

@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { useTheme } from 'styled-components';
-import { Select } from '@chakra-ui/react';
+import Select from 'react-select';
 import useSwr from 'swr';
 
 import { City, Wash, PaginationProps } from '../../interfaces/types';
@@ -28,8 +27,6 @@ const WashList: React.FC = () => {
     `/wash/list${currentPage > 1 ? `/${currentPage}` : ''}${params}`
   );
   const { data: cities } = useSwr<City[]>('/guide/cites');
-
-  const { variables } = useTheme();
 
   const optionsCities = useMemo(
     () =>
@@ -68,10 +65,6 @@ const WashList: React.FC = () => {
     setSearch(search);
   };
 
-  const onChangeCity = (value: string) => {
-    setCity(value);
-  };
-
   return (
     <>
       <Container
@@ -80,16 +73,13 @@ const WashList: React.FC = () => {
             <SearchForm searchText={search} onSearch={onChangeSearch} />
             <Select
               placeholder={'Город'}
-              value={city}
-              borderRadius={variables.borderRadius}
-              onChange={({ target }) => onChangeCity(target.value)}
-            >
-              {optionsCities?.map(({ label, value }, key) => (
-                <option key={key} value={value}>
-                  {label}
-                </option>
-              ))}
-            </Select>
+              className={'react-select'}
+              classNamePrefix={'react-select'}
+              defaultValue={city ? { value: city, label: city } : null}
+              options={optionsCities}
+              onChange={(option) => setCity(option?.value || '')}
+              isClearable={true}
+            />
           </Header>
         }
         titles={[
