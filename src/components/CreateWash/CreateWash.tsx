@@ -110,9 +110,11 @@ const CreateWash: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
 
   const { data: cities, error: citiesError } = useSwr<City[]>('/guide/cites');
-  const { data: washInfo, error: washError } = useSwr<Wash>(
-    id ? `/wash/info/${id}` : null
-  );
+  const {
+    data: washInfo,
+    error: washError,
+    isValidating,
+  } = useSwr<Wash>(id ? `/wash/info/${id}` : null);
 
   const citiesLoading = !cities && !citiesError;
   const washInfoLoading = !washInfo && !washError;
@@ -174,8 +176,6 @@ const CreateWash: React.FC = () => {
     setIsLoading(true);
     const formData = new FormData();
 
-    console.log(markerCoord);
-
     const { startTime, endTime, ...props } = data;
     const newData = {
       ...props,
@@ -202,7 +202,6 @@ const CreateWash: React.FC = () => {
           isClosable: true,
         });
 
-        mutate('/wash/list');
         history.push('/');
       } catch (e) {
         toast({
@@ -214,6 +213,7 @@ const CreateWash: React.FC = () => {
           isClosable: true,
         });
       } finally {
+        mutate('/wash/list');
         setIsLoading(false);
       }
     } else {
@@ -294,7 +294,7 @@ const CreateWash: React.FC = () => {
     setValue('street', address);
   };
 
-  if (id && washInfoLoading) return <></>;
+  if (id && (washInfoLoading || isValidating)) return <></>;
 
   return (
     <Container>
@@ -317,6 +317,7 @@ const CreateWash: React.FC = () => {
             <Controller
               name={'city'}
               control={control}
+              defaultValue={washInfo?.city || ''}
               rules={{
                 required: 'Обязательное поле',
               }}
@@ -333,6 +334,7 @@ const CreateWash: React.FC = () => {
                   }
                   options={sortedCities}
                   onChange={(option) => {
+                    console.log(option);
                     getGeoCodeRequest(option?.value || 'Москва');
                     onChange(option?.value);
                   }}
@@ -341,7 +343,7 @@ const CreateWash: React.FC = () => {
                 />
               )}
             />
-            {errors.city && <p>{errors.city.message}</p>}
+            {errors.city && <p>{errors.city?.message}</p>}
           </FormSelect>
         ) : (
           <Skeleton

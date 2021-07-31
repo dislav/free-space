@@ -252,7 +252,9 @@ const Statistics: React.FC = () => {
         </StatisticsItem>
         <StatisticsItem>
           <h2>Средний чек</h2>
-          <p>{totalPrice ? (totalPrice / prices.length).toFixed() : 0} ₽</p>
+          <p>
+            {totalPrice ? (totalPrice / ordersCount.completed).toFixed() : 0} ₽
+          </p>
         </StatisticsItem>
         <StatisticsItem>
           <h2>Всего заявок</h2>
