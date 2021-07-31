@@ -130,7 +130,7 @@ const InfoForm: React.FC = () => {
         <ProfileAvatar
           imageUrl={
             profile?.pic
-              ? `https://wash.rj28.ru/files/${profile.pic}`
+              ? `https://api.fspaceapp.ru/files/${profile.pic}`
               : undefined
           }
         />
