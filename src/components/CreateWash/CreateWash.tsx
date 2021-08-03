@@ -283,12 +283,16 @@ const CreateWash: React.FC = () => {
     }
   };
 
+  // useMemo(() => {
+  //   if (!debounceStreet?.length) return;
+  //   getGeoCodeRequest(
+  //     `${fields?.city ? `${fields.city}, ` : ''}${debounceStreet}`
+  //   );
+  // }, [fields?.city, debounceStreet]);
+
   useMemo(() => {
-    if (!debounceStreet?.length) return;
-    getGeoCodeRequest(
-      `${fields?.city ? `${fields.city}, ` : ''}${debounceStreet}`
-    );
-  }, [fields?.city, debounceStreet]);
+    getGeoCodeRequest(fields?.city || '');
+  }, [fields?.city]);
 
   const onGetAddress = (address: string) => {
     setValue('street', address);

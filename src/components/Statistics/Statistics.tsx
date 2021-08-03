@@ -242,6 +242,8 @@ const Statistics: React.FC = () => {
             margin={'auto'}
           />
         ) : (
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           <Line data={statsData} options={options} />
         )}
       </Content>

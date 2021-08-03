@@ -18,12 +18,13 @@ import ChatTab from '../ChatTab/ChatTab';
 import ChatBody from '../ChatBody/ChatBody';
 
 const Chat: React.FC = () => {
-  const { data: newMessages, mutate } = useSwr<{
-    new: boolean;
-    list: {
-      [key: string]: number;
-    };
-  }>('/message/checknew');
+  const { data: newMessages, mutate } =
+    useSwr<{
+      new: boolean;
+      list: {
+        [key: string]: number;
+      };
+    }>('/message/checknew');
   const { data, error } = useSwr<ChatProps[]>('/message/chat');
   const chatsLoading = !data && !error;
 
