@@ -1,11 +1,16 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import useSwr from 'swr';
 import cookie from 'cookie';
+import useSound from 'use-sound';
 
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { getSandwich } from '../../store/sandwich/selectors';
 import { setSandwich } from '../../store/sandwich/actions';
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import notificationSound from '../../sounds/notification.mp3';
 
 import {
   Container,
@@ -28,10 +33,27 @@ import {
   StatisticsIcon,
   ChatIcon,
 } from '../../icons/icons';
+import { fetcher } from '../../lib/api';
 
 const Sidebar: React.FC = () => {
   const dispatch = useAppDispatch();
   const isSandwichOpen = useAppSelector(getSandwich);
+
+  const isWash = localStorage.getItem('group') === '2';
+
+  const { data: lastOrders } = useSwr<{ status: boolean }>(
+    isWash ? '/order/last' : null,
+    fetcher,
+    {
+      refreshInterval: 1000 * 10,
+    }
+  );
+
+  const [playNotification] = useSound(notificationSound);
+
+  useMemo(() => {
+    if (lastOrders?.status) playNotification();
+  }, [lastOrders]);
 
   const isAdmin = localStorage.getItem('group') === '1';
   const { data } = useSwr<{
