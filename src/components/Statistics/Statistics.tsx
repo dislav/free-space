@@ -242,7 +242,7 @@ const Statistics: React.FC = () => {
             margin={'auto'}
           />
         ) : (
-          <Line data={statsData} options={options} type={'line'} />
+          <Line data={statsData} options={options} />
         )}
       </Content>
       <StatisticsNumbers>

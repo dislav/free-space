@@ -10,7 +10,7 @@ import Pagination from '../Pagination/Pagination';
 const ServicesList: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const { data, error } = useSwr<PaginationProps<Service[]>>(
-    `/services/list${currentPage > 1 ? `/${currentPage}` : ''}`
+    `/services${currentPage > 1 ? `/${currentPage}` : ''}`
   );
 
   return (
