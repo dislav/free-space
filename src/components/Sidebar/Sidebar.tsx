@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useEffect, useCallback, useMemo } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import useSwr from 'swr';
 import cookie from 'cookie';
@@ -41,18 +41,25 @@ const Sidebar: React.FC = () => {
 
   const isWash = localStorage.getItem('group') === '2';
 
+  const [playNotification] = useSound(notificationSound);
+  const onSuccess = (data: { status: boolean }) => {
+    if (data?.status) playNotification();
+  };
+
   const { data: lastOrders } = useSwr<{ status: boolean }>(
     isWash ? '/order/last' : null,
     fetcher,
     {
-      refreshInterval: 1000 * 10,
+      refreshInterval: 10000,
+      onSuccess,
     }
   );
 
-  const [playNotification] = useSound(notificationSound);
-
-  useMemo(() => {
-    if (lastOrders?.status) playNotification();
+  useEffect(() => {
+    if (lastOrders?.status) {
+      if ('Notification' in window)
+        new Notification('Free Space', { body: 'У вас есть новый заказ!' });
+    }
   }, [lastOrders]);
 
   const isAdmin = localStorage.getItem('group') === '1';

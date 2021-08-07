@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet';
 
 import { Container, Header } from './Layout.styled';
 import Sandwich from '../Sandwich/Sandwich';
+import NotificationMessage from '../NotificationMessage/NotificationMessage';
 
 interface ILayout {
   title?: string;
@@ -20,6 +21,7 @@ const Layout: React.FC<ILayout> = ({ title, action, children }) => {
           content={'Личный кабинет агрегатора автомоек'}
         />
       </Helmet>
+      <NotificationMessage />
       <Header>
         <Sandwich />
         {title && <h1>{title}</h1>}
