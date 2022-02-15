@@ -50,7 +50,7 @@ const Sidebar: React.FC = () => {
     isWash ? '/order/last' : null,
     fetcher,
     {
-      refreshInterval: 10000,
+      refreshInterval: 2000,
       onSuccess,
     }
   );

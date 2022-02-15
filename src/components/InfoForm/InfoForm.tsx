@@ -169,6 +169,10 @@ const InfoForm: React.FC = () => {
           />
           <FormErrorMessage>{errors.phone?.message}</FormErrorMessage>
         </FormControl>
+        <FormControl mb={['20px', '20px', '2px']}>
+          <span>Ключь авторизации телеграм бота, для уведомлений:</span>
+          <h2>{profile?.noti_uid ? profile?.noti_uid : ''}</h2>
+        </FormControl>
         <Time>
           <p>{t('Working hours (start - end of the working day)')}</p>
           <FormControl isInvalid={!!errors.startTime} w={'30%'}>

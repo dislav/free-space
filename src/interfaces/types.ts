@@ -30,6 +30,7 @@ export type BaseUser = {
   first_name: string;
   last_name: string;
   phone: string;
+  noti_uid: string;
   pic: string;
 };
 
@@ -44,6 +45,7 @@ export type WashUser = {
   street: string;
   worktime: string;
   phone: string;
+  noti_uid: string;
   legal_info: string;
   created: string;
   updated: string;

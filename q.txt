@@ -1,0 +1,1 @@
+docker run -v $(pwd)/public:/usr/share/nginx/html:ro -p 8092:80 -d nginx
