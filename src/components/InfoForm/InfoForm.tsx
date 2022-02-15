@@ -171,6 +171,10 @@ const InfoForm: React.FC = () => {
         </FormControl>
         <FormControl mb={['20px', '20px', '2px']}>
           <span>Ключь авторизации телеграм бота, для уведомлений:</span>
+          <br />
+          <a href="https://t.me/freespacenoti_bot">
+            <i>Перейти в бот</i>
+          </a>
           <h2>{profile?.noti_uid ? profile?.noti_uid : ''}</h2>
         </FormControl>
         <Time>
