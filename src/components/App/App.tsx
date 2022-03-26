@@ -32,6 +32,7 @@ import Boxes from '../../pages/Boxes';
 import CreatePromotion from '../../pages/CreatePromotion';
 import Statistics from '../../pages/Statistics';
 import Chat from '../../pages/Chat';
+import Order from '../../pages/Order';
 
 dayjs.locale('ru');
 
@@ -88,6 +89,12 @@ const App: React.FC = () => {
                     </PrivateRoute>
                     <PrivateRoute path={'/chat'}>
                       <Chat />
+                    </PrivateRoute>
+                    <PrivateRoute path={'/order/create'}>
+                      <Order />
+                    </PrivateRoute>
+                    <PrivateRoute path={'/order/update/:id'}>
+                      <Order />
                     </PrivateRoute>
                     <PrivateRoute path={'/'}>
                       <Dashboard />

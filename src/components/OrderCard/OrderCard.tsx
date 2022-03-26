@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTheme } from 'styled-components';
 import { Button, Tooltip, useToast } from '@chakra-ui/react';
+import { useHistory } from 'react-router-dom';
 
 import { Service, CarBody, Order } from '../../interfaces/types';
 import { updateOrderStatus } from '../../lib/api';
@@ -40,6 +41,7 @@ const OrderCard: React.FC<IOrderCard> = ({
   const { mutate } = useOrders();
   const { colors, variables } = useTheme();
   const toast = useToast();
+  const history = useHistory();
 
   const [isLoading, setIsLoading] = useState(false);
   const [rejectModal, setRejectModal] = useState(false);
@@ -54,6 +56,8 @@ const OrderCard: React.FC<IOrderCard> = ({
 
   const openTagsModal = () => setTagsModal(true);
   const closeTagsModal = () => setTagsModal(false);
+
+  const onEditOrder = () => history.push(`/order/update/${id}`);
 
   const carBody = bodies?.find(({ id }) => id === body);
   const tags = servicesList?.filter(({ id }) =>
@@ -174,6 +178,11 @@ const OrderCard: React.FC<IOrderCard> = ({
           {+status === OrderStatus.Accepted && (
             <DropdownMenuLink onClick={openCompleteModal}>
               Завершить
+            </DropdownMenuLink>
+          )}
+          {[OrderStatus.Created, OrderStatus.Accepted].includes(+status) && (
+            <DropdownMenuLink onClick={onEditOrder}>
+              Редактировать
             </DropdownMenuLink>
           )}
         </DropdownMenu>

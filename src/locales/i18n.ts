@@ -3,11 +3,13 @@ import { initReactI18next } from 'react-i18next';
 
 import Profile from './ru/Profile.json';
 import PromotionForm from './ru/PromotionForm.json';
+import OrderForm from './ru/OrderForm.json';
 
 const resources = {
   ru: {
     Profile,
     PromotionForm,
+    OrderForm,
   },
 };
 

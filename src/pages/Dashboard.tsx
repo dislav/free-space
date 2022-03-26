@@ -15,7 +15,7 @@ const Dashboard: React.FC = () => {
     );
 
   return (
-    <Layout title={'Заявки'}>
+    <Layout title={'Заявки'} action={<LinkButton to={'/order/create'} />}>
       <OrdersList />
     </Layout>
   );

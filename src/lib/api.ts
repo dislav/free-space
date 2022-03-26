@@ -65,6 +65,11 @@ export const createService = (data: FormData): AxiosPromise<Response> =>
     params: { ukey28: getToken() },
   });
 
+export const createOrder = (data: FormData): AxiosPromise<Response> =>
+  axiosInstance.post('/order/create', data, {
+    params: { ukey28: getToken() },
+  });
+
 export const activateBox = (id: string): AxiosPromise<Response> =>
   axiosInstance.post(`/box/active/${id}`, null, {
     params: { ukey28: getToken() },
@@ -90,6 +95,14 @@ export const updateOrderStatus = (
   status: number
 ): AxiosPromise<Response<Order>> =>
   axiosInstance.post(`/order/${id}/status/${status}`, null, {
+    params: { ukey28: getToken() },
+  });
+
+export const updateOrder = (
+  id: string,
+  data: FormData
+): AxiosPromise<Response> =>
+  axiosInstance.post(`/order/update/${id}`, data, {
     params: { ukey28: getToken() },
   });
 
