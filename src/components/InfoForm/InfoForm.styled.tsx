@@ -59,3 +59,9 @@ export const Time = styled.div`
     margin: 0 10px;
   }
 `;
+
+export const BotKey = styled.span`
+  font-size: 24px;
+  font-weight: 700;
+  cursor: pointer;
+`;

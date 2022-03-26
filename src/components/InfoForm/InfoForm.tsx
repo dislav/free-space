@@ -8,6 +8,7 @@ import {
   Button,
   Select,
   useToast,
+  Tooltip,
 } from '@chakra-ui/react';
 import {
   useForm,
@@ -19,7 +20,7 @@ import {
 import { BaseUser, WashUser } from '../../interfaces/types';
 import { updateProfile, updateProfileImage } from '../../lib/api';
 
-import { Container, Time } from './InfoForm.styled';
+import { Container, Time, BotKey } from './InfoForm.styled';
 import ProfileAvatar from '../ProfileAvatar/ProfileAvatar';
 import { useProfile } from '../../lib/useProfile';
 
@@ -169,14 +170,24 @@ const InfoForm: React.FC = () => {
           />
           <FormErrorMessage>{errors.phone?.message}</FormErrorMessage>
         </FormControl>
-        <FormControl mb={['20px', '20px', '2px']}>
-          <span>Ключь авторизации телеграм бота, для уведомлений:</span>
-          <br />
-          <a href="https://t.me/freespacenoti_bot">
-            <i>Перейти в бот</i>
-          </a>
-          <h2>{profile?.noti_uid ? profile?.noti_uid : ''}</h2>
-        </FormControl>
+        {profile?.noti_uid && (
+          <FormControl mb={['20px', '20px', '20px']}>
+            <span>Ключ авторизации телеграм бота, для уведомлений:</span>
+            <br />
+            <a href="https://t.me/freespacenoti_bot">
+              <i>Перейти в бот</i>
+            </a>{' '}
+            -{' '}
+            {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions */}
+            <Tooltip label="Кликните, чтобы скопировать">
+              <BotKey
+                onClick={() => navigator.clipboard?.writeText(profile.noti_uid)}
+              >
+                {profile.noti_uid}
+              </BotKey>
+            </Tooltip>
+          </FormControl>
+        )}
         <Time>
           <p>{t('Working hours (start - end of the working day)')}</p>
           <FormControl isInvalid={!!errors.startTime} w={'30%'}>
