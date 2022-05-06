@@ -13,6 +13,8 @@ import {
   Promotion,
   ChatMessageProps,
   PaginationProps,
+  BaseUser,
+  WashUser,
 } from '../interfaces/types';
 
 // Basic
@@ -40,6 +42,13 @@ export const fetcher = async (url: string, limitPage?: number) => {
 // Api
 export const auth = (data: FormData): AxiosPromise<Response<Auth>> =>
   axiosInstance.post('/auth', data);
+
+export const getProfile = (
+  ukey28: string
+): AxiosPromise<Response<BaseUser | WashUser>> =>
+  axiosInstance.get('/profile', {
+    params: { ukey28 },
+  });
 
 export const createWash = (
   data: FormData

@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTheme } from 'styled-components';
 import { useHistory } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Button, FormControl, FormErrorMessage, Input } from '@chakra-ui/react';
 import cookie from 'cookie';
 
-import { auth } from '../../lib/api';
+import { auth, getProfile } from '../../lib/api';
 
 import { Container, TextError } from './AuthForm.styled';
+import { useProfile } from '../../lib/useProfile';
 
 interface Inputs {
   login: string;
@@ -17,6 +18,8 @@ interface Inputs {
 const AuthForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const { mutate } = useProfile();
 
   const history = useHistory();
   const { colors, variables } = useTheme();
@@ -47,7 +50,11 @@ const AuthForm: React.FC = () => {
 
       localStorage.setItem('group', response.data.group[0]);
 
-      setTimeout(() => history.push('/'), 400);
+      const { data: profile } = await getProfile(response.data.hash);
+
+      await mutate(profile.data);
+
+      history.push('/');
     } catch (e) {
       setError(e.message);
     } finally {
